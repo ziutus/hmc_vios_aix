@@ -43,6 +43,15 @@ I will use some example data found on Internet (manual pages, example data, post
 
 #Installation
 
+Configuration file for for HMC script (hmc_manage.rb) should provide data like: hmc IP or name, user on HMC and password. it is yaml file. Example of config:
+
+```
+--- 
+:hmc: 192.168.200.33
+:username: hscroot
+:password: TopSecretPasswordAbc1234
+```
+
 #API Reference
 
 #Tests
