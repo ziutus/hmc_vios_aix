@@ -22,10 +22,10 @@ to use classes and functions and what is expected to get as result. This documen
 
 
 ## Why Ruby?
-I believe first scripts you was writting in bash/ksh but when project is growning you afraid to change anything as your changes can destroy others scripts.
-So you are ending with big number of small scripts which maintance take longer and longer. Then you can start to write it in Perl and OOP (Object
-Oriented programming). Perl is always on AIX machines so you can run scripts on any of your systems. Problem started as OOP on AIX is difficult, no 
-internal variables, no isolations etc, so it was time to change base laungauge. 
+I believe first scripts you were writting in bash/ksh but when project was growning you afraid to change anything as your changes could destroy 
+others scripts. So you are ended with big number of small scripts which maintance took longer and longer. Then you started to write it in Perl 
+and OOP (Object Oriented programming). Perl is always on AIX machines so you can run scripts on any of your systems. Problem is that OOP on AIX 
+is difficult, no internal variables, no isolations etc, so it is time to change base laungauge. 
 Why Ruby and not Python or something different? Ruby is used in Chef :). Some part of code can be used in Chef.
 
 ## Why Git?
