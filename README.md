@@ -32,6 +32,14 @@ Why Ruby and not Python or something different? Ruby is used in Chef :). Some pa
 Git allow you to have branches and easy manage versions of project. Main stream have only current and working version of scripts and you don't 
 need anymore versioning with numbers like check_interfaces8.rb ;). 
 
+## Why AIX 5.3 not current one like 7.1 or 7.2?
+Why I'm using in my tests AIX 5.3 and not current AIX like 7.1 or 7.2? because I got this version with my harware :). 
+if you are using newer versions and you are authorized to provide me data to update my scripts I will do it. 
+if you known how to really buy newer version of this software please write to me. I was trying to contact sellers but they ignored me :).
+
+I will use some example data found on Ineternet (maunal pages, example data, posts etc) but I can't quarantee that it will be working on your setup.
+
+
 
 #Installation
 
