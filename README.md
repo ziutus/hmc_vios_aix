@@ -30,7 +30,7 @@ Why Ruby and not Python or something different? Ruby is used in Chef :). Some pa
 
 ## Why Git?
 Git allow you to have branches and easy manage versions of project. Main stream have only current and working version of scripts and you don't 
-need anymore versioning with numbers like check_interfaces8.pl ;). 
+need anymore versioning with numbers like check_interfaces8.rb ;). 
 
 
 #Installation
