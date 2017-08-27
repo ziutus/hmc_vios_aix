@@ -1,9 +1,9 @@
-#Synopsis
+# Synopsis
 
-#Code Exemple
+# Code Exemple
 ping_all.rb -s server1,server2
 
-#Motivation
+# Motivation
 ## Why this project?
 I'm the AIX SysAdmin and I don't like to do every day the same jobs. If something is repetitive, maybe we can write script for that?
 This repository hold scripts which I wrote or rewrite from different projects / persons to have all in one place.
@@ -42,7 +42,7 @@ If you known how to really buy newer version of this software please write to me
 
 I will use some example data found on Internet (manual pages, example data, posts etc) but I can't promise that it will be working on your setup.
 
-##Installation
+## Installation
 
 Configuration file with default data for HMC script (hmc_manage.rb) should provide data like: hmc IP or name, user on HMC and password. It is yaml file. 
 Example of config:
@@ -54,11 +54,11 @@ Example of config:
 :password: TopSecretPasswordAbc1234
 ```
 
-##API Reference
+## API Reference
 
-##Tests
+## Tests
 
-##Contributors
+## Contributors
 
-##License
+## License
 GPL
