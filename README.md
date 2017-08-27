@@ -5,7 +5,7 @@
 #Motivation
 ## Why this project?
 I'm the AIX SysAdmin and I don't like to do every day the same jobs. If something is repetitive, maybe we can write script for that?
-This repository hold scripts which I wrote or rewrite from different projects / persons to have all in place.
+This repository hold scripts which I wrote or rewrite from different projects / persons to have all in one place.
 
 ## Why OOP (Object-oriented programming [link] https://en.wikipedia.org/wiki/Object-oriented_programming)?
 OOP is used in this project as I want to reuse code each time, where it is possible, it is not big difference in code when you want to use
