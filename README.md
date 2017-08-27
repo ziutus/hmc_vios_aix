@@ -37,9 +37,9 @@ need anymore version with numbers like check_interfaces8.rb ;).
 ## Why AIX 5.3 not current one like 7.1 or 7.2?
 Why I'm using in my tests AIX 5.3 and not current AIX like 7.1 or 7.2? because I got this version with my hardware :). 
 if you are using newer versions and you are authorized to provide me data to update my scripts I will do it. 
-if you known how to really buy newer version of this software please write to me. I was trying to contact sellers but they ignored me :).
+If you known how to really buy newer version of this software please write to me. I was trying to contact sellers but they ignored me :).
 
-I will use some example data found on Ineternet (maunal pages, example data, posts etc) but I can't promise that it will be working on your setup.
+I will use some example data found on Internet (manual pages, example data, posts etc) but I can't promise that it will be working on your setup.
 
 #Installation
 
