@@ -41,9 +41,10 @@ If you known how to really buy newer version of this software please write to me
 
 I will use some example data found on Internet (manual pages, example data, posts etc) but I can't promise that it will be working on your setup.
 
-#Installation
+##Installation
 
-Configuration file for for HMC script (hmc_manage.rb) should provide data like: hmc IP or name, user on HMC and password. it is yaml file. Example of config:
+Configuration file with default data for HMC script (hmc_manage.rb) should provide data like: hmc IP or name, user on HMC and password. It is yaml file. 
+Example of config:
 
 ```
 --- 
