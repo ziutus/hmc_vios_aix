@@ -16,16 +16,17 @@ with TDD you are always sure that it works. So maintance of code is much easier 
 
 ## Why  Test Driven Developing (TDD)?
 AIX systems are typically production systems so each time you change your scripts, you should be sure that it will not hurt your systems.
-TDD (https://en.wikipedia.org/wiki/Test-driven_development) will help you to be sure that all classes, scripts etc. will behavior as you expect. TDD is also helping you to define what really you 
-want (as you are starting from writting tests ;). Other reason is simple, good tests are really good documentation of your code, it shows how
+TDD (https://en.wikipedia.org/wiki/Test-driven_development) will help you to be sure that all classes, scripts etc. will behavior as you expect. 
+TDD is also helping you to define what really you 
+want (as you are starting from writing tests ;). Other reason is simple, good tests are really good documentation of your code, it shows how
 to use classes and functions and what is expected to get as result. This documentation is always updated ;).
-
 
 ## Why Ruby?
 I believe first scripts you were writting in bash/ksh but when project was growning you afraid to change anything as your changes could destroy 
-others scripts. So you are ended with big number of small scripts which maintance took longer and longer. Then you started to write it in Perl 
-and OOP (Object Oriented programming). Perl is always on AIX machines so you can run scripts on any of your systems. Problem is that OOP on AIX 
-is difficult, no internal variables, no isolations etc, so it is time to change base laungauge. 
+others scripts. So you are ended with big number of small scripts which maintenance took longer and longer. Then you started to write it in Perl 
+and OOP (Object Oriented programming). Perl was always on AIX machines so you can could scripts on any of your systems. Problem is that OOP on AIX 
+is difficult: no internal variables, no isolation etc, so it is time to change base language. 
+
 Why Ruby and not Python or something different? Ruby is used in Chef :). Some part of code can be used in Chef.
 
 ## Why Git?
@@ -39,11 +40,7 @@ if you known how to really buy newer version of this software please write to me
 
 I will use some example data found on Ineternet (maunal pages, example data, posts etc) but I can't quarantee that it will be working on your setup.
 
-
-
 #Installation
-
-
 
 #API Reference
 
