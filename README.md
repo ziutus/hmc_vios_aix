@@ -1,6 +1,7 @@
 #Synopsis
 
 #Code Exemple
+ping_all.rb -s server1,server2
 
 #Motivation
 ## Why this project?
