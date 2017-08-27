@@ -53,11 +53,11 @@ Example of config:
 :password: TopSecretPasswordAbc1234
 ```
 
-#API Reference
+##API Reference
 
-#Tests
+##Tests
 
-#Contributors
+##Contributors
 
-#License
+##License
 GPL
