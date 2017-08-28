@@ -19,7 +19,7 @@ require_relative 'inc/HMC/TaskRoles'
 myName = File.basename(__FILE__)
 
 options = {}
-options = YAML.load_file('hmc_data.yaml')
+options = YAML.load_file('../hmc_data.yaml')
 
 action=""
 defaultAction="statusAll"
@@ -150,7 +150,7 @@ def startFrameAndCheckProgress frameName
 	 frameStatus = Exec.Exec(Frame.statusCheck(), "on").gsub("\n", '')	
 	 if   frameStatus == "Power Off"
 		puts "Can't start the Frame, status of frame "+frameStatus
-		exit 0	
+		exit 0
 	end 
 
 end
