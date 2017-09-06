@@ -31,8 +31,6 @@ HMC\sBuild\slevel\s([\d\.]+)\s*
 
     match = regexp.match(string)
 
-#    attr_reader :version, :release, :servicePack, :hmcBuildlevel, :base_version
-
     if match
       @version        = match[1]
       @release		    = match[2]
@@ -40,6 +38,33 @@ HMC\sBuild\slevel\s([\d\.]+)\s*
       @hmcBuildLevel 	= match[4]
       @patches 		    = match[5]
       @base_version 	= match[6]
+
+        if @patches.length > 0
+          parsePatches(@patches)
+        end
+
+    else
+      puts string
+      puts regexp
+      puts match
+      puts "regexp couldn't decode string #{string}"
+      raise
+
+    end
+
+  end
+
+  def parsePatches string
+
+    regexp = %r{(MH\d{5})\:(.*)}
+
+    match = regexp.match(string)
+
+    if match
+      version        = match[1]
+      description		 = match[2]
+
+ #     print "---patches:" + version + "description:" + description + "++patches---"
 
     else
       puts string
@@ -54,10 +79,6 @@ HMC\sBuild\slevel\s([\d\.]+)\s*
 
   def hasFix(fixName)
 
-    print "this HMC has pathes like:"
-    print "----"
-    print @pathes
-    print "----"
 
     return 0
   end
