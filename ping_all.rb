@@ -1,4 +1,4 @@
-#!/usr/bin/ruby
+#! /usr/bin/env ruby
 
 # standard libraries
 require 'pp'
@@ -11,6 +11,8 @@ include Dnsruby
 # own libraries
 $LOAD_PATH << File.dirname(__FILE__)+"/inc"
 
+myName = File.basename(__FILE__)
+
 # own functions
 def up?(host)
     check = Net::Ping::External.new(host)
@@ -19,16 +21,23 @@ end
 
 def ip (server)
 	resolver = Dnsruby::DNS.new
-	ip=""
-	
-	begin
-		resolver.each_resource(server, 'A') do |rr|
-			ip =  rr.address
-		end	
-	rescue Exception => e
-	  ip = "DNS query failed"
-	end  
-	
+	ip=''
+
+  if  server =~ %r{\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}}
+    begin
+        ip =  resolver.getname(server)
+    rescue Exception => e
+      ip = "DNS query failed"
+    end
+
+  else
+    begin
+        ip =  resolver.getaddress(server)
+    rescue Exception => e
+      ip = "DNS query failed"
+    end
+  end
+
 	return ip
 end
 
@@ -93,7 +102,7 @@ servers.uniq! #removing duplicates
 if (servers.empty?)
 	puts ""
 	puts "No servers to ping!"
-	puts "Try $0 -h"
+	puts "Try #{myName} -h"
 #	puts opts
 	exit
 end 
