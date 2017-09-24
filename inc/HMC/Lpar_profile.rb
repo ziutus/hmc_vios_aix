@@ -1,4 +1,6 @@
 require "pp"
+require 'HMC/HmcString'
+include HmcString
 
 class Lpar_profile
 
@@ -29,6 +31,16 @@ class Lpar_profile
 	def initialize sys, lpar_name, lpar_id, name="normal"
 	
 		@sys = sys 
+	
+		@variables_int    = ['lpar_id', 'min_mem', 'desired_mem', 'max_mem', 'all_resources', 'min_procs',
+				'desired_procs', 'max_procs', 'max_virtual_slots', 'auto_start', 'conn_monitoring', 'uncap_weight',
+				'min_num_huge_pages', 'desired_num_huge_pages', 'max_num_huge_pages' ]
+		@variables_float  = ['min_proc_units', 'desired_proc_units', 'max_proc_units' ]
+	
+		@variables_string_raw = ['virtual_serial_adapters', 'virtual_scsi_adapters', 'virtual_eth_adapters', 'io_slots', 'hca_adapters']
+		@variables_string = ['name', 'lpar_name', 'lpar_env', 'mem_mode', 'proc_mode', 'sharing_mode', 
+			'lpar_io_pool_ids',  'boot_mode',
+			'power_ctrl_lpar_ids', 'work_group_id', 'redundant_err_path_reporting', 'hpt_ratio', ]
 	
 		@dataString = ""
 	
@@ -183,156 +195,28 @@ class Lpar_profile
 			end
 		}			
 	end
-	
+
 	def lssyscfgProfDecode string 
-#		puts "Will decode string" + string
+
+		myHash = HmcString.parse(string)
+		
+		myHash.each { |name, value| 
+		
+			if @variables_int.include?(name)
+				instance_variable_set("@#{name}", value.to_i) 
+			elsif @variables_float.include?(name)
+				instance_variable_set("@#{name}", value.to_f) 
+			elsif @variables_string_raw.include?(name)
+				instance_variable_set("@#{name}_raw", value.to_s) 
+			elsif @variables_string.include?(name)
+				instance_variable_set("@#{name}", value.to_s) 
+			else 
+				print "unknown name: #{name} with value #{value}"
+				raise 
+			end
+				
+		}	
 	
-		regExp = %r{name=([\w\_\-]+),lpar_name=([\w\_\-]+),lpar_id=(\d+),lpar_env=(aixlinux|vioserver),all_resources=(\d+),
-		min_mem=(\d+),desired_mem=(\d+),max_mem=(\d+),mem_mode=(ded),hpt_ratio=(\d+:\d+),
-		proc_mode=(shared),min_proc_units=(\d+\.\d+),desired_proc_units=(\d+\.\d+),max_proc_units=(\d+\.\d+),
-		min_procs=(\d+),desired_procs=(\d+),max_procs=(\d+),sharing_mode=(cap|uncap),uncap_weight=(\d+),
-		(?:\"|)io_slots=(none|[\w\/\,]+)(?:\"|),
-		(?:\"|)lpar_io_pool_ids=(none|[\w\/\,]+)(?:\"|),
-		max_virtual_slots=(\d+),
-		(?:\"|)virtual_serial_adapters=(.*?)(?:\"|),
-		(?:\"|)virtual_scsi_adapters=(.*?)(?:\"|),
-		(?:\"|)virtual_eth_adapters=(.*?)(?:\"|),
-		(?:\"|)hca_adapters=(.*?)(?:\"|),
-		boot_mode=(norm),conn_monitoring=(\d+),auto_start=(\d+),power_ctrl_lpar_ids=(none),work_group_id=(none),
-		redundant_err_path_reporting=(\d+)
-		}x
-
-		regExp2 = %r{name=([\w\_\-]+),lpar_name=([\w\_\-]+),lpar_id=(\d+),lpar_env=(aixlinux|vioserver),all_resources=(\d+),
-		min_mem=(\d+),desired_mem=(\d+),max_mem=(\d+),
-		min_num_huge_pages=(\d+),desired_num_huge_pages=(\d+),max_num_huge_pages=(\d+),mem_mode=(ded),hpt_ratio=(\d+:\d+),
-		proc_mode=(shared),min_proc_units=(\d+\.\d+),desired_proc_units=(\d+\.\d+),max_proc_units=(\d+\.\d+),
-		min_procs=(\d+),desired_procs=(\d+),max_procs=(\d+),sharing_mode=(cap|uncap),uncap_weight=(\d+),
-		(?:\"|)io_slots=(none|[\w\/\,]+)(?:\"|),
-		(?:\"|)lpar_io_pool_ids=(none|[\w\/\,]+)(?:\"|),
-		max_virtual_slots=(\d+),
-		(?:\"|)virtual_serial_adapters=(.*?)(?:\"|),
-		(?:\"|)virtual_scsi_adapters=(.*?)(?:\"|),
-		(?:\"|)virtual_eth_adapters=(.*?)(?:\"|),
-		(?:\"|)hca_adapters=(.*?)(?:\"|),
-		boot_mode=(norm),conn_monitoring=(\d+),auto_start=(\d+),power_ctrl_lpar_ids=(none),work_group_id=(none),
-		redundant_err_path_reporting=(\d+)
-		}x
-		
-
-		match   = regExp.match(string)
-		match2  = regExp2.match(string)
-		
-
-#		puts "regexp is working..."
-#		pp match
-
-		if match 	
-			@name 		= match[1]
-			@lpar_name 	= match[2]
-			@lpar_id 	= match[3].to_i
-			@lpar_env	= match[4]
-			@all_resources = match[5].to_i 
-
-			@min_mem	 = match[6].to_i
-			@desired_mem = match[7].to_i 
-			@max_mem	 = match[8].to_i 
-			@mem_mode	 = match[9]
-			@hpt_ratio   = match[10]
-
-			@proc_mode	 = match[11]
-
-			@min_proc_units		= match[12]
-			@desired_proc_units	= match[13]
-			@max_proc_units		= match[14]
-			
-			@min_procs		= match[15].to_i
-			@desired_procs	= match[16].to_i
-			@max_procs		= match[17].to_i
-
-			@sharing_mode   = match[18]
-			@uncap_weight	= match[19].to_i
-
-			@io_slots_raw   	  = match[20]		
-			@lpar_io_pool_ids_raw = match[21]
-
-			@max_virtual_slots 	  = match[22].to_i
-			
-			@virtual_serial_adapters_raw = match[23]
-			@virtual_scsi_adapters_raw   = match[24]
-			@virtual_eth_adapters_raw	 = match[25]
-			@hca_adapters_raw			 = match[26]
-			@boot_mode					 = match[27]
-			@conn_monitoring 			 = match[28].to_i 
-			@auto_start					 = match[29].to_i 
-			@power_ctrl_lpar_ids		 = match[30]
-			@work_group_id				 = match[31]
-			@redundant_err_path_reporting= match[32].to_i 
-
-		elsif match2 
-#			pp match2 
-		
-			@name 		= match2[1]
-			@lpar_name 	= match2[2]
-			@lpar_id 	= match2[3].to_i
-			@lpar_env	= match2[4]
-			@all_resources = match2[5].to_i 
-
-			@min_mem	 = match2[6].to_i
-			@desired_mem = match2[7].to_i 
-			@max_mem	 = match2[8].to_i 
-			
-			@min_num_huge_pages		= match2[9].to_i 
-			@desired_num_huge_pages = match2[10].to_i 
-			@max_num_huge_pages		= match2[11].to_i		
-
-			
-			@mem_mode	 = match2[12]
-			@hpt_ratio   = match2[13]
-
-			@proc_mode	 = match2[14]
-
-			@min_proc_units		= match2[15]
-			@desired_proc_units	= match2[16]
-			@max_proc_units		= match2[17]
-			
-			@min_procs		= match2[18].to_i
-			@desired_procs	= match2[19].to_i
-			@max_procs		= match2[20].to_i
-
-			@sharing_mode   = match2[21]
-			@uncap_weight	= match2[22].to_i
-
-			@io_slots_raw   	  = match2[23]		
-			@lpar_io_pool_ids_raw = match2[24]
-
-			@max_virtual_slots 	  = match2[25].to_i
-			
-			@virtual_serial_adapters_raw = match2[26]
-			@virtual_scsi_adapters_raw   = match2[27]
-			@virtual_eth_adapters_raw	 = match2[28]
-			@hca_adapters_raw			 = match2[29]
-			@boot_mode					 = match2[30]
-			@conn_monitoring 			 = match2[31].to_i 
-			@auto_start					 = match2[32].to_i 
-			@power_ctrl_lpar_ids		 = match2[33]
-			@work_group_id				 = match2[34]
-			@redundant_err_path_reporting= match2[35].to_i 
-							
-		else 
-	
-			puts string
-			puts match 
-			puts "RegExp couldn't decode string >#{string}<"
-			raise 
-	
-		end
-		
-		@virtual_eth_adapters = []
-		@virtual_scsi_adapters = []
-		@virtual_serial_adapters = []
-
-		
 	end
-	
 	
 end	
