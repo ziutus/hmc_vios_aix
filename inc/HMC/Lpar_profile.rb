@@ -1,5 +1,9 @@
 require "pp"
 require 'HMC/HmcString'
+require 'HMC/VirtualEthAdapter'
+require 'HMC/VirtualScsiAdapter'
+require 'HMC/VirtualSerialAdapter'
+
 include HmcString
 
 class Lpar_profile
@@ -20,8 +24,9 @@ class Lpar_profile
 	attr_reader :virtual_serial_adapters_raw, :virtual_serial_adapters
 	attr_reader :virtual_scsi_adapters_raw, :virtual_scsi_adapters
 	attr_reader :virtual_eth_adapters_raw, :virtual_eth_adapters
-	
-	attr_reader :hca_adapters, :hca_adapters_raw, :auto_start, :conn_monitoring
+	attr_reader :hca_adapters_raw, :hca_adapters 
+
+	attr_reader:auto_start, :conn_monitoring
 	
 	attr_reader :resource_config, :os_version, :logical_serial_num, :default_profile, :curr_profile, :work_group_id, :shared_proc_pool_util_auth, :allow_perf_collection 
 	attr_reader :power_ctrl_lpar_ids, :boot_mode, :lpar_keylock, :redundant_err_path_reporting, :rmc_state, :rmc_ipaddr, :sync_curr_profile 
@@ -91,14 +96,16 @@ class Lpar_profile
 #		@sync_curr_profile=""
 
 		@uncap_weight=128
-		@virtual_eth_adapters_raw=""
-		@virtual_scsi_adapters_raw=""
-		@virtual_serial_adapters_raw=""
+		@virtual_eth_adapters_raw="none"
+		@virtual_scsi_adapters_raw="none"
+		@virtual_serial_adapters_raw="none"
+		@hca_adapters_raw = "none"
 		
 		@virtual_eth_adapters = []
 		@virtual_scsi_adapters = []
 		@virtual_serial_adapters = []
-		
+		@io_slots = []	
+			
 		@work_group_id=""
 		
 
@@ -216,6 +223,33 @@ class Lpar_profile
 			end
 				
 		}	
+	
+		self._rawToTable()
+	end
+	
+	def _rawToTable
+		
+		if @virtual_serial_adapters_raw != "none"
+			@virtual_serial_adapters_raw.split(',').each { |adapter|
+				@virtual_serial_adapters.push(VirtualSerialAdapter.new(adapter))
+			}
+		end
+
+		if @virtual_eth_adapters_raw != "none"
+			@virtual_eth_adapters_raw.split(',').each { |adapter|
+				@virtual_eth_adapters.push(VirtualEthAdapter.new(adapter))
+			}
+		end
+
+		if @virtual_scsi_adapters_raw != "none"
+			@virtual_scsi_adapters_raw.split(',').each { |adapter|
+				@virtual_scsi_adapters.push(VirtualScsiAdapter.new(adapter))
+			}
+		end
+		
+		
+		#@io_slots
+		# @hca_adapters
 	
 	end
 	
