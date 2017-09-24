@@ -41,10 +41,5 @@ class TestHMCRemoteAccess < Test::Unit::TestCase
     assert_equal("legacy",    myHmc.security)
     assert_equal("disabled",  myHmc.sol)
 
-
   end
-
-
-
-
 end
