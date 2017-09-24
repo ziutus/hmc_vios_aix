@@ -10,17 +10,25 @@ $LOAD_PATH << File.dirname(__FILE__)
 $LOAD_PATH << File.dirname(__FILE__)+"/../inc"
 
 
+require "aix_errpt_entry.rb"
+
 require "aix_etc_hosts_entry.rb"
 require "aix_etc_hosts.rb"
 require "hmc_lpar_netboot.rb"
-require "hmc_lpar_profile2.rb"
 require "hmc_lpar_profile.rb"
 require "hmc_lpar_real.rb"
+require "hmc_lssysconf_sys.rb"
+require "hmcRemoteAccess.rb"
 require "hmc_resourcerole.rb"
 require "hmc_resourceRoles.rb"
 require "hmc_resoure.rb"
+require "hmcString.rb"
+require "hmc_version.rb"
 require "hmc_VirtualEthAdapter.rb"
 require "hmc_VirtualScsiAdapter.rb"
 require "hmc_VirtualSerialAdapter.rb"
+
+require "unix_ps_ef.rb"
+require "unix_ps_process.rb"
 #require "targetcli_1.rb"
 #require "targetcli_backstore_lv.rb"
