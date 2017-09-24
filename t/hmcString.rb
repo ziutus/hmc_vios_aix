@@ -9,9 +9,9 @@ include HmcString
 # "--require <gem home>/test-unit-3.2.3/lib/test/unit/autorunner"
 #  --require "C:/Ruby24/lib/ruby/gems/2.4.0/gems/test-unit-3.2.3/lib/test-unit.rb"
 
-class TestHMCRemoteAccess < Test::Unit::TestCase
+class TestString < Test::Unit::TestCase
 
-  def test_hmcRemoteAccess
+  def test_String
 
     string = 'name=L2support,"resources=lpar:root/ibmhscS1_0|1*9131-52A*6535CCG|IBMHSC_Partition,lpar:root/ibmhscS1_0|5*9131-52A*6535CCG|IBMHSC_Partition",nameLong=L2supportRole';
 
