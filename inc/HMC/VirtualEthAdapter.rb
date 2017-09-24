@@ -4,7 +4,7 @@ class VirtualEthAdapter
 	attr_accessor :virtualSlotNumber, :isIEEE, :portVlanID, :additionalVlanIDs, :trunkPriority, :isTrunk
 	attr_accessor :isRequired, :virtualSwitch, :macAddress, :allowedOsMacAddresses, :QosPiority 
 
-	def initialize 
+	def initialize string='' 
 		@virtualSlotNumber
 		@isIEEE=0
 		@portVlanID 
@@ -18,10 +18,15 @@ class VirtualEthAdapter
 		@macAddress
 		@allowedOsMacAddresses
 		@QosPiority
+		
+		if string.length > 0
+		  @data_string_raw = string
+		  self.parse(string)
+		end			
 	end
 		
-	def validate
 		
+	def validate
 		raise "virtualSlotNumber not defined" unless (@virtualSlotNumber.is_a? Numeric)
 	end
 		
@@ -30,10 +35,10 @@ class VirtualEthAdapter
 		self.validate()
 	
 		result ="#{@virtualSlotNumber}/#{@isIEEE}/#{@portVlanID}/#{@additionalVlanIDs}/#{@trunkPriority}/#{@isRequired}" 
-		result = result+"/#{@virtualSwitch}" unless (@virtualSwitch.nil?)
-		result = result+"/#{@macAddress}" unless (@macAddress.nil?)
+		result = result+"/#{@virtualSwitch}" 		 unless (@virtualSwitch.nil?)
+		result = result+"/#{@macAddress}" 			 unless (@macAddress.nil?)
 		result = result+"/#{@allowedOsMacAddresses}" unless (@allowedOsMacAddresses.nil?)
-		result = result+"/#{@QosPiority}" unless (@QosPiority.nil?)
+		result = result+"/#{@QosPiority}" 			 unless (@QosPiority.nil?)
 		
 		result
 	end
@@ -57,5 +62,8 @@ class VirtualEthAdapter
 		@isRequired			= match[6].to_i
 
 	end
+
+	alias :parse :decode
+
 	
 end

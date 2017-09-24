@@ -2,20 +2,23 @@ class VirtualScsiAdapter
 
 	attr_accessor :virtualSlotNumber, :clientOrServer, :remoteLparID, :remoteLparName, :remoteSlotNumber, :isRequired 
 
-	def def initialize 
+	def initialize string='' 
 		@virtualSlotNumber
 		@clientOrServer
 		@remoteLparID
 		@remoteLparName
 		@remoteSlotNumber
 		@isRequired 
+		
+		if string.length > 0
+		  @data_string_raw = string
+		  self.parse(string)
+		end			
 	end
 
 	#virtual-slot-number/client-or-server/[remote-lpar-ID]/[remote-lpar-name]/[remote-slot-number]/is-required
 	def to_s
-	
 		self.validate
-	
 		"#{@virtualSlotNumber}/#{@clientOrServer}/#{@remoteLparID}/#{@remoteLparName}/#{@remoteSlotNumber}/#{@isRequired}"
 	end
 	
@@ -46,7 +49,7 @@ class VirtualScsiAdapter
 	
 	def decode string
 
-		regExp = /(\d+)\/(server|client)\/(\d+)\/([\w\_\-]+)\/(\d+)\/(0|1)/
+		regExp = /(\d+)\/(server|client)\/(\d+)\/([\w\_\-\.]+)\/(\d+)\/(0|1)/
 		regExp2 = /slot_num=(\d+),state=(0|1),is_required=(0|1),adapter_type=(client|server),remote_lpar_id=(\d+|any),remote_lpar_name=([\w\_\-]+|),remote_slot_num=(\d+|any)/
 		match = regExp.match(string)
 		match2 = regExp2.match(string)
@@ -66,12 +69,11 @@ class VirtualScsiAdapter
 			@remoteLparID		= match2[5].to_i
 			@remoteLparName		= match2[6]
 			@remoteSlotNumber	= match2[7].to_i
-			
-			
 		else	
-			abort "RegExp couldn't decode string #{string}"
-		end
-		
+			abort "Class VirtualScsiAdapter:RegExp couldn't decode string #{string}"
+		end		
 	end
+	
+	alias :parse :decode
 	
 end
