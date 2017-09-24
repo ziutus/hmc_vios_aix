@@ -43,7 +43,7 @@ MH01454: Required fix for HMC V8R8.2.0 (11-05-2014)
     assert_equal("8.2.0",    myHmc.release)
     assert_equal("0",        myHmc.servicePack)
     assert_equal("20141104.1", myHmc.hmcBuildLevel)
-    assert_equal(1, myHmc.hasFix("MH01454"))
+    assert_equal(true, myHmc.hasFix?("MH01454"))
     assert_equal("V8R8.2.0", myHmc.base_version)
 
   end
