@@ -27,6 +27,7 @@ require "hmc_version.rb"
 require "hmc_VirtualEthAdapter.rb"
 require "hmc_VirtualScsiAdapter.rb"
 require "hmc_VirtualSerialAdapter.rb"
+require "hmc_frame_lshwres_io_slot.rb"
 
 require "unix_ps_ef.rb"
 require "unix_ps_process.rb"
