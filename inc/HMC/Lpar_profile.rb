@@ -3,6 +3,7 @@ require 'HMC/HmcString'
 require 'HMC/VirtualEthAdapter'
 require 'HMC/VirtualScsiAdapter'
 require 'HMC/VirtualSerialAdapter'
+require 'HMC/VirtualFCAdapter'
 
 include HmcString
 
@@ -31,7 +32,9 @@ class Lpar_profile
 	attr_reader :resource_config, :os_version, :logical_serial_num, :default_profile, :curr_profile, :work_group_id, :shared_proc_pool_util_auth, :allow_perf_collection 
 	attr_reader :power_ctrl_lpar_ids, :boot_mode, :lpar_keylock, :redundant_err_path_reporting, :rmc_state, :rmc_ipaddr, :sync_curr_profile 
 
-	
+	attr_reader :mem_expansion, :affinity_group_id, :vtpm_adapters, :vtpm_adapters_raw, :virtual_fc_adapters, :virtual_fc_adapters_raw, :bsr_arrays, :lpar_proc_compat_mode
+	attr_reader :lhea_capabilities,  :lpar_proc_compat_mode, :electronic_err_reporting
+	attr_reader :lhea_logical_ports, :lhea_logical_ports_raw
 	
 	def initialize sys, lpar_name, lpar_id, name="normal"
 	
@@ -39,13 +42,18 @@ class Lpar_profile
 	
 		@variables_int    = ['lpar_id', 'min_mem', 'desired_mem', 'max_mem', 'all_resources', 'min_procs',
 				'desired_procs', 'max_procs', 'max_virtual_slots', 'auto_start', 'conn_monitoring', 'uncap_weight',
-				'min_num_huge_pages', 'desired_num_huge_pages', 'max_num_huge_pages' ]
-		@variables_float  = ['min_proc_units', 'desired_proc_units', 'max_proc_units' ]
+				'bsr_arrays' ]
+				
+		@variables_float  = ['min_proc_units', 'desired_proc_units', 'max_proc_units', 'mem_expansion' ]
 	
-		@variables_string_raw = ['virtual_serial_adapters', 'virtual_scsi_adapters', 'virtual_eth_adapters', 'io_slots', 'hca_adapters']
+		@variables_string_raw = ['virtual_serial_adapters', 'virtual_scsi_adapters', 'virtual_eth_adapters', 'io_slots', 'hca_adapters',
+				'vtpm_adapters', 'virtual_fc_adapters', 'lhea_logical_ports']
+				
 		@variables_string = ['name', 'lpar_name', 'lpar_env', 'mem_mode', 'proc_mode', 'sharing_mode', 
 			'lpar_io_pool_ids',  'boot_mode',
-			'power_ctrl_lpar_ids', 'work_group_id', 'redundant_err_path_reporting', 'hpt_ratio', ]
+			'power_ctrl_lpar_ids', 'work_group_id', 'redundant_err_path_reporting', 'hpt_ratio',
+			'affinity_group_id', 'lhea_capabilities' 'lpar_proc_compat_mode', 'lhea_capabilities', 'lpar_proc_compat_mode',
+			'electronic_err_reporting', 'min_num_huge_pages', 'desired_num_huge_pages', 'max_num_huge_pages']
 	
 		@dataString = ""
 	
@@ -104,6 +112,7 @@ class Lpar_profile
 		@virtual_eth_adapters = []
 		@virtual_scsi_adapters = []
 		@virtual_serial_adapters = []
+		@virtual_fc_adapters = []
 		@io_slots = []	
 			
 		@work_group_id=""
@@ -246,7 +255,15 @@ class Lpar_profile
 				@virtual_scsi_adapters.push(VirtualScsiAdapter.new(adapter))
 			}
 		end
-		
+
+		if @virtual_fc_adapters_raw != nil
+			if @virtual_fc_adapters_raw != "none"
+				@virtual_fc_adapters_raw.gsub!(/\/(?<reg>\d+),(?<slot>\d+)\//,'/\k<reg>@\k<slot>/')
+				@virtual_fc_adapters_raw.split("@").each { |adapter|
+					@virtual_fc_adapters.push(VirtualFCAdapter.new(adapter))
+				}
+			end
+		end
 		
 		#@io_slots
 		# @hca_adapters
