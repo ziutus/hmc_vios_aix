@@ -1,5 +1,7 @@
 class VirtualScsiAdapter
 
+	#TODO: analyze if in case that remote lpar or slot is 'any' can we do simpler code (not so many if..elsif...)
+
 	attr_accessor :virtualSlotNumber, :clientOrServer, :remoteLparID, :remoteLparName, :remoteSlotNumber, :isRequired 
 
 	def initialize string='' 
@@ -49,26 +51,34 @@ class VirtualScsiAdapter
 	
 	def decode string
 
-		regExp = /(\d+)\/(server|client)\/(\d+)\/([\w\_\-\.]+)\/(\d+)\/(0|1)/
-		regExp2 = /slot_num=(\d+),state=(0|1),is_required=(0|1),adapter_type=(client|server),remote_lpar_id=(\d+|any),remote_lpar_name=([\w\_\-]+|),remote_slot_num=(\d+|any)/
-		match = regExp.match(string)
-		match2 = regExp2.match(string)
+		regExp      = %r{^\s*(\d+)/(server|client)/(\d+)/([\w\_\-\.]+)/(\d+)/(0|1)\s*$}
+		regExp_any  = %r{^\s*(\d+)/(server|client)/(any)/([\w\_\-\.]+)/(any)/(0|1)\s*$}
+		regExp_long = %{^\s*slot_num=(\d+),state=(0|1),is_required=(0|1),adapter_type=(client|server),remote_lpar_id=(\d+|any),remote_lpar_name=([\w\_\-]+|),remote_slot_num=(\d+|any)\s*$}
 		
-		if  (match)
+		
+		
+		if  match = regExp.match(string)
 			@virtualSlotNumber	= match[1].to_i	
 			@clientOrServer		= match[2]
 			@remoteLparID		= match[3].to_i
 			@remoteLparName		= match[4]
 			@remoteSlotNumber	= match[5].to_i
 			@isRequired			= match[6].to_i
-		elsif (match2)
-			@virtualSlotNumber	= match2[1].to_i	
-			@state				= match2[2]
-			@isRequired			= match2[3].to_i
-			@clientOrServer		= match2[4]
-			@remoteLparID		= match2[5].to_i
-			@remoteLparName		= match2[6]
-			@remoteSlotNumber	= match2[7].to_i
+		elsif  match = regExp_any.match(string)
+			@virtualSlotNumber	= match[1].to_i	
+			@clientOrServer		= match[2]
+			@remoteLparID		= match[3]
+			@remoteLparName		= match[4]
+			@remoteSlotNumber	= match[5]
+			@isRequired			= match[6].to_i
+		elsif match = regExp_long.match(string)
+			@virtualSlotNumber	= match[1].to_i	
+			@state				= match[2]
+			@isRequired			= match[3].to_i
+			@clientOrServer		= match[4]
+			@remoteLparID		= match[5].to_i
+			@remoteLparName		= match[6]
+			@remoteSlotNumber	= match[7].to_i
 		else	
 			abort "Class VirtualScsiAdapter:RegExp couldn't decode string #{string}"
 		end		
