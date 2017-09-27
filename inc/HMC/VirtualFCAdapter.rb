@@ -47,7 +47,7 @@ class VirtualFCAdapter
 
 		#virtual-slot-number/client-or-server/[remote-lpar-ID]/[remote-lpar-name]/remote-slot-number/[wwpns]/is-required
 	
-		regExp =  %r{(\d+)/(server|client)/(\d+)/([\w\-\_]+|)/(\d+)/(\w{16}\,\w{16}|\w{16}|)/(0|1)}
+		regExp =  %r{^\s*(\d+)/(server|client)/(\d+)/([\w\-\_]+|)/(\d+)/(\w{16}\,\w{16}|\w{16}|)/(0|1)\s*$}
 
 		match = regExp.match(string)
 		
