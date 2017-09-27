@@ -4,6 +4,7 @@ $LOAD_PATH << File.dirname(__FILE__)
 require 'HMC/VirtualEthAdapter'
 require "test/unit"
 
+#TODO: using own power5 prepare more test cases
 
 class TestVirtualEthAdapter < Test::Unit::TestCase
  
@@ -40,7 +41,7 @@ class TestVirtualEthAdapter < Test::Unit::TestCase
 		adapter2 = VirtualEthAdapter.new()
 	
 		exception = assert_raise(RuntimeError) {adapter2.to_s()}
-		assert_equal("virtualSlotNumber not defined", exception.message)
+		assert_equal("class: VirtualEthAdapter: function: validation, virtualSlotNumber not defined", exception.message)
 	
 	end
 end
