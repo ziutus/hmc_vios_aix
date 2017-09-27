@@ -27,7 +27,9 @@ class VirtualEthAdapter
 		
 		
 	def validate
-		raise "virtualSlotNumber not defined" unless (@virtualSlotNumber.is_a? Numeric)
+		raise "class: VirtualEthAdapter: function: validation, virtualSlotNumber not defined" unless (@virtualSlotNumber.is_a? Numeric)
+		raise "class: VirtualEthAdapter: function: validation, isIEEE not defined" unless (@isIEEE.is_a? Numeric)
+		raise "class: VirtualEthAdapter: function: validation, isRequired not defined" unless (@isRequired.is_a? Numeric)
 	end
 		
 	def to_s
@@ -48,22 +50,74 @@ class VirtualEthAdapter
 #virtual-slot-number/is-IEEE/port-vlan-ID/[additional-vlan-IDs]/[trunk-priority]/is-required[/[virtual-switch][/[MAC-address]/ 
 #[allowed-OS-MAC-addresses]/[QoS-priority]]]
 	
-		regExp = /(\d+)\/(0|1)\/(\d+)\/([\d\,]+|)\/(\d+)\/(0|1)/
+		regExp_minimum 			   = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)\s*$}
+		regExp_vswitch 			   = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\_]+)\s*$}
+		regExp_mac_address 		   = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\_]+)/(\w+)\s*$}
+		regExp_allowed_mac_address = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\_]+)/(\w+)/([\w\,]+)\s*$}
+		regExp_qos_priority 	   = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\_]+)/(\w+)/([\w\,]+)/(\d+)\s*$}
 
-		match = regExp.match(string)
+		if match = regExp_minimum.match(string) 
 		
-		abort "RegExp couldn't decode string #{string}" unless match
+			@virtualSlotNumber	= match[1].to_i	
+			@isIEEE				= match[2].to_i	
+			@portVlanID			= match[3].to_i	
+			@additionalVlanIDs	= match[4]
+			@trunkPriority		= match[5].to_i
+			@isRequired			= match[6].to_i
 
-		@virtualSlotNumber	= match[1].to_i	
-		@isIEEE				= match[2].to_i	
-		@portVlanID			= match[3].to_i	
-		@additionalVlanIDs	= match[4]
-		@trunkPriority		= match[5].to_i
-		@isRequired			= match[6].to_i
+		elsif match = regExp_vswitch.match(string) 
+		
+			@virtualSlotNumber	= match[1].to_i	
+			@isIEEE				= match[2].to_i	
+			@portVlanID			= match[3].to_i	
+			@additionalVlanIDs	= match[4]
+			@trunkPriority		= match[5].to_i
+			@isRequired			= match[6].to_i
+			@virtualSwitch		= match[7].to_i
 
+		elsif match = regExp_mac_address.match(string) 
+		
+			@virtualSlotNumber	= match[1].to_i	
+			@isIEEE				= match[2].to_i	
+			@portVlanID			= match[3].to_i	
+			@additionalVlanIDs	= match[4]
+			@trunkPriority		= match[5].to_i
+			@isRequired			= match[6].to_i
+			@virtualSwitch		= match[7]
+			@macAddress			= match[8].to_i
+			
+		elsif match = regExp_allowed_mac_address.match(string) 
+
+			@virtualSlotNumber	= match[1].to_i	
+			@isIEEE				= match[2].to_i	
+			@portVlanID			= match[3].to_i	
+			@additionalVlanIDs	= match[4]
+			@trunkPriority		= match[5].to_i
+			@isRequired			= match[6].to_i
+			@virtualSwitch		= match[7]
+			@macAddress			= match[8].to_i
+			@allowedOsMacAddresses = match[9]
+
+		elsif match = regExp_qos_priority.match(string) 
+
+			@virtualSlotNumber	= match[1].to_i	
+			@isIEEE				= match[2].to_i	
+			@portVlanID			= match[3].to_i	
+			@additionalVlanIDs	= match[4]
+			@trunkPriority		= match[5].to_i
+			@isRequired			= match[6].to_i
+			@virtualSwitch		= match[7]
+			@macAddress			= match[8].to_i
+			@allowedOsMacAddresses = match[9]
+			@QosPiority			= match[10]
+			
+		else
+			raise "class:VirtualEthAdapter, function:parse, RegExp couldn't decode string #{string}"
+		end
+		
+		
 	end
 
 	alias :parse :decode
 
-	
 end
