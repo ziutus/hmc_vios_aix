@@ -206,6 +206,7 @@ class TestHMCLparProfile < Test::Unit::TestCase
 		
 	end
 	
+	# data source: own Power5 frame
 	def test_create_lpar_profile_1
 	
 		vent1 = VirtualEthAdapter.new()
