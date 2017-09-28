@@ -3,6 +3,7 @@ class Vhost
 	#see: https://www.ibm.com/support/knowledgecenter/en/POWER8/p8hcg/p8hcg_lsmap.htm
 	
 	attr_accessor :name, :physloc, :client_partition_id, :vtds
+	attr_reader :client_partition_id_nice
 	
 	def initialize string='' 
 		
@@ -21,6 +22,8 @@ class Vhost
 			@name 				 = match[1]
 			@physloc 			 = match[2]
 			@client_partition_id = match[3]
+			@client_partition_id_nice = Integer(match[3])
+			#.to_f.convert_base(16)
 		else 
 			raise "Class:VIOS:Vhost, function: parse, RegExp couldn't decode string >>#{string}<<"
 		end
