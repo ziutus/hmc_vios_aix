@@ -206,6 +206,13 @@ class TestHMCLparProfile < Test::Unit::TestCase
 		
 	end
 	
+	# source of data : own power5 frame 
+	def test_profile_decode_5
+		string = 'name=test_1,lpar_name=dump,lpar_id=1,lpar_env=aixlinux,all_resources=0,min_mem=1152,desired_mem=3200,max_mem=5248,min_num_huge_pages=0,desired_num_huge_pages=0,max_num_huge_pages=0,mem_mode=ded,hpt_ratio=1:64,proc_mode=shared,min_proc_units=0.1,desired_proc_units=0.2,max_proc_units=0.5,min_procs=1,desired_procs=1,max_procs=1,sharing_mode=cap,uncap_weight=0,io_slots=none,lpar_io_pool_ids=none,max_virtual_slots=10,"virtual_serial_adapters=0/server/1/any//any/1,1/server/1/any//any/1",virtual_scsi_adapters=none,"virtual_eth_adapters=""2/1/1/3,4,5/0/1""",hca_adapters=none,boot_mode=sms,conn_monitoring=1,auto_start=0,power_ctrl_lpar_ids=none,work_group_id=none,redundant_err_path_reporting=0'
+		profile = Lpar_profile.new("unknown-frame", 15, "lpar05")
+		profile.lssyscfgProfDecode(string)
+	end
+	
 	# data source: own Power5 frame
 	def test_create_lpar_profile_1
 	

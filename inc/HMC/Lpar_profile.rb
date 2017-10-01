@@ -40,16 +40,16 @@ class Lpar_profile
 	
 		@sys = sys 
 	
-		@variables_int    = ['lpar_id', 'min_mem', 'desired_mem', 'max_mem', 'all_resources', 'min_procs',
+		@variables_int    = [ 'lpar_id', 'min_mem', 'desired_mem', 'max_mem', 'all_resources', 'min_procs',
 				'desired_procs', 'max_procs', 'max_virtual_slots', 'auto_start', 'conn_monitoring', 'uncap_weight',
 				'bsr_arrays' ]
 				
-		@variables_float  = ['min_proc_units', 'desired_proc_units', 'max_proc_units', 'mem_expansion' ]
+		@variables_float  = [ 'min_proc_units', 'desired_proc_units', 'max_proc_units', 'mem_expansion' ]
 	
-		@variables_string_raw = ['virtual_serial_adapters', 'virtual_scsi_adapters', 'virtual_eth_adapters', 'io_slots', 'hca_adapters',
+		@variables_string_raw = [ 'virtual_serial_adapters', 'virtual_scsi_adapters', 'virtual_eth_adapters', 'io_slots', 'hca_adapters',
 				'vtpm_adapters', 'virtual_fc_adapters', 'lhea_logical_ports']
 				
-		@variables_string = ['name', 'lpar_name', 'lpar_env', 'mem_mode', 'proc_mode', 'sharing_mode', 
+		@variables_string = [ 'name', 'lpar_name', 'lpar_env', 'mem_mode', 'proc_mode', 'sharing_mode', 
 			'lpar_io_pool_ids',  'boot_mode',
 			'power_ctrl_lpar_ids', 'work_group_id', 'redundant_err_path_reporting', 'hpt_ratio',
 			'affinity_group_id', 'lhea_capabilities' 'lpar_proc_compat_mode', 'lhea_capabilities', 'lpar_proc_compat_mode',
@@ -76,19 +76,19 @@ class Lpar_profile
 		@lpar_io_pool_ids="none"
 #		@lpar_keylock=""
 
-		@min_mem="512"
-		@desired_mem="2048"
-		@max_mem="4096"
+		@min_mem     = "512"
+		@desired_mem = "2048"
+		@max_mem     = "4096"
 
-		@min_procs="1"
-		@desired_procs="2"
-		@max_procs="3"
+		@min_procs     = "1"
+		@desired_procs = "2"
+		@max_procs     = "3"
 
-		@min_proc_units="0.1"
-		@desired_proc_units="0.2"
-		@max_proc_units="2.0"
+		@min_proc_units     = "0.1"
+		@desired_proc_units = "0.2"
+		@max_proc_units     = "2.0"
 
-		@max_virtual_slots="20"
+		@max_virtual_slots = "20"
 
 		@mem_mode=""
 
@@ -104,15 +104,16 @@ class Lpar_profile
 #		@sync_curr_profile=""
 
 		@uncap_weight=128
-		@virtual_eth_adapters_raw="none"
-		@virtual_scsi_adapters_raw="none"
-		@virtual_serial_adapters_raw="none"
-		@hca_adapters_raw = "none"
+		@virtual_eth_adapters_raw	 = "none"
+		@virtual_scsi_adapters_raw	 = "none"
+		@virtual_serial_adapters_raw = "none"
+		@virtual_fc_adapters_raw 	 = "none"
+		@hca_adapters_raw 			 = "none"
 		
-		@virtual_eth_adapters = []
-		@virtual_scsi_adapters = []
+		@virtual_eth_adapters    = []
+		@virtual_scsi_adapters   = []
 		@virtual_serial_adapters = []
-		@virtual_fc_adapters = []
+		@virtual_fc_adapters     = []
 		@io_slots = []	
 			
 		@work_group_id=""
@@ -238,31 +239,36 @@ class Lpar_profile
 	
 	def _rawToTable
 		
-		if @virtual_serial_adapters_raw != "none"
-			@virtual_serial_adapters_raw.split(',').each { |adapter|
-				@virtual_serial_adapters.push(VirtualSerialAdapter.new(adapter))
-			}
-		end
+		if @virtual_serial_adapters_raw != nil
+			if @virtual_serial_adapters_raw != "none"
+				@virtual_serial_adapters_raw.split(',').each { |adapter|
+					@virtual_serial_adapters.push(VirtualSerialAdapter.new(adapter))
+				}
+			end
+		end	
 
-		if @virtual_eth_adapters_raw != "none"
-			@virtual_eth_adapters_raw.split(',').each { |adapter|
-				@virtual_eth_adapters.push(VirtualEthAdapter.new(adapter))
-			}
-		end
+		if @virtual_eth_adapters_raw != nil		
+			if @virtual_eth_adapters_raw != "none"
+				HmcString.parse_value(@virtual_eth_adapters_raw).each { |adapter_string|
+					@virtual_eth_adapters.push(VirtualEthAdapter.new(adapter_string))
+				}	
+			end
+		end	
 
-		if @virtual_scsi_adapters_raw != "none"
-			@virtual_scsi_adapters_raw.split(',').each { |adapter|
-				@virtual_scsi_adapters.push(VirtualScsiAdapter.new(adapter))
-			}
-		end
+		if @virtual_scsi_adapters_raw != nil
+			if @virtual_scsi_adapters_raw != "none"
+				@virtual_scsi_adapters_raw.split(',').each { |adapter|
+					@virtual_scsi_adapters.push(VirtualScsiAdapter.new(adapter))
+				}
+			end
+		end	
 
 		if @virtual_fc_adapters_raw != nil
 			if @virtual_fc_adapters_raw != "none"
-				@virtual_fc_adapters_raw.gsub!(/\/(?<reg>\d+),(?<slot>\d+)\//,'/\k<reg>@\k<slot>/')
-				@virtual_fc_adapters_raw.split("@").each { |adapter|
-					@virtual_fc_adapters.push(VirtualFCAdapter.new(adapter))
-				}
-			end
+				HmcString.parse_value(@virtual_fc_adapters_raw).each { |adapter_string|
+					@virtual_fc_adapters.push(VirtualFCAdapter.new(adapter_string))
+				}	
+			end	
 		end
 		
 		#@io_slots

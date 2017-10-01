@@ -36,6 +36,24 @@ class TestVirtualEthAdapter < Test::Unit::TestCase
 		assert_equal(1, 	  adapter2.isRequired) 		
 	end	
 	
+	
+	def test_vswitch_name
+	
+		adapter = VirtualEthAdapter.new('10/0/1//0/0/ETHERNET0//all/none')
+	
+		assert_equal(10, adapter.virtualSlotNumber)
+		assert_equal(0,  adapter.isIEEE)
+		assert_equal(1,  adapter.portVlanID)
+		assert_equal('', adapter.additionalVlanIDs)
+		assert_equal(0,  adapter.trunkPriority)
+		assert_equal(0,  adapter.isRequired) 		
+		assert_equal('ETHERNET0', adapter.virtualSwitch) 		
+
+		assert_equal('', adapter.macAddress)
+		assert_equal('all', adapter.allowedOsMacAddresses)
+		assert_equal('none', adapter.qosPiority)		
+	end 
+	
 	def test_validation 
 
 		adapter2 = VirtualEthAdapter.new()

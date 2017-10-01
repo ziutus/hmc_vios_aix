@@ -2,7 +2,7 @@ class VirtualEthAdapter
 
 
 	attr_accessor :virtualSlotNumber, :isIEEE, :portVlanID, :additionalVlanIDs, :trunkPriority, :isTrunk
-	attr_accessor :isRequired, :virtualSwitch, :macAddress, :allowedOsMacAddresses, :QosPiority 
+	attr_accessor :isRequired, :virtualSwitch, :macAddress, :allowedOsMacAddresses, :qosPiority 
 
 	def initialize string='' 
 		@virtualSlotNumber
@@ -17,7 +17,7 @@ class VirtualEthAdapter
 		
 		@macAddress
 		@allowedOsMacAddresses
-		@QosPiority
+		@qosPiority
 		
 		if string.length > 0
 		  @data_string_raw = string
@@ -51,10 +51,10 @@ class VirtualEthAdapter
 #[allowed-OS-MAC-addresses]/[QoS-priority]]]
 	
 		regExp_minimum 			   = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)\s*$}
-		regExp_vswitch 			   = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\_]+)\s*$}
-		regExp_mac_address 		   = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\_]+)/(\w+)\s*$}
-		regExp_allowed_mac_address = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\_]+)/(\w+)/([\w\,]+)\s*$}
-		regExp_qos_priority 	   = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\_]+)/(\w+)/([\w\,]+)/(\d+)\s*$}
+		regExp_vswitch 			   = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\-]+)\s*$}
+		regExp_mac_address 		   = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\-]+)/(\w+|)\s*$}
+		regExp_allowed_mac_address = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\-]+)/(\w+|)/([\w\,]+|all)\s*$}
+		regExp_qos_priority 	   = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\-]+)/(\w+|)/([\w\,]+|all)/(\d+|none)\s*$}
 
 		if match = regExp_minimum.match(string) 
 		
@@ -84,7 +84,7 @@ class VirtualEthAdapter
 			@trunkPriority		= match[5].to_i
 			@isRequired			= match[6].to_i
 			@virtualSwitch		= match[7]
-			@macAddress			= match[8].to_i
+			@macAddress			= match[8]
 			
 		elsif match = regExp_allowed_mac_address.match(string) 
 
@@ -95,7 +95,7 @@ class VirtualEthAdapter
 			@trunkPriority		= match[5].to_i
 			@isRequired			= match[6].to_i
 			@virtualSwitch		= match[7]
-			@macAddress			= match[8].to_i
+			@macAddress			= match[8]
 			@allowedOsMacAddresses = match[9]
 
 		elsif match = regExp_qos_priority.match(string) 
@@ -107,12 +107,12 @@ class VirtualEthAdapter
 			@trunkPriority		= match[5].to_i
 			@isRequired			= match[6].to_i
 			@virtualSwitch		= match[7]
-			@macAddress			= match[8].to_i
+			@macAddress			= match[8]
 			@allowedOsMacAddresses = match[9]
-			@QosPiority			= match[10]
+			@qosPiority			= match[10]
 			
 		else
-			raise "class:VirtualEthAdapter, function:parse, RegExp couldn't decode string #{string}"
+			raise "class:VirtualEthAdapter, function:parse, RegExp couldn't decode string >#{string}<"
 		end
 		
 		
