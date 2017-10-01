@@ -32,6 +32,8 @@ class Lsmap
 				next
 			elsif (line =~ /^\s*[-]+\s+[-]+\s+[-]+\s*$/)
 				next
+			elsif (line =~ /VTD NO VIRTUAL TARGET DEVICE FOUND/)	
+				next
 			elsif (line =~ /^\s*(vhost\d+)\s+([\w\-\.]+)\s+(\w+)\s*$/)	
 				if vhost_number > 0
 					if vtd_number > 0

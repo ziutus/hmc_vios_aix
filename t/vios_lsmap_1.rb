@@ -15,8 +15,11 @@ class TestVioslsmap_long < Test::Unit::TestCase
 #			pp vtd.backing_device
 #		}
 
+		assert_equal(0,	lsmap.mapping["vhost0"].vtds.count)
 		assert_equal(3,	lsmap.mapping["vhost2"].vtds.count)
 		assert_equal(4,	lsmap.mapping["vhost4"].vtds.count)
+		assert_equal(0,	lsmap.mapping["vhost13"].vtds.count)
+		
 
 	end
 end
@@ -26,6 +29,9 @@ end
 
 # example data source https://www.ibm.com/support/knowledgecenter/en/POWER8/p8hcg/p8hcg_lsmap.htm
 # and http://nixys.fr/blog/?p=618
+#
+# "VTD NO VIRTUAL TARGET DEVICE FOUND" taken from (vhost12 created as copy of vhost2 for post)
+# https://www.ibm.com/developerworks/community/forums/html/topic?id=77777777-0000-0000-0000-000014422737
 __END__
  SVSA                 Physloc				Client Partition ID
 -------------        --------------------------------- -----------------------------
@@ -51,6 +57,12 @@ Mirrored              false
 
 SVSA Physloc Client Partition ID
 --------------- -------------------------------------------- ------------------
+vhost0 U9131.52A.10E47DG-V3-C31 0x00000000
+
+VTD NO VIRTUAL TARGET DEVICE FOUND
+
+SVSA Physloc Client Partition ID
+--------------- -------------------------------------------- ------------------
 vhost4 U9117.MMB.999BCP-V2-C8 0x00000008
 VTD d7f1_lpar1
 Status Available
@@ -72,3 +84,9 @@ Status Available
 LUN 0x8400000000000000
 Backing device hdisk25
 Physloc U78C0.001.DBJ1531-P2-C5-T1-W50060E80164DFB26-L19000000000000
+
+SVSA Physloc Client Partition ID
+--------------- -------------------------------------------- ------------------
+vhost13 U9131.52A.10E47DG-V3-C34 0x00000000
+
+VTD NO VIRTUAL TARGET DEVICE FOUND
