@@ -33,6 +33,12 @@ end
 # "VTD NO VIRTUAL TARGET DEVICE FOUND" taken from (vhost12 created as copy of vhost2 for post)
 # https://www.ibm.com/developerworks/community/forums/html/topic?id=77777777-0000-0000-0000-000014422737
 __END__
+SVSA Physloc Client Partition ID
+--------------- -------------------------------------------- ------------------
+vhost0 U9131.52A.10E47DG-V3-C31 0x00000000
+
+VTD NO VIRTUAL TARGET DEVICE FOUND
+
  SVSA                 Physloc				Client Partition ID
 -------------        --------------------------------- -----------------------------
 vhost2       	      U9111.520.10004BA-V1-C2           0x00000004
@@ -57,7 +63,7 @@ Mirrored              false
 
 SVSA Physloc Client Partition ID
 --------------- -------------------------------------------- ------------------
-vhost0 U9131.52A.10E47DG-V3-C31 0x00000000
+vhost3 U9131.52A.10E47DG-V3-C34 0x00000000
 
 VTD NO VIRTUAL TARGET DEVICE FOUND
 
@@ -85,8 +91,3 @@ LUN 0x8400000000000000
 Backing device hdisk25
 Physloc U78C0.001.DBJ1531-P2-C5-T1-W50060E80164DFB26-L19000000000000
 
-SVSA Physloc Client Partition ID
---------------- -------------------------------------------- ------------------
-vhost13 U9131.52A.10E47DG-V3-C34 0x00000000
-
-VTD NO VIRTUAL TARGET DEVICE FOUND
