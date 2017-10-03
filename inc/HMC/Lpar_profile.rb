@@ -42,18 +42,20 @@ class Lpar_profile
 	
 		@variables_int    = [ 'lpar_id', 'min_mem', 'desired_mem', 'max_mem', 'all_resources', 'min_procs',
 				'desired_procs', 'max_procs', 'max_virtual_slots', 'auto_start', 'conn_monitoring', 'uncap_weight',
-				'bsr_arrays' ]
+				'bsr_arrays', 'shared_proc_pool_id' ]
 				
 		@variables_float  = [ 'min_proc_units', 'desired_proc_units', 'max_proc_units', 'mem_expansion' ]
 	
 		@variables_string_raw = [ 'virtual_serial_adapters', 'virtual_scsi_adapters', 'virtual_eth_adapters', 'io_slots', 'hca_adapters',
-				'vtpm_adapters', 'virtual_fc_adapters', 'lhea_logical_ports']
+				'vtpm_adapters', 'virtual_fc_adapters', 'lhea_logical_ports', 'virtual_vasi_adapters',
+				'virtual_eth_vsi_profiles', 'sriov_eth_logical_ports']
 				
 		@variables_string = [ 'name', 'lpar_name', 'lpar_env', 'mem_mode', 'proc_mode', 'sharing_mode', 
 			'lpar_io_pool_ids',  'boot_mode',
 			'power_ctrl_lpar_ids', 'work_group_id', 'redundant_err_path_reporting', 'hpt_ratio',
 			'affinity_group_id', 'lhea_capabilities' 'lpar_proc_compat_mode', 'lhea_capabilities', 'lpar_proc_compat_mode',
-			'electronic_err_reporting', 'min_num_huge_pages', 'desired_num_huge_pages', 'max_num_huge_pages']
+			'electronic_err_reporting', 'min_num_huge_pages', 'desired_num_huge_pages', 'max_num_huge_pages',
+			'shared_proc_pool_name', 'sni_device_ids' ]
 	
 		@dataString = ""
 	
