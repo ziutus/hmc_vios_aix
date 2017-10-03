@@ -2,7 +2,8 @@ $LOAD_PATH << File.dirname(__FILE__)+"./inc"
 $LOAD_PATH << File.dirname(__FILE__)
 
 require 'HMC/VirtualSerialAdapter'
-require "test/unit"
+require 'test/unit'
+require 'pp'
 
 
 class TestVirtualSerialAdapter < Test::Unit::TestCase
@@ -33,5 +34,16 @@ class TestVirtualSerialAdapter < Test::Unit::TestCase
 		assert_equal("",  adapter2.remoteLparName)
 		assert_equal("any", 	  adapter2.remoteSlotNumber)
 		assert_equal(1, 	  adapter2.isRequired) 		
-	end	
+	end
+
+	def test_compare1
+
+    adapter1 = VirtualSerialAdapter.new("0/server/1/any//any/1")
+    adapter2 = VirtualSerialAdapter.new("0/server/1/any//any/0")
+    adapter3 = VirtualSerialAdapter.new("0/server/1/any//any/1")
+
+    assert_equal(false, adapter2 == adapter3, 'is adapter2 the same like adapter3' )
+    assert_equal(true,  adapter1 == adapter3, 'is adapter1 the same like adapter3' )
+
+  end
 end

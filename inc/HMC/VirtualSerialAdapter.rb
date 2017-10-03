@@ -44,6 +44,9 @@ class VirtualSerialAdapter
 	def to_s
 		"#{@virtualSlotNmuber}/#{@clientOrServer}/#{@supportsHMC}/#{@remoteLparID}/#{@remoteLparName}/#{@remoteSlotNumber}/#{@isRequired}"
 	end
-	
+
+  def ==(another_adapter)
+    self.to_s == another_adapter.to_s
+  end
 
 end
