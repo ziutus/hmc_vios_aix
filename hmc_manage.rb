@@ -19,7 +19,7 @@ require_relative 'inc/HMC/TaskRoles'
 myName = File.basename(__FILE__)
 
 options = {}
-options = YAML.load_file('../hmc_data.yaml')
+options = YAML.load_file('hmc_data.yaml')
 
 action=""
 defaultAction="statusAll"
@@ -40,7 +40,6 @@ Usage: #{$myName} [opotions]
 	possible ACTION: 
 	on|off - powerOn or powerOff frame or lpar
 	status|statusAll - show status of Frame or lpar
-	lparCreate - create lpar using default values
 	exec on|off - on - run all commands, off - run only commands for collecting data	
 	
 Examples:
@@ -59,16 +58,16 @@ OptionParser.new do |opts|
 	# puts "HERE!"
 	# pp opts 
 
-  opts.banner = "Usage: #{myName} [options]"
-
-    ACTION_DESCRIPTION  = "
+	    ACTION_DESCRIPTION  = "
 	possible ACTION: 
 	on|off - powerOn or powerOff frame or lpar
 	status|statusAll - show status of Frame or lpar
-	lparCreate - create lpar using default values
 	exec on|off - on - run all commands, off - run only commands for collecting data
-	"  
-  
+"
+	
+  opts.banner = "Usage: #{myName} [options] $ACTION_DESCRIPTION"
+
+ 
   opts.on('-s', '--hmc NAME',  'server name') { |v| options[:hmc] = v }
   opts.on('-u', '--username USER', 'user name') { |v| options[:username] = v }
   opts.on('-p', '--password PASSWORD', 'user password') { |v| options[:password] = v }
@@ -98,18 +97,10 @@ if action == "" || action == nil
 	action = defaultAction
 end
 
-if action == "lparCreate" and lparName == ""
-	puts "if you want to create lpar, please provide name of lpar!\n "
-	puts "exiting..."
-	exit 
-
+if action == "status" and (frame == "" or frame == nil)
+	puts "Action 'status' must follow frame name, as you didn't put name of frame, I'm showing status of all frames action='statusAll'"
+	action = 'statusAll'
 end
-
-	if action == "lparCreate" and lparID == 0
-		puts "You should provide the lparID!"
-		puts "Exiting..."
-		exit 10
-	end
 
 Frame = Sys.new(frame)
 
@@ -158,6 +149,8 @@ end
 
 
 #puts "lpar: #{lparName} "
+
+puts "HMC: #{options[:hmc]}"
 
 if lparName.size > 0
 #	puts "lpar1:"+lparName.size.to_s
@@ -287,38 +280,7 @@ case action
 	
 	
   when "lparCreate"
-	vent1 = VirtualEthAdapter.new()
-	vent1.virtualSlotNmuber=2
-	vent1.portVlanID=1
-
-	vent2 = VirtualEthAdapter.new()
-	vent2.virtualSlotNmuber=3
-	vent2.portVlanID=2
-	
-	vscsi1 = VirtualScsiAdapter.new()
-	vscsi1.virtualSlotNmuber=4
-	vscsi1.clientOrServer="client"
-	vscsi1.remoteLparID=2
-	vscsi1.remoteLparName="vios1"
-	vscsi1.remoteSlotNumber=11
-	vscsi1.isRequired=1
-	
-	vscsi2 = VirtualScsiAdapter.new()
-	vscsi2.virtualSlotNmuber=5
-	vscsi2.clientOrServer="client"
-	vscsi2.remoteLparID=3
-	vscsi2.remoteLparName="vios2"
-	vscsi2.remoteSlotNumber=12
-	vscsi2.isRequired=1	
-	
-	lpar = Lpar_profile.new(frame, lparName, lparID)
-	lpar.adapter_eth_add(vent1)
-	lpar.adapter_eth_add(vent2)
-	
-	lpar.adapter_scsi_add(vscsi1)
-	lpar.adapter_scsi_add(vscsi2)
-	
-	puts Exec.Exec(lpar.get_mksyscfg)
+	puts "Moved to separate file"
   
   when "checkVIOS"
   
