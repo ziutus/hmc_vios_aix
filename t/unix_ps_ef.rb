@@ -14,7 +14,14 @@ class TestUnixPsEf < Test::Unit::TestCase
 
 	def test_ps_ef_1
 
-		string='UID        PID  PPID  C STIME TTY          TIME CMD
+		ps_ef = Ps_ef.new(DATA.read)
+
+		assert_equal(ps_ef.have_more_children(4), [1527])
+		
+	end
+end
+__END__
+UID        PID  PPID  C STIME TTY          TIME CMD
 root         1     0  0 Aug19 ?        00:06:53 /usr/lib/systemd/systemd --switched-root --system --deserialize 23
 root         2     0  0 Aug19 ?        00:00:01 [kthreadd]
 root         4     2  0 Aug19 ?        00:00:00 [kworker/0:0H]
@@ -250,11 +257,3 @@ apache   30694  1527  0 Sep17 ?        00:01:08 /usr/sbin/httpd -DFOREGROUND
 apache   30695  1527  0 Sep17 ?        00:01:08 /usr/sbin/httpd -DFOREGROUND
 root     32271     1  0 Aug19 ?        00:01:22 /usr/libexec/packagekitd
 ziutus   32311     1  0 Aug19 ?        00:00:01 spring server | blog | started 769 hours ago
-'
-
-		ps_ef = Ps_ef.new(string)
-
-		assert_equal(ps_ef.have_more_children(4), [1527])
-		
-	end
-end
