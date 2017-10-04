@@ -32,7 +32,7 @@ class Lsmap
 				next
 			elsif (line =~ /^\s*[-]+\s+[-]+\s+[-]+\s*$/)
 				next
-			elsif (line =~ /VTD NO VIRTUAL TARGET DEVICE FOUND/)	
+			elsif (line =~ /NO VIRTUAL TARGET DEVICE FOUND/)
 				next
 			elsif (line =~ /^\s*(vhost\d+)\s+([\w\-\.]+)\s+(\w+)\s*$/)	
 				if vhost_number > 0
@@ -81,4 +81,41 @@ class Lsmap
 			@mapping[vhost.name] = vhost
 		end
 	end
+
+  def lpars
+
+    result = Array.new()
+
+    @mapping.each_value { |vhost|
+        result.push(vhost.client_partition_id_nice)
+    }
+
+    result.uniq
+  end
+
+
+  def mapping_for_lpar lpar_id
+
+    result = Array.new()
+
+    @mapping.each_value { |vhost|
+      result.push(vhost) if vhost.client_partition_id_nice == lpar_id
+    }
+
+    result
+  end
+
+  def backing_devices_for_lpar lpar_id
+
+    result = Array.new()
+
+    self.mapping_for_lpar(lpar_id).each { |vhost|
+      vhost.vtds.each { |vtd|
+          result.push(vtd.backing_device)
+      }
+    }
+
+    result.sort
+  end
+
 end
