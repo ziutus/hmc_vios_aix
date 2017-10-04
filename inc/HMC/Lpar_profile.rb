@@ -1,4 +1,4 @@
-require "pp"
+require 'pp'
 require 'HMC/HmcString'
 require 'HMC/VirtualEthAdapter'
 require 'HMC/VirtualScsiAdapter'
@@ -57,60 +57,60 @@ class Lpar_profile
 			'electronic_err_reporting', 'min_num_huge_pages', 'desired_num_huge_pages', 'max_num_huge_pages',
 			'shared_proc_pool_name', 'sni_device_ids' ]
 	
-		@dataString = ""
+		@dataString = ''
 	
 		@name = name
 		@lpar_name = lpar_name
 		@lpar_id = lpar_id
 
-#		@allow_perf_collection=""
-		@all_resources = ""
+#		@allow_perf_collection=''
+		@all_resources = ''
 		@auto_start=0
 
-		@boot_mode="norm"
+		@boot_mode='norm'
 		@conn_monitoring=1
 
-		@hca_adapters_raw=""
-		@hpt_ratio=""
+		@hca_adapters_raw=''
+		@hpt_ratio=''
 
-		@io_slots_raw=""
-		@lpar_env="aixlinux"
-		@lpar_io_pool_ids="none"
-#		@lpar_keylock=""
+		@io_slots_raw=''
+		@lpar_env='aixlinux'
+		@lpar_io_pool_ids='none'
+#		@lpar_keylock='none'
 
-		@min_mem     = "512"
-		@desired_mem = "2048"
-		@max_mem     = "4096"
+		@min_mem     = 512
+		@desired_mem = 2048
+		@max_mem     = 4096
 
-		@min_procs     = "1"
-		@desired_procs = "2"
-		@max_procs     = "3"
+		@min_procs     = 1
+		@desired_procs = 2
+		@max_procs     = 3
 
-		@min_proc_units     = "0.1"
-		@desired_proc_units = "0.2"
-		@max_proc_units     = "2.0"
+		@min_proc_units     = 0.1
+		@desired_proc_units = 0.2
+		@max_proc_units     = 2.0
 
-		@max_virtual_slots = "20"
+		@max_virtual_slots = 20
 
-		@mem_mode=""
+		@mem_mode=''
 
-		@power_ctrl_lpar_ids=""
-		@proc_mode="shared"
+		@power_ctrl_lpar_ids=''
+		@proc_mode='shared'
 
 		@redundant_err_path_reporting=0
 		
-#		@resource_config=""
-		@shared_proc_pool_util_auth="1"
-		@sharing_mode="uncap"
+#		@resource_config=''
+		@shared_proc_pool_util_auth='1'
+		@sharing_mode='uncap'
 		
-#		@sync_curr_profile=""
+#		@sync_curr_profile=''
 
 		@uncap_weight=128
-		@virtual_eth_adapters_raw	 = "none"
-		@virtual_scsi_adapters_raw	 = "none"
-		@virtual_serial_adapters_raw = "none"
-		@virtual_fc_adapters_raw 	 = "none"
-		@hca_adapters_raw 			 = "none"
+		@virtual_eth_adapters_raw	 = 'none'
+		@virtual_scsi_adapters_raw	 = 'none'
+		@virtual_serial_adapters_raw = 'none'
+		@virtual_fc_adapters_raw 	 = 'none'
+		@hca_adapters_raw 			 = 'none'
 		
 		@virtual_eth_adapters    = []
 		@virtual_scsi_adapters   = []
@@ -118,7 +118,7 @@ class Lpar_profile
 		@virtual_fc_adapters     = []
 		@io_slots = []	
 			
-		@work_group_id=""
+		@work_group_id=''
 		
 
 	end
@@ -149,7 +149,7 @@ class Lpar_profile
 		end
 		
 		if (@virtual_scsi_adapters.size == 0) 
-			result +=  ",virtual_scsi_adapters=none"
+			result +=  ',virtual_scsi_adapters=none'
 		else 
 			result +=  ",\"\\\"virtual_scsi_adapters="
 			adapters=[] 
@@ -180,37 +180,37 @@ class Lpar_profile
 	
 	def lssyscfgDecode string
 		
-		parameters = string.split(",")
+		parameters = string.split(',')
 		
 		parameters.each { |x| 
-			key, value = x.split("=")
+			key, value = x.split('=')
 		
-			value = "" if value==nil
+			value = '' if value==nil
 	
 			case key 
 
-				when "name" 				then				@name=value
-				when "lpar_id" 				then				@lpar_id=value
-				when "lpar_env" 			then				@lpar_env=value
-				when "state" 				then				@state=value
-				when "resource_config" 		then				@resource_config=value
-				when "os_version" 			then				@os_version=value
-				when "logical_serial_num" 	then				@logical_serial_num=value
-				when "default_profile" 		then				@default_profile=value
-				when "curr_profile" 		then				@curr_profile=value
-				when "work_group_id" 		then				@work_group_id=value
-				when "shared_proc_pool_util_auth" then			@shared_proc_pool_util_auth=value
-				when "allow_perf_collection" then				@allow_perf_collection=value
-				when "power_ctrl_lpar_ids" 	then				@power_ctrl_lpar_ids=value
-				when "boot_mode" 			then				@boot_mode=value
-				when "lpar_keylock" 		then				@lpar_keylock=value
-				when "auto_start" 			then				@auto_start=value
-				when "redundant_err_path_reporting" then		@redundant_err_path_reporting=value
-				when "rmc_state" 			then				@rmc_state=value
-				when "rmc_ipaddr" 			then				@rmc_ipaddr=value
-				when "sync_curr_profile" 	then				@sync_curr_profile=value			
+				when 'name' 				then				@name=value
+				when 'lpar_id' 				then				@lpar_id=value
+				when 'lpar_env' 			then				@lpar_env=value
+				when 'state' 				then				@state=value
+				when 'resource_config' 		then				@resource_config=value
+				when 'os_version' 			then				@os_version=value
+				when 'logical_serial_num' 	then				@logical_serial_num=value
+				when 'default_profile' 		then				@default_profile=value
+				when 'curr_profile' 		then				@curr_profile=value
+				when 'work_group_id' 		then				@work_group_id=value
+				when 'shared_proc_pool_util_auth' then			@shared_proc_pool_util_auth=value
+				when 'allow_perf_collection' then				@allow_perf_collection=value
+				when 'power_ctrl_lpar_ids' 	then				@power_ctrl_lpar_ids=value
+				when 'boot_mode' 			then				@boot_mode=value
+				when 'lpar_keylock' 		then				@lpar_keylock=value
+				when 'auto_start' 			then				@auto_start=value
+				when 'redundant_err_path_reporting' then		@redundant_err_path_reporting=value
+				when 'rmc_state' 			then				@rmc_state=value
+				when 'rmc_ipaddr' 			then				@rmc_ipaddr=value
+				when 'sync_curr_profile' 	then				@sync_curr_profile=value
 				else
-					abort "Unknown key #{key} with value #{value}, exiting... \n"
+					raise "Unknown key #{key} with value #{value}, exiting... \n"
 			end
 		}			
 	end
@@ -273,8 +273,8 @@ class Lpar_profile
 			end	
 		end
 		
-		#@io_slots
-		# @hca_adapters
+		#TODO: make decode code for @io_slots
+		#TODO: make decode code for @hca_adapters
 	
 	end
 	
