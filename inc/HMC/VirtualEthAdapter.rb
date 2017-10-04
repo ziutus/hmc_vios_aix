@@ -8,7 +8,7 @@ class VirtualEthAdapter
 		@virtualSlotNumber
 		@isIEEE=0
 		@portVlanID 
-		@additionalVlanIDs=""
+		@additionalVlanIDs=''
 		@isTrunk=0
 		@trunkPriority=0 #if trunk is true, trunk priority has to to be set up
 		@isRequired=0
@@ -27,9 +27,9 @@ class VirtualEthAdapter
 		
 		
 	def validate
-		raise "class: VirtualEthAdapter: function: validation, virtualSlotNumber not defined" unless (@virtualSlotNumber.is_a? Numeric)
-		raise "class: VirtualEthAdapter: function: validation, isIEEE not defined" unless (@isIEEE.is_a? Numeric)
-		raise "class: VirtualEthAdapter: function: validation, isRequired not defined" unless (@isRequired.is_a? Numeric)
+		raise 'class: VirtualEthAdapter: function: validation, virtualSlotNumber not defined' unless (@virtualSlotNumber.is_a? Numeric)
+		raise 'class: VirtualEthAdapter: function: validation, isIEEE not defined' unless (@isIEEE.is_a? Numeric)
+		raise 'class: VirtualEthAdapter: function: validation, isRequired not defined' unless (@isRequired.is_a? Numeric)
 	end
 		
 	def to_s
@@ -40,7 +40,7 @@ class VirtualEthAdapter
 		result = result+"/#{@virtualSwitch}" 		 unless (@virtualSwitch.nil?)
 		result = result+"/#{@macAddress}" 			 unless (@macAddress.nil?)
 		result = result+"/#{@allowedOsMacAddresses}" unless (@allowedOsMacAddresses.nil?)
-		result = result+"/#{@QosPiority}" 			 unless (@QosPiority.nil?)
+		result = result+"/#{@qosPiority}" 			 unless (@qosPiority.nil?)
 		
 		result
 	end
@@ -119,5 +119,10 @@ class VirtualEthAdapter
 	end
 
 	alias :parse :decode
+
+	def ==(another_adapter)
+		self.to_s == another_adapter.to_s
+	end
+
 
 end

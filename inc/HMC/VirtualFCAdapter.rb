@@ -74,5 +74,8 @@ class VirtualFCAdapter
 
 	alias :parse :decode
 
-	
+	def ==(another_adapter)
+		self.to_s == another_adapter.to_s
+	end
+
 end

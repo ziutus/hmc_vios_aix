@@ -26,25 +26,25 @@ class VirtualScsiAdapter
 	
 	def validate
 
-		raise "virtualSlotNumber not defined" 		if 	   (@virtualSlotNumber == nil)
-		raise "virtualSlotNumber is not number" 	unless (@virtualSlotNumber.is_a? Numeric)
+		raise 'virtualSlotNumber not defined' 		if 	   (@virtualSlotNumber == nil)
+		raise 'virtualSlotNumber is not number' 	unless (@virtualSlotNumber.is_a? Numeric)
 		raise "virtualSlotNumber has wrong value: #{@virtualSlotNumber}" 	if (@virtualSlotNumber < 1)
 	
-		raise "clinetOrServer not defined" 		if 	   (@clientOrServer == nil)
-		clientOrServer_allowed = [ "client", "server"]		
+		raise 'clinetOrServer not defined' 		if 	   (@clientOrServer == nil)
+		clientOrServer_allowed = [ 'client', 'server']
 		raise "clinetOrServer has wrong value #{@clientOrServer}" unless clientOrServer_allowed.include?(@clientOrServer)
 		
-		raise "remoteLparID not defined" 		if 	   (@remoteLparID.== nil)
-		raise "remoteLparID is not number" 		unless (@remoteLparID.is_a? Numeric)
+		raise 'remoteLparID not defined' 		if 	   (@remoteLparID.== nil)
+		raise 'remoteLparID is not number' 		unless (@remoteLparID.is_a? Numeric)
 		
-		raise "remoteLparName not defined" 		if	   (@remoteLparName == nil)
-		raise "remoteLparName is not string"	unless (@remoteLparName.is_a? String)
+		raise 'remoteLparName not defined' 		if	   (@remoteLparName == nil)
+		raise 'remoteLparName is not string'	unless (@remoteLparName.is_a? String)
 
-		raise "remoteSlotNumber not defined" 	if     (@remoteSlotNumber == nil)
-		raise "remoteSlotNumber is not number" 	unless (@remoteSlotNumber.is_a? Numeric)
+		raise 'remoteSlotNumber not defined' 	if     (@remoteSlotNumber == nil)
+		raise 'remoteSlotNumber is not number' 	unless (@remoteSlotNumber.is_a? Numeric)
 		
-		raise "isRequired not defined" 			if     (@isRequired == nil)
-		raise "isRequired is not number"		unless (@isRequired.is_a? Numeric)
+		raise 'isRequired not defined' 			if     (@isRequired == nil)
+		raise 'isRequired is not number'		unless (@isRequired.is_a? Numeric)
 		raise "isRequired has wrong value #{@isRequired} " unless (@isRequired == 0 or @isRequired == 1)
 		
 	end 
@@ -85,5 +85,10 @@ class VirtualScsiAdapter
 	end
 	
 	alias :parse :decode
-	
+
+	def ==(another_adapter)
+		self.to_s == another_adapter.to_s
+	end
+
+
 end
