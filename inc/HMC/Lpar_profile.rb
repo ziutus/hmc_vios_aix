@@ -16,7 +16,7 @@ class Lpar_profile
 	attr_reader :min_num_huge_pages, :desired_num_huge_pages, :max_num_huge_pages
 	
 	attr_reader :proc_mode, :min_proc_units, :desired_proc_units, :max_proc_units
-	attr_reader 			:min_procs, 	 :desired_procs, 	  :max_procs
+	attr_reader :min_procs, 	 :desired_procs, 	  :max_procs
 
 	attr_reader :sharing_mode, :uncap_weight
 	attr_reader :io_slots, :io_slots_raw
@@ -27,7 +27,7 @@ class Lpar_profile
 	attr_reader :virtual_eth_adapters_raw, :virtual_eth_adapters
 	attr_reader :hca_adapters_raw, :hca_adapters 
 
-	attr_reader:auto_start, :conn_monitoring
+	attr_reader :auto_start, :conn_monitoring
 	
 	attr_reader :resource_config, :os_version, :logical_serial_num, :default_profile, :curr_profile, :work_group_id, :shared_proc_pool_util_auth, :allow_perf_collection 
 	attr_reader :power_ctrl_lpar_ids, :boot_mode, :lpar_keylock, :redundant_err_path_reporting, :rmc_state, :rmc_ipaddr, :sync_curr_profile 
@@ -73,10 +73,10 @@ class Lpar_profile
 		@hca_adapters_raw=''
 		@hpt_ratio=''
 
-		@io_slots_raw=''
-		@lpar_env='aixlinux'
-		@lpar_io_pool_ids='none'
-#		@lpar_keylock='none'
+		@io_slots_raw			=''
+		@lpar_env					='aixlinux'
+		@lpar_io_pool_ids	='none'
+#		@lpar_keylock			='none'
 
 		@min_mem     = 512
 		@desired_mem = 2048
@@ -106,11 +106,11 @@ class Lpar_profile
 #		@sync_curr_profile=''
 
 		@uncap_weight=128
-		@virtual_eth_adapters_raw	 = 'none'
-		@virtual_scsi_adapters_raw	 = 'none'
-		@virtual_serial_adapters_raw = 'none'
-		@virtual_fc_adapters_raw 	 = 'none'
-		@hca_adapters_raw 			 = 'none'
+		@virtual_eth_adapters_raw	 		= 'none'
+		@virtual_scsi_adapters_raw	 	= 'none'
+		@virtual_serial_adapters_raw 	= 'none'
+		@virtual_fc_adapters_raw 	 		= 'none'
+		@hca_adapters_raw 			 			= 'none'
 		
 		@virtual_eth_adapters    = []
 		@virtual_scsi_adapters   = []
@@ -118,7 +118,7 @@ class Lpar_profile
 		@virtual_fc_adapters     = []
 		@io_slots = []	
 			
-		@work_group_id=''
+		@work_group_id = ''
 		
 
 	end
@@ -134,17 +134,17 @@ class Lpar_profile
 		result += ",lpar_io_pool_ids=#{@lpar_io_pool_ids},"
 		result += "max_virtual_slots=#{@max_virtual_slots}"
 
-		result += ",io_slots=none";
+		result += ',io_slots=none';
 		
 		if (@virtual_eth_adapters.size == 0) 
-			result +=  ",virtual_eth_adapters=none"
+			result +=  ',virtual_eth_adapters=none'
 		 else 
 			result +=  ",\"\\\"virtual_eth_adapters="
 			adapters=[] 
 			@virtual_eth_adapters.each { |adapter|
 				adapters.push(adapter.to_s)
 			}
-			result += adapters.join(",")
+			result += adapters.join(',')
 			result +=  "\"\\\""
 		end
 		
@@ -156,12 +156,12 @@ class Lpar_profile
 			@virtual_scsi_adapters.each { |adapter|
 				adapters.push(adapter.to_s)
 			}
-			result += adapters.join(",")
+			result += adapters.join(',')
 			result +=  "\"\\\""
 		end
 		
 		
-		result += "\""
+		result += '"'
 		
 		result 
 	end
@@ -189,26 +189,26 @@ class Lpar_profile
 	
 			case key 
 
-				when 'name' 				then				@name=value
-				when 'lpar_id' 				then				@lpar_id=value
-				when 'lpar_env' 			then				@lpar_env=value
-				when 'state' 				then				@state=value
-				when 'resource_config' 		then				@resource_config=value
-				when 'os_version' 			then				@os_version=value
-				when 'logical_serial_num' 	then				@logical_serial_num=value
-				when 'default_profile' 		then				@default_profile=value
-				when 'curr_profile' 		then				@curr_profile=value
-				when 'work_group_id' 		then				@work_group_id=value
-				when 'shared_proc_pool_util_auth' then			@shared_proc_pool_util_auth=value
-				when 'allow_perf_collection' then				@allow_perf_collection=value
-				when 'power_ctrl_lpar_ids' 	then				@power_ctrl_lpar_ids=value
-				when 'boot_mode' 			then				@boot_mode=value
-				when 'lpar_keylock' 		then				@lpar_keylock=value
-				when 'auto_start' 			then				@auto_start=value
-				when 'redundant_err_path_reporting' then		@redundant_err_path_reporting=value
-				when 'rmc_state' 			then				@rmc_state=value
-				when 'rmc_ipaddr' 			then				@rmc_ipaddr=value
-				when 'sync_curr_profile' 	then				@sync_curr_profile=value
+				when 'name' 									then				@name=value
+				when 'lpar_id' 								then				@lpar_id=value
+				when 'lpar_env' 							then				@lpar_env=value
+				when 'state' 									then				@state=value
+				when 'resource_config' 				then				@resource_config=value
+				when 'os_version' 						then				@os_version=value
+				when 'logical_serial_num' 		then				@logical_serial_num=value
+				when 'default_profile' 				then				@default_profile=value
+				when 'curr_profile' 					then				@curr_profile=value
+				when 'work_group_id' 					then				@work_group_id=value
+				when 'shared_proc_pool_util_auth' then		@shared_proc_pool_util_auth=value
+				when 'allow_perf_collection' 	then				@allow_perf_collection=value
+				when 'power_ctrl_lpar_ids' 		then				@power_ctrl_lpar_ids=value
+				when 'boot_mode' 							then				@boot_mode=value
+				when 'lpar_keylock' 					then				@lpar_keylock=value
+				when 'auto_start' 						then				@auto_start=value
+				when 'redundant_err_path_reporting' then	@redundant_err_path_reporting=value
+				when 'rmc_state' 							then				@rmc_state=value
+				when 'rmc_ipaddr' 						then				@rmc_ipaddr=value
+				when 'sync_curr_profile' 			then				@sync_curr_profile=value
 				else
 					raise "Unknown key #{key} with value #{value}, exiting... \n"
 			end
