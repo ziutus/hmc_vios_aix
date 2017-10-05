@@ -35,8 +35,11 @@ class Lpar_profile
 	attr_reader :mem_expansion, :affinity_group_id, :vtpm_adapters, :vtpm_adapters_raw, :virtual_fc_adapters, :virtual_fc_adapters_raw, :bsr_arrays, :lpar_proc_compat_mode
 	attr_reader :lhea_capabilities,  :lpar_proc_compat_mode, :electronic_err_reporting
 	attr_reader :lhea_logical_ports, :lhea_logical_ports_raw
-	
-	def initialize sys, lpar_name, lpar_id, name="normal"
+
+
+  attr_reader :_compatibility
+
+	def initialize sys='', lpar_name='', lpar_id='', name="normal"
 	
 		@sys = sys 
 	
@@ -48,7 +51,8 @@ class Lpar_profile
 	
 		@variables_string_raw = [ 'virtual_serial_adapters', 'virtual_scsi_adapters', 'virtual_eth_adapters', 'io_slots', 'hca_adapters',
 				'vtpm_adapters', 'virtual_fc_adapters', 'lhea_logical_ports', 'virtual_vasi_adapters',
-				'virtual_eth_vsi_profiles', 'sriov_eth_logical_ports']
+				'virtual_eth_vsi_profiles', 'sriov_eth_logical_ports',
+				'vnic_adapters' ]
 				
 		@variables_string = [ 'name', 'lpar_name', 'lpar_env', 'mem_mode', 'proc_mode', 'sharing_mode', 
 			'lpar_io_pool_ids',  'boot_mode',
@@ -57,8 +61,7 @@ class Lpar_profile
 			'electronic_err_reporting', 'min_num_huge_pages', 'desired_num_huge_pages', 'max_num_huge_pages',
 			'shared_proc_pool_name', 'sni_device_ids' ]
 	
-		@dataString = ''
-	
+
 		@name = name
 		@lpar_name = lpar_name
 		@lpar_id = lpar_id
@@ -119,9 +122,116 @@ class Lpar_profile
 		@io_slots = []	
 			
 		@work_group_id = ''
-		
 
+    @_compatibility = "power5"
 	end
+
+  def io_slots_to_s
+
+    if (@io_slots.size == 0)
+      result =  'virtual_eth_adapters=none'
+    elsif (@io_slots.size == 1)
+      result =  'io_slots=' + @io_slots[0].join('/')
+    else
+      result =  '"io_slots='
+      adapters=[]
+      @io_slots.each { |adapter|
+        adapters.push(adapter.join('/'))
+      }
+      result += adapters.join(',')
+      result +=  '"'
+    end
+    result
+  end
+
+
+  def virtual_eth_adapters_to_s
+
+    if (@virtual_eth_adapters.size == 0)
+      result =  'virtual_eth_adapters=none'
+    elsif (@virtual_eth_adapters.size == 1)
+      result =  'virtual_eth_adapters=' + @virtual_eth_adapters[0].to_s
+    else
+      result =  '"virtual_eth_adapters='
+      adapters=[]
+      @virtual_eth_adapters.each { |adapter|
+        adapters.push(adapter.to_s)
+      }
+      result += adapters.join(',')
+      result +=  '"'
+    end
+    result
+
+  end
+
+  def virtual_serial_adapters_to_s
+
+    if (@virtual_serial_adapters.size == 0)
+      result =  'virtual_serial_adapters=none'
+    elsif (@virtual_serial_adapters.size == 1)
+        result =  'virtual_serial_adapters=' + @virtual_serial_adapters[0].to_s
+    else
+      result =  '"virtual_serial_adapters='
+      adapters=[]
+      @virtual_serial_adapters.each { |adapter|
+        adapters.push(adapter.to_s)
+      }
+      result += adapters.join(',')
+      result +=  '"'
+    end
+    result
+  end
+
+  def virtual_scsi_adapters_to_s
+
+    if @virtual_scsi_adapters.size == 0
+      result =  'virtual_scsi_adapters=none'
+    elsif @virtual_scsi_adapters.size == 1
+      result =  'virtual_scsi_adapters=' + @virtual_scsi_adapters[0].to_s
+    else
+      result =  '"virtual_scsi_adapters='
+
+      @virtual_scsi_adapters.each { |adapter|
+        adapters.push(adapter.to_s)
+      }
+      result += adapters.join(',')
+      result +=  '"'
+    end
+    result
+  end
+
+
+  def hca_adapters_to_s
+
+    'hca_adapters=none'
+  end
+
+
+
+  def to_s
+
+    if @_compatibility == "power5"
+      result  = "name=#{@name},lpar_name=#{@lpar_name},lpar_id=#{@lpar_id},lpar_env=#{@lpar_env},all_resources=#{@all_resources},"
+      result += "min_mem=#{@min_mem},desired_mem=#{@desired_mem},max_mem=#{@max_mem},mem_mode=#{@mem_mode},hpt_ratio=#{@hpt_ratio},"
+      result += "proc_mode=#{@proc_mode},min_proc_units=#{@min_proc_units},desired_proc_units=#{@desired_proc_units},max_proc_units=#{@max_proc_units},"
+      result += "min_procs=#{@min_procs},desired_procs=#{@desired_procs},max_procs=#{@max_procs},sharing_mode=#{@sharing_mode},"
+      result += "uncap_weight=#{@uncap_weight},"
+      result += self.io_slots_to_s() + ','
+      result += "lpar_io_pool_ids=#{@lpar_io_pool_ids},"
+      result += "max_virtual_slots=#{@max_virtual_slots},"
+      result += self.virtual_serial_adapters_to_s() + ','
+      result += self.virtual_scsi_adapters_to_s()   + ','
+      result += self.virtual_eth_adapters_to_s()    + ','
+      result += self.hca_adapters_to_s() + ','
+      result += "boot_mode=#{@boot_mode},conn_monitoring=#{@conn_monitoring},auto_start=#{@auto_start},"
+      result += "power_ctrl_lpar_ids=#{@power_ctrl_lpar_ids},work_group_id=#{@work_group_id},"
+      result += "redundant_err_path_reporting=#{@redundant_err_path_reporting}"
+    else
+       raise "unknown compatibility, default is Power5"
+    end
+
+      result
+  end
 
 	def get_mksyscfg
 		result = "mksyscfg -r lpar -m #{@sys} -i \"name=#{@lpar_name},lpar_id=#{@lpar_id},profile_name=#{@name},"
@@ -159,8 +269,7 @@ class Lpar_profile
 			result += adapters.join(',')
 			result +=  "\"\\\""
 		end
-		
-		
+
 		result += '"'
 		
 		result 
@@ -219,10 +328,12 @@ class Lpar_profile
 
 		myHash = HmcString.parse(string)
 		
-		myHash.each { |name, value| 
-		
-			if @variables_int.include?(name)
-				instance_variable_set("@#{name}", value.to_i) 
+		myHash.each { |name, value|
+
+#      puts "#{name}: #{value}"
+
+      if @variables_int.include?(name)
+				instance_variable_set("@#{name}", value.to_i)
 			elsif @variables_float.include?(name)
 				instance_variable_set("@#{name}", value.to_f) 
 			elsif @variables_string_raw.include?(name)
@@ -272,10 +383,16 @@ class Lpar_profile
 				}	
 			end	
 		end
-		
-		#TODO: make decode code for @io_slots
+
+    if @io_slots_raw != nil
+      if @io_slots_raw != "none"
+        @io_slots_raw.split(',').each { |adapter_string|
+          @io_slots.push(adapter_string.split('/'))
+        }
+      end
+    end
+
 		#TODO: make decode code for @hca_adapters
 	
 	end
-	
-end	
+end
