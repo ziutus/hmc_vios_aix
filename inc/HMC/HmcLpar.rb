@@ -8,7 +8,8 @@ class HmcLpar
 
 	def initialize lpar_id
 	
-		@lpar_id   = lpar_id
+		@lpar_id  = lpar_id
+    @profiles = []
 	end
 
   def add_profile profile
