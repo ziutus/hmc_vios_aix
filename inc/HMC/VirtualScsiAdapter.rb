@@ -51,8 +51,8 @@ class VirtualScsiAdapter
 	
 	def decode string
 
-		regExp      = %r{^\s*(\d+)/(server|client)/(\d+)/([\w\_\-\.]+)/(\d+)/(0|1)\s*$}
-		regExp_any  = %r{^\s*(\d+)/(server|client)/(any)/([\w\_\-\.]+)/(any)/(0|1)\s*$}
+		regExp      = %r{^\s*(\d+)/(server|client)/(\d+)/([\w\_\-\.]+|)/(\d+)/(0|1)\s*$}
+		regExp_any  = %r{^\s*(\d+)/(server|client)/(any)/([\w\_\-\.]+|)/(any)/(0|1)\s*$}
 		regExp_long = %{^\s*slot_num=(\d+),state=(0|1),is_required=(0|1),adapter_type=(client|server),remote_lpar_id=(\d+|any),remote_lpar_name=([\w\_\-]+|),remote_slot_num=(\d+|any)\s*$}
 		
 		
