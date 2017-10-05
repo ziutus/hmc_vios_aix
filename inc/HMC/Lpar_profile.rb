@@ -129,7 +129,7 @@ class Lpar_profile
   def io_slots_to_s
 
     if (@io_slots.size == 0)
-      result =  'virtual_eth_adapters=none'
+      result =  'io_slots=none'
     elsif (@io_slots.size == 1)
       result =  'io_slots=' + @io_slots[0].join('/')
     else
