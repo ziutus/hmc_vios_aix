@@ -190,7 +190,7 @@ class Lpar_profile
       result =  'virtual_scsi_adapters=' + @virtual_scsi_adapters[0].to_s
     else
       result =  '"virtual_scsi_adapters='
-
+      adapters=[]
       @virtual_scsi_adapters.each { |adapter|
         adapters.push(adapter.to_s)
       }
