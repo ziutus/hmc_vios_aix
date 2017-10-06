@@ -35,10 +35,11 @@ class VirtualFCAdapter
 		#virtual-slot-number/client-or-server/[remote-lpar-ID]/[remote-lpar-name]/remote-slot-number/[wwpns]/is-required
 
 		
-		result ="#{@virtualSlotNumber}/#{clientOrServer}/#{@remoteLparID}/#{@remoteLparName}/#{@remoteSlotNumber}/" 
+		result = '""' + "#{@virtualSlotNumber}/#{clientOrServer}/#{@remoteLparID}/#{@remoteLparName}/#{@remoteSlotNumber}/"
 		result = result+"#{@wwpn1}" 	   unless (@wwpn1.nil?)
 		result = result+",#{@wwpn2}" 	   unless (@wwpn2.nil?)
 		result = result+"/#{@isRequired}"
+		result += '""'
 		
 		result
 	end
