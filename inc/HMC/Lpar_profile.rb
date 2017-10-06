@@ -32,9 +32,12 @@ class Lpar_profile
 	attr_reader :resource_config, :os_version, :logical_serial_num, :default_profile, :curr_profile, :work_group_id, :shared_proc_pool_util_auth, :allow_perf_collection 
 	attr_reader :power_ctrl_lpar_ids, :boot_mode, :lpar_keylock, :redundant_err_path_reporting, :rmc_state, :rmc_ipaddr, :sync_curr_profile 
 
-	attr_reader :mem_expansion, :affinity_group_id, :vtpm_adapters, :vtpm_adapters_raw, :virtual_fc_adapters, :virtual_fc_adapters_raw, :bsr_arrays, :lpar_proc_compat_mode
+	attr_reader :mem_expansion, :affinity_group_id, :virtual_fc_adapters, :virtual_fc_adapters_raw, :bsr_arrays, :lpar_proc_compat_mode
 	attr_reader :lhea_capabilities,  :lpar_proc_compat_mode, :electronic_err_reporting
 	attr_reader :lhea_logical_ports, :lhea_logical_ports_raw
+  attr_reader :vtpm_adapters, :vtpm_adapters_raw
+
+  attr_reader :sni_device_ids
 
 
   attr_reader :_compatibility
@@ -74,7 +77,6 @@ class Lpar_profile
 		@conn_monitoring=1
 
 		@hca_adapters_raw=''
-		@hpt_ratio=''
 
 		@io_slots_raw			=''
 		@lpar_env					='aixlinux'
@@ -95,8 +97,6 @@ class Lpar_profile
 
 		@max_virtual_slots = 20
 
-		@mem_mode=''
-
 		@power_ctrl_lpar_ids=''
 		@proc_mode='shared'
 
@@ -112,9 +112,9 @@ class Lpar_profile
 		@virtual_eth_adapters_raw	 		= 'none'
 		@virtual_scsi_adapters_raw	 	= 'none'
 		@virtual_serial_adapters_raw 	= 'none'
-		@virtual_fc_adapters_raw 	 		= 'none'
+#		@virtual_fc_adapters_raw 	 		= 'none'
 		@hca_adapters_raw 			 			= 'none'
-		
+
 		@virtual_eth_adapters    = []
 		@virtual_scsi_adapters   = []
 		@virtual_serial_adapters = []
@@ -124,6 +124,7 @@ class Lpar_profile
 		@work_group_id = ''
 
     @_compatibility = "power5"
+
 	end
 
   def io_slots_to_s
@@ -147,22 +148,46 @@ class Lpar_profile
 
   def virtual_eth_adapters_to_s
 
+    result = 'virtual_eth_adapters='
+
     if (@virtual_eth_adapters.size == 0)
-      result =  'virtual_eth_adapters=none'
-    elsif (@virtual_eth_adapters.size == 1)
-      result =  'virtual_eth_adapters=' + @virtual_eth_adapters[0].to_s
+      result +=  'none'
     else
-      result =  '"virtual_eth_adapters='
       adapters=[]
       @virtual_eth_adapters.each { |adapter|
         adapters.push(adapter.to_s)
       }
       result += adapters.join(',')
-      result +=  '"'
     end
-    result
 
+    if result.include?('"')
+      result = '"' + result + '"'
+    end
+
+    result
   end
+
+  def virtual_fc_adapters_to_s
+
+    result = 'virtual_fc_adapters='
+
+    if (@virtual_fc_adapters.size == 0)
+      result +=  'none'
+    else
+      adapters=[]
+      @virtual_fc_adapters.each { |adapter|
+        adapters.push(adapter.to_s)
+      }
+      result += adapters.join(',')
+    end
+
+    if result.include?('"')
+      result = '"' + result + '"'
+    end
+
+    result
+  end
+
 
   def virtual_serial_adapters_to_s
 
@@ -207,25 +232,42 @@ class Lpar_profile
   end
 
 
-
+ # the result of command it the same as: lssyscfg -r prof -m $FRAME
   def to_s
+
 
     if @_compatibility == "power5"
       result  = "name=#{@name},lpar_name=#{@lpar_name},lpar_id=#{@lpar_id},lpar_env=#{@lpar_env},all_resources=#{@all_resources},"
-      result += "min_mem=#{@min_mem},desired_mem=#{@desired_mem},max_mem=#{@max_mem},mem_mode=#{@mem_mode},hpt_ratio=#{@hpt_ratio},"
+      result += "min_mem=#{@min_mem},desired_mem=#{@desired_mem},max_mem=#{@max_mem},"
+
+      result += "min_num_huge_pages=#{@min_num_huge_pages},"          unless @min_num_huge_pages  == nil
+      result += "desired_num_huge_pages=#{@desired_num_huge_pages},"  unless @desired_num_huge_pages  == nil
+      result += "max_num_huge_pages=#{@max_num_huge_pages},"          unless @max_num_huge_pages  == nil
+
+      result += "mem_mode=#{@mem_mode},"   unless @mem_mode  == nil
+      result += "hpt_ratio=#{@hpt_ratio}," unless @hpt_ratio == nil
       result += "proc_mode=#{@proc_mode},min_proc_units=#{@min_proc_units},desired_proc_units=#{@desired_proc_units},max_proc_units=#{@max_proc_units},"
       result += "min_procs=#{@min_procs},desired_procs=#{@desired_procs},max_procs=#{@max_procs},sharing_mode=#{@sharing_mode},"
       result += "uncap_weight=#{@uncap_weight},"
+      result += "shared_proc_pool_id=#{@shared_proc_pool_id},"     unless @shared_proc_pool_id == nil
+      result += "shared_proc_pool_name=#{@shared_proc_pool_name}," unless @shared_proc_pool_name == nil
+      result += "affinity_group_id=#{@affinity_group_id},"         unless @affinity_group_id == nil
       result += self.io_slots_to_s() + ','
       result += "lpar_io_pool_ids=#{@lpar_io_pool_ids},"
       result += "max_virtual_slots=#{@max_virtual_slots},"
       result += self.virtual_serial_adapters_to_s() + ','
       result += self.virtual_scsi_adapters_to_s()   + ','
       result += self.virtual_eth_adapters_to_s()    + ','
+      result += "vtpm_adapters=#{@vtpm_adapters_raw},"         unless @vtpm_adapters_raw == nil
+      result += self.virtual_fc_adapters_to_s()     + ',' unless @virtual_fc_adapters_raw == nil
+      result += "sni_device_ids=#{@sni_device_ids},"      unless @sni_device_ids == nil
       result += self.hca_adapters_to_s() + ','
       result += "boot_mode=#{@boot_mode},conn_monitoring=#{@conn_monitoring},auto_start=#{@auto_start},"
       result += "power_ctrl_lpar_ids=#{@power_ctrl_lpar_ids},work_group_id=#{@work_group_id},"
       result += "redundant_err_path_reporting=#{@redundant_err_path_reporting}"
+      result += ",bsr_arrays=#{@bsr_arrays}"                              unless @bsr_arrays == nil
+      result += ",lpar_proc_compat_mode=#{@lpar_proc_compat_mode}"      unless @lpar_proc_compat_mode == nil
+      result += ",electronic_err_reporting=#{@electronic_err_reporting}" unless @electronic_err_reporting == nil
     else
        raise "unknown compatibility, default is Power5"
     end
@@ -344,7 +386,7 @@ class Lpar_profile
 				print "unknown name: #{name} with value #{value}"
 				raise 
 			end
-				
+
 		}	
 	
 		self._rawToTable()
