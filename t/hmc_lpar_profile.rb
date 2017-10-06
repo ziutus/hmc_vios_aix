@@ -95,7 +95,7 @@ class TestHMCLparProfile < Test::Unit::TestCase
 		assert_equal(2, profile.virtual_serial_adapters.count)
 		assert_equal(1 , profile.virtual_scsi_adapters.count)
 		assert_equal(3, profile.virtual_eth_adapters.count)
-		assert_equal(0, profile.io_slots.count)
+		assert_equal(2, profile.io_slots.count)
 
 		assert_equal('none', profile.hca_adapters_raw)
 		assert_equal('norm', profile.boot_mode)
@@ -148,7 +148,7 @@ class TestHMCLparProfile < Test::Unit::TestCase
 			assert_equal('4/server/3/op710-1-Client2-RHAS4U3/3/1,6/server/5/op710-1-Client4-openSUSE-10.1/3/1,3/server/2/op710-1-Client1-SLES9SP3/3/1,7/server/6/op710-1-Client5-Fedora-Core-4/3/1,5/server/4/op710-1-Client3-Debian-3.1/3/1' , profile.virtual_scsi_adapters_raw)
 
 			assert_equal(1, profile.virtual_eth_adapters.count)
-			assert_equal(0, profile.io_slots.count)
+			assert_equal(2, profile.io_slots.count)
 			assert_equal(2, profile.virtual_serial_adapters.count)
 			assert_equal(5, profile.virtual_scsi_adapters.count)
 	
@@ -211,6 +211,8 @@ class TestHMCLparProfile < Test::Unit::TestCase
 		string = 'name=test_1,lpar_name=dump,lpar_id=1,lpar_env=aixlinux,all_resources=0,min_mem=1152,desired_mem=3200,max_mem=5248,min_num_huge_pages=0,desired_num_huge_pages=0,max_num_huge_pages=0,mem_mode=ded,hpt_ratio=1:64,proc_mode=shared,min_proc_units=0.1,desired_proc_units=0.2,max_proc_units=0.5,min_procs=1,desired_procs=1,max_procs=1,sharing_mode=cap,uncap_weight=0,io_slots=none,lpar_io_pool_ids=none,max_virtual_slots=10,"virtual_serial_adapters=0/server/1/any//any/1,1/server/1/any//any/1",virtual_scsi_adapters=none,"virtual_eth_adapters=""2/1/1/3,4,5/0/1""",hca_adapters=none,boot_mode=sms,conn_monitoring=1,auto_start=0,power_ctrl_lpar_ids=none,work_group_id=none,redundant_err_path_reporting=0'
 		profile = Lpar_profile.new('unknown-frame', 15, 'lpar05')
 		profile.lssyscfgProfDecode(string)
+    assert_equal(nil,    profile.virtual_fc_adapters_raw)
+    assert_equal(string, profile.to_s)
 	end
 	
 	# source od data: http://www.kfsolutions.nl/2013/03/where-do-all-the-virtual-disks-come-from/
@@ -218,6 +220,12 @@ class TestHMCLparProfile < Test::Unit::TestCase
 		string = 'name=Default,lpar_name=B8008,lpar_id=8,lpar_env=aixlinux,all_resources=0,min_mem=256,desired_mem=1280,max_mem=4352,min_num_huge_pages=0,desired_num_huge_pages=0,max_num_huge_pages=0,mem_mode=ded,hpt_ratio=1:64,proc_mode=shared,min_proc_units=0.1,desired_proc_units=0.5,max_proc_units=1.0,min_procs=1,desired_procs=2,max_procs=4,sharing_mode=uncap,uncap_weight=128,shared_proc_pool_id=0,shared_proc_pool_name=DefaultPool,affinity_group_id=none,io_slots=none,lpar_io_pool_ids=none,max_virtual_slots=256,"virtual_serial_adapters=0/server/1/any//any/1,1/server/1/any//any/1","virtual_scsi_adapters=2/client/1/B8001/21/1,3/client/2/B8002/21/1",virtual_eth_adapters=10/0/955//0/1/vswitchprod//all/none,vtpm_adapters=none,"virtual_fc_adapters=""4/client/1/B8001/22/c05076058ba7001c,c05076058ba7001d/1"",""5/client/2/B8002/22/c05076058ba7001e,c05076058ba7001f/1""",hca_adapters=none,boot_mode=norm,conn_monitoring=0,auto_start=0,power_ctrl_lpar_ids=none,work_group_id=none,redundant_err_path_reporting=0,bsr_arrays=0,lpar_proc_compat_mode=default,electronic_err_reporting=null'
 		profile = Lpar_profile.new('unknown-frame', 8, 'B8008')
 		profile.lssyscfgProfDecode(string)
+
+    assert_equal('default', profile.lpar_proc_compat_mode)
+    assert_equal(0, profile.bsr_arrays)
+    assert_equal('none', profile.vtpm_adapters_raw)
+
+    assert_equal(string, profile.to_s)
 	end
 	
 	# source of data: https://www.ibm.com/developerworks/community/forums/html/threadTopic?id=77777777-0000-0000-0000-000014412555
@@ -225,20 +233,28 @@ class TestHMCLparProfile < Test::Unit::TestCase
 		string = 'name=bt10_normal,lpar_name=bt10,lpar_id=1,lpar_env=vioserver,all_resources=0,min_mem=1024,desired_mem=1024,max_mem=2048,mem_mode=ded,proc_mode=shared,min_proc_units=0.1,desired_proc_units=0.1,max_proc_units=0.5,min_procs=1,desired_procs=1,max_procs=1,sharing_mode=cap,uncap_weight=0,shared_proc_pool_id=0,shared_proc_pool_name=DefaultPool,"io_slots=21010200/none/1,21010201/none/1,21010204/none/1,21010205/none/1,21010207/none/1",lpar_io_pool_ids=none,max_virtual_slots=64,"virtual_serial_adapters=0/server/1/any//any/1,1/server/1/any//any/1",virtual_scsi_adapters=none,virtual_eth_adapters=none,hca_adapters=none,boot_mode=norm,conn_monitoring=0,auto_start=0,power_ctrl_lpar_ids=none,work_group_id=none,redundant_err_path_reporting=0,bsr_arrays=0,virtual_vasi_adapters=none,"lhea_logical_ports=23000000/1/0/1/none,23000000/1/1/9/none",lhea_capabilities=23000000/0,lpar_proc_compat_mode=default,"virtual_fc_adapters=21/server/10/bt11/21//0,22/server/10/bt11/22//0"'
 		profile = Lpar_profile.new('unknown-frame', 1, 'bt10')
 		profile.lssyscfgProfDecode(string)
+ #   assert_equal(string, profile.to_s)
 	end
 		
 	# source of data: https://chmod666.org/2014/11/configuration-of-a-remote-restart-capable-partition	
 	def test_profile_decode_8
 		string = 'name=default_profile,lpar_name=temp3-b642c120-00000133,lpar_id=11,lpar_env=aixlinux,all_resources=0,min_mem=8192,desired_mem=8192,max_mem=8192,min_num_huge_pages=0,desired_num_huge_pages=0,max_num_huge_pages=0,mem_mode=ded,mem_expansion=0.0,hpt_ratio=1:128,proc_mode=shared,min_proc_units=2.0,desired_proc_units=2.0,max_proc_units=2.0,min_procs=4,desired_procs=4,max_procs=4,sharing_mode=uncap,uncap_weight=128,shared_proc_pool_id=0,shared_proc_pool_name=DefaultPool,affinity_group_id=none,io_slots=none,lpar_io_pool_ids=none,max_virtual_slots=64,"virtual_serial_adapters=0/server/1/any//any/1,1/server/1/any//any/1",virtual_scsi_adapters=3/client/2/vios1/32/0,virtual_eth_adapters=32/0/1659//0/0/switcha/facc157c3e20/all/0,virtual_eth_vsi_profiles=none,"virtual_fc_adapters=""2/client/1/vios2/32/c050760727c5007a,c050760727c5007b/0"",""4/client/1/vios1/35/c050760727c5007c,c050760727c5007d/0"",""5/client/2/vios2/34/c050760727c5007e,c050760727c5007f/0"",""6/client/2/vios2/35/c050760727c50080,c050760727c50081/0""",vtpm_adapters=none,hca_adapters=none,boot_mode=norm,conn_monitoring=1,auto_start=0,power_ctrl_lpar_ids=none,work_group_id=none,redundant_err_path_reporting=0,bsr_arrays=0,lpar_proc_compat_mode=default,electronic_err_reporting=null,sriov_eth_logical_ports=none'
 		profile = Lpar_profile.new('unknown-frame', 11, 'temp3-b642c120-00000133')
-		profile.lssyscfgProfDecode(string)
+#		profile.lssyscfgProfDecode(string)
+
+ #   assert_equal(string, profile.to_s)
+
 	end
-		
+
+	#source of data: https://sites.google.com/site/syscookbook/aix/hmc-cheatsheet
 	def test_profile_decode_9
 		string = 'name=p590n22 normal,lpar_name=p590n22,lpar_id=22,lpar_env=aixlinux,all_resources=0,min_mem=1024,desired_mem=4608,max_mem=6144,proc_mode=shared,min_proc_units=1.0,desired_proc_units=1.0,max_proc_units=4.0,min_procs=1,desired_procs=1,max_procs=8,sharing_mode=uncap,uncap_weight=128,"io_slots=2104001C/none/1,21020025/none/1,21040025/none/1,21010020/none/1,21030025/none/1",lpar_io_pool_ids=none,max_virtual_slots=10,"virtual_serial_adapters=1/server/1/any//any/1,0/server/1/any//any/1","virtual_scsi_adapters=2/client/1/p590v01/22/0,3/client/2/p590v02/22/0",virtual_eth_adapters=none,sni_device_ids=none,hca_adapters=none,boot_mode=norm,conn_monitoring=1,auto_start=0,power_ctrl_lpar_ids=none,work_group_id=none,redundant_err_path_reporting=null'
 		profile = Lpar_profile.new('unknown-frame', 22, 'p590n22')
 		profile.lssyscfgProfDecode(string)
-	end 
+
+#    assert_equal(string, profile.to_s)
+
+	end
 		
 	# data source: own Power5 frame
 	def test_create_lpar_profile_1
