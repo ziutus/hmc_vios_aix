@@ -41,7 +41,11 @@ class VirtualEthAdapter
 		result = result+"/#{@macAddress}" 			 unless (@macAddress.nil?)
 		result = result+"/#{@allowedOsMacAddresses}" unless (@allowedOsMacAddresses.nil?)
 		result = result+"/#{@qosPiority}" 			 unless (@qosPiority.nil?)
-		
+
+		if result.include?(',')
+		  result = '""' + result + '""'
+    end
+
 		result
 	end
 	
