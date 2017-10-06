@@ -12,15 +12,15 @@ class TestVirtualFCAdapter < Test::Unit::TestCase
 		adapter = VirtualFCAdapter.new()
 		
 		adapter.virtualSlotNumber=10
-		adapter.clientOrServer="client"
+		adapter.clientOrServer='client'
 		adapter.remoteLparID=20
-		adapter.remoteLparName="VIOS1-Dilling"
+		adapter.remoteLparName='VIOS1-Dilling'
 		adapter.remoteSlotNumber=34 
-		adapter.wwpn1="c0507602f9ac000a"
-		adapter.wwpn2="c0507602f9ac000b"
+		adapter.wwpn1='c0507602f9ac000a'
+		adapter.wwpn2='c0507602f9ac000b'
 		adapter.isRequired=1
 				
-		assert_equal("10/client/20/VIOS1-Dilling/34/c0507602f9ac000a,c0507602f9ac000b/1", adapter.to_s() )
+		assert_equal('""10/client/20/VIOS1-Dilling/34/c0507602f9ac000a,c0507602f9ac000b/1""', adapter.to_s() )
 	end
 
 	#example data: http://www-01.ibm.com/support/docview.wss?uid=nas8N1011009	
@@ -32,14 +32,14 @@ class TestVirtualFCAdapter < Test::Unit::TestCase
 		#virtual-slot-number/client-or-server/[remote-lpar-ID]/[remote-lpar-name]/remote-slot-number/[wwpns]/is-required	
 
 		assert_equal(10,		adapter.virtualSlotNumber)
-		assert_equal("client", 	adapter.clientOrServer)
+		assert_equal('client', 	adapter.clientOrServer)
 		assert_equal(20, 		adapter.remoteLparID)
 		assert_equal(34, 		adapter.remoteSlotNumber) 
 		assert_equal(1,			adapter.isRequired)
 
-		assert_equal("VIOS1-Dilling", 	 adapter.remoteLparName)
-		assert_equal("c0507602f9ac000a", adapter.wwpn1)
-		assert_equal("c0507602f9ac000b", adapter.wwpn2)
+		assert_equal('VIOS1-Dilling', 	 adapter.remoteLparName)
+		assert_equal('c0507602f9ac000a', adapter.wwpn1)
+		assert_equal('c0507602f9ac000b', adapter.wwpn2)
 		
 		
 	end	
