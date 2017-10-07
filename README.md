@@ -26,7 +26,7 @@ to use classes and functions and what is expected to get as result. This documen
 ## Why Ruby?
 I believe first scripts you were writing in bash/ksh but when project was growing you afraid to change anything as your changes could destroy 
 others scripts. So you are ended with big number of small scripts which maintenance took longer and longer. Then you started to write it in Perl 
-and OOP (Object Oriented programming). Perl was always on AIX machines so you can could scripts on any of your systems. Problem is that OOP on AIX 
+and OOP (Object Oriented programming). Perl was always on AIX machines so you can could scripts on any of your systems. Problem is that OOP in Perl 
 is difficult: no internal variables, no isolation etc, so it is time to change base language. 
 
 Why Ruby and not Python or something different? Ruby is used in Chef :). Some part of code can be used in Chef.
