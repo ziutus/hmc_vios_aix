@@ -62,6 +62,10 @@ Example of config:
 # API Reference
 
 # Tests
+In this project we are using Unit Tests. if you want to run one test, just call:
+```
+ruby hmc_lpar_profile.rb -n test_profile_decode_6
+```
 
 # Contributors
 
