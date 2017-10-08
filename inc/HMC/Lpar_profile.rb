@@ -50,29 +50,25 @@ class Lpar_profile
   attr_reader   :_parametr_order
   attr_reader   :_default_params
 
-	def initialize lpar_id='', name="normal"
+	def initialize(lpar_id='', name='normal')
 
     @lpar_id = lpar_id
+    @name    = name
 
-		@variables_int    = [ 'lpar_id', 'min_mem', 'desired_mem', 'max_mem', 'all_resources', 'min_procs',
-				'desired_procs', 'max_procs', 'max_virtual_slots', 'auto_start', 'conn_monitoring', 'uncap_weight',
-				'bsr_arrays', 'shared_proc_pool_id' ]
-				
-		@variables_float  = [ 'min_proc_units', 'desired_proc_units', 'max_proc_units', 'mem_expansion' ]
-	
-		@variables_string_raw = [ 'virtual_serial_adapters', 'virtual_scsi_adapters', 'virtual_eth_adapters', 'io_slots', 'hca_adapters',
-				'vtpm_adapters', 'virtual_fc_adapters', 'lhea_logical_ports', 'virtual_vasi_adapters',
-				'virtual_eth_vsi_profiles', 'sriov_eth_logical_ports',
-				'vnic_adapters' ]
-				
-		@variables_string = [ 'name', 'lpar_name', 'lpar_env', 'mem_mode', 'proc_mode', 'sharing_mode', 
-			'lpar_io_pool_ids',  'boot_mode',
-			'power_ctrl_lpar_ids', 'work_group_id', 'redundant_err_path_reporting', 'hpt_ratio',
-			'affinity_group_id', 'lhea_capabilities' 'lpar_proc_compat_mode', 'lhea_capabilities', 'lpar_proc_compat_mode',
-			'electronic_err_reporting', 'min_num_huge_pages', 'desired_num_huge_pages', 'max_num_huge_pages',
-			'shared_proc_pool_name', 'sni_device_ids' ]
+    @variables_int = %w(lpar_id min_mem desired_mem max_mem all_resources min_procs desired_procs max_procs max_virtual_slots auto_start conn_monitoring uncap_weight bsr_arrays shared_proc_pool_id)
 
-    @_default_params = Hash.new()
+    @variables_float = %w(min_proc_units desired_proc_units max_proc_units mem_expansion)
+
+    @variables_string_raw = %w(virtual_serial_adapters virtual_scsi_adapters virtual_eth_adapters io_slots hca_adapters vtpm_adapters virtual_fc_adapters lhea_logical_ports virtual_vasi_adapters virtual_eth_vsi_profiles sriov_eth_logical_ports vnic_adapters)
+
+    @variables_string = ['name', 'lpar_name', 'lpar_env', 'mem_mode', 'proc_mode', 'sharing_mode',
+                         'lpar_io_pool_ids', 'boot_mode',
+                         'power_ctrl_lpar_ids', 'work_group_id', 'redundant_err_path_reporting', 'hpt_ratio',
+                         'affinity_group_id', 'lhea_capabilities' 'lpar_proc_compat_mode', 'lhea_capabilities', 'lpar_proc_compat_mode',
+                         'electronic_err_reporting', 'min_num_huge_pages', 'desired_num_huge_pages', 'max_num_huge_pages',
+                         'shared_proc_pool_name', 'sni_device_ids']
+
+    @_default_params = Hash.new
 
     @_default_params['power5'] = %w{name lpar_name lpar_id lpar_env all_resources min_mem desired_mem max_mem min_num_huge_pages
       desired_num_huge_pages max_num_huge_pages mem_mode hpt_ratio proc_mode min_proc_units
@@ -80,25 +76,26 @@ class Lpar_profile
       io_slots lpar_io_pool_ids max_virtual_slots virtual_serial_adapters virtual_scsi_adapters virtual_eth_adapters
       hca_adapters boot_mode conn_monitoring auto_start power_ctrl_lpar_ids work_group_id redundant_err_path_reporting }
 
-		@virtual_eth_adapters     = []
-		@virtual_scsi_adapters    = []
-		@virtual_serial_adapters  = []
-		@virtual_fc_adapters      = []
-    @lhea_logical_ports       = []
-    @hca_adapters             = []
-		@io_slots                 = []
+    @virtual_eth_adapters = []
+    @virtual_scsi_adapters = []
+    @virtual_serial_adapters = []
+    @virtual_fc_adapters = []
+    @lhea_logical_ports = []
+    @hca_adapters = []
+    @io_slots = []
 
     @_compatibility = 'power5'
     @_parametr_order = []
 
-	end
+  end
 
   def io_slots_to_s
 
+    result = nil
     unless @io_slots_raw.nil?
-      if (@io_slots.size == 0)
+      if @io_slots.size == 0
         result =  'none'
-      elsif (@io_slots.size == 1)
+      elsif @io_slots.size == 1
         result = @io_slots[0].join('/')
       else
         adapters=[]
@@ -115,8 +112,9 @@ class Lpar_profile
 
   def virtual_eth_adapters_to_s
 
+    result = nil
     unless @virtual_eth_adapters_raw.nil?
-      if (@virtual_eth_adapters.size == 0)
+      if @virtual_eth_adapters.size == 0
         result =  'none'
       else
         adapters=[]
@@ -126,16 +124,16 @@ class Lpar_profile
         result = adapters.join(',')
       end
     end
-
     result
   end
 
   def virtual_fc_adapters_to_s
 
+    result = nil
     unless @virtual_fc_adapters_raw.nil?
       result = 'virtual_fc_adapters='
 
-      if (@virtual_fc_adapters.size == 0)
+      if @virtual_fc_adapters.size == 0
         result +=  'none'
       else
         adapters=[]
@@ -151,6 +149,7 @@ class Lpar_profile
 
   def virtual_serial_adapters_to_s
 
+    result = nil
     unless @virtual_serial_adapters_raw.nil?
       if    @virtual_serial_adapters.size == 0
         result = 'none'
@@ -169,6 +168,7 @@ class Lpar_profile
 
   def virtual_scsi_adapters_to_s
 
+    result = nil
     unless @virtual_scsi_adapters_raw.nil?
         if @virtual_scsi_adapters.size == 0
           result =  'none'
@@ -229,145 +229,174 @@ class Lpar_profile
   end
 
  # the result of command it the same as: lssyscfg -r prof -m $FRAME
-  def to_s params='all'
+  def to_s(params='all')
 
-      result_array    = []
-      params_to_print = []
+    result_array = []
+    params_to_print = []
 
-      if params == 'all'
-          if @_parametr_order.count > 0
-            params_to_print = @_parametr_order
-          else
-            params_to_print = @_default_params[ @_compatibility ]
-          end
+    if params == 'all'
+      if @_parametr_order.count > 0
+        params_to_print = @_parametr_order
       else
-          params_to_print = params.split(',')
+        params_to_print = @_default_params[@_compatibility]
       end
+    else
+      params_to_print = params.split(',')
+    end
 
-      params_with_functions = [ 'io_slots', 'virtual_serial_adapters', 'virtual_scsi_adapters', 'virtual_eth_adapters', 'hca_adapters',
-                                'vtpm_adapters', 'virtual_fc_adapters', 'lhea_logical_ports', 'virtual_vasi_adapters',
-                                'sriov_eth_logical_ports', 'virtual_eth_vsi_profiles']
+    params_with_functions = %w(io_slots virtual_serial_adapters virtual_scsi_adapters virtual_eth_adapters hca_adapters vtpm_adapters virtual_fc_adapters lhea_logical_ports virtual_vasi_adapters sriov_eth_logical_ports virtual_eth_vsi_profiles)
 
-      params_to_print.each { |parametr|
+    params_to_print.each {|parametr|
 
-          if  params_with_functions.include?(parametr)
-                tmp = self.adapters_to_s_F(parametr)
-                unless tmp.nil?
-                      tmp = parametr + '=' + tmp
-                      if tmp.include?('"') or tmp.include?(',')
-                        tmp = '"' + tmp + '"'
-                      end
-                      result_array.push(tmp)
-                  end
-          else
-            unless self.instance_variable_get("@#{parametr}") == nil
-              result_array.push (parametr + '=' + self.instance_variable_get("@#{parametr}").to_s)
-            end
+      if params_with_functions.include?(parametr)
+        tmp = self.adapters_to_s_F(parametr)
+        unless tmp.nil?
+          tmp = parametr + '=' + tmp
+          if tmp.include?('"') or tmp.include?(',')
+            tmp = '"' + tmp + '"'
           end
-      }
+          result_array.push(tmp)
+        end
+      else
+        unless self.instance_variable_get("@#{parametr}") == nil
+          result_array.push (parametr + '=' + self.instance_variable_get("@#{parametr}").to_s)
+        end
+      end
+    }
 
     result_array.join(',')
   end
 
-  def adapters_to_s_F type
+  def adapters_to_s_F(type)
 
     string = case type
-            when 'io_slots'                 then self.io_slots_to_s
-            when 'virtual_serial_adapters'  then self.virtual_serial_adapters_to_s
-            when 'virtual_scsi_adapters'    then self.virtual_scsi_adapters_to_s
-            when 'virtual_eth_adapters'     then self.virtual_eth_adapters_to_s
-            when 'hca_adapters'             then self.hca_adapters_to_s
-            when 'vtpm_adapters'            then self.vtpm_adapters_to_s
-            when 'virtual_fc_adapters'      then self.virtual_fc_adapters_to_s
-            when 'lhea_logical_ports'       then self.lhea_logical_ports_to_s
-            when 'virtual_vasi_adapters'    then self.virtual_vasi_adapters_to_s
-            when 'sriov_eth_logical_ports'  then self.sriov_eth_logical_ports_to_s
-            when 'virtual_eth_vsi_profiles' then self.virtual_eth_vsi_profiles_to_s
-            else
-              raise 'class:lpar_profile, function:adapters_to_s_F unknown type'
-    end
+               when 'io_slots' then
+                 self.io_slots_to_s
+               when 'virtual_serial_adapters' then
+                 self.virtual_serial_adapters_to_s
+               when 'virtual_scsi_adapters' then
+                 self.virtual_scsi_adapters_to_s
+               when 'virtual_eth_adapters' then
+                 self.virtual_eth_adapters_to_s
+               when 'hca_adapters' then
+                 self.hca_adapters_to_s
+               when 'vtpm_adapters' then
+                 self.vtpm_adapters_to_s
+               when 'virtual_fc_adapters' then
+                 self.virtual_fc_adapters_to_s
+               when 'lhea_logical_ports' then
+                 self.lhea_logical_ports_to_s
+               when 'virtual_vasi_adapters' then
+                 self.virtual_vasi_adapters_to_s
+               when 'sriov_eth_logical_ports' then
+                 self.sriov_eth_logical_ports_to_s
+               when 'virtual_eth_vsi_profiles' then
+                 self.virtual_eth_vsi_profiles_to_s
+               else
+                 raise 'class:lpar_profile, function:adapters_to_s_F unknown type'
+             end
 
     string
   end
 
   def get_mksyscfg
-		"mksyscfg -r lpar -m #{@sys} -i \"" + self.to_s() + '"'
+		"mksyscfg -r lpar -m #{@sys} -i \"" + self.to_s + '"'
 
 	end
 	
-	def adapter_eth_add adapter
-		@virtual_eth_adapters.push(adapter)
-	end
+	def adapter_eth_add(adapter)
+    @virtual_eth_adapters.push(adapter)
+  end
 	
-	def adapter_scsi_add adapter
-		@virtual_scsi_adapters.push(adapter)
-	end	
+	def adapter_scsi_add(adapter)
+    @virtual_scsi_adapters.push(adapter)
+  end
 	
 	def remove
 		"rmsyscfg -m #{@sys} -r lpar -n #{@lpar_name}"
 	end
 	
-	def lssyscfgDecode string
-		
-		parameters = string.split(',')
-		
-		parameters.each { |x| 
-			key, value = x.split('=')
-		
-			value = '' if value==nil
-	
-			case key 
+	def lssyscfgDecode(string)
 
-				when 'name' 									then				@name=value
-				when 'lpar_id' 								then				@lpar_id=value
-				when 'lpar_env' 							then				@lpar_env=value
-				when 'state' 									then				@state=value
-				when 'resource_config' 				then				@resource_config=value
-				when 'os_version' 						then				@os_version=value
-				when 'logical_serial_num' 		then				@logical_serial_num=value
-				when 'default_profile' 				then				@default_profile=value
-				when 'curr_profile' 					then				@curr_profile=value
-				when 'work_group_id' 					then				@work_group_id=value
-				when 'shared_proc_pool_util_auth' then		@shared_proc_pool_util_auth=value
-				when 'allow_perf_collection' 	then				@allow_perf_collection=value
-				when 'power_ctrl_lpar_ids' 		then				@power_ctrl_lpar_ids=value
-				when 'boot_mode' 							then				@boot_mode=value
-				when 'lpar_keylock' 					then				@lpar_keylock=value
-				when 'auto_start' 						then				@auto_start=value
-				when 'redundant_err_path_reporting' then	@redundant_err_path_reporting=value
-				when 'rmc_state' 							then				@rmc_state=value
-				when 'rmc_ipaddr' 						then				@rmc_ipaddr=value
-				when 'sync_curr_profile' 			then				@sync_curr_profile=value
-				else
-					raise "Unknown key #{key} with value #{value}, exiting... \n"
-			end
-		}			
-	end
+    parameters = string.split(',')
 
-	def lssyscfgProfDecode string 
+    parameters.each {|x|
+      key, value = x.split('=')
 
-    HmcString.parse(string).each { |name, value|
+      value = '' if value==nil
+
+      case key
+
+        when 'name' then
+          @name=value
+        when 'lpar_id' then
+          @lpar_id=value
+        when 'lpar_env' then
+          @lpar_env=value
+        when 'state' then
+          @state=value
+        when 'resource_config' then
+          @resource_config=value
+        when 'os_version' then
+          @os_version=value
+        when 'logical_serial_num' then
+          @logical_serial_num=value
+        when 'default_profile' then
+          @default_profile=value
+        when 'curr_profile' then
+          @curr_profile=value
+        when 'work_group_id' then
+          @work_group_id=value
+        when 'shared_proc_pool_util_auth' then
+          @shared_proc_pool_util_auth=value
+        when 'allow_perf_collection' then
+          @allow_perf_collection=value
+        when 'power_ctrl_lpar_ids' then
+          @power_ctrl_lpar_ids=value
+        when 'boot_mode' then
+          @boot_mode=value
+        when 'lpar_keylock' then
+          @lpar_keylock=value
+        when 'auto_start' then
+          @auto_start=value
+        when 'redundant_err_path_reporting' then
+          @redundant_err_path_reporting=value
+        when 'rmc_state' then
+          @rmc_state=value
+        when 'rmc_ipaddr' then
+          @rmc_ipaddr=value
+        when 'sync_curr_profile' then
+          @sync_curr_profile=value
+        else
+          raise "Unknown key #{key} with value #{value}, exiting... \n"
+      end
+    }
+  end
+
+	def lssyscfgProfDecode(string)
+
+    HmcString.parse(string).each {|name, value|
 
 #      puts "#{name}: #{value}"
 
       if @variables_int.include?(name)
-				instance_variable_set("@#{name}", value.to_i)
-			elsif @variables_float.include?(name)
-				instance_variable_set("@#{name}", value.to_f) 
-			elsif @variables_string_raw.include?(name)
-				instance_variable_set("@#{name}_raw", value.to_s) 
-			elsif @variables_string.include?(name)
-				instance_variable_set("@#{name}", value.to_s) 
-			else 
-				print "unknown name: #{name} with value #{value}"
-				raise 
-			end
+        instance_variable_set("@#{name}", value.to_i)
+      elsif @variables_float.include?(name)
+        instance_variable_set("@#{name}", value.to_f)
+      elsif @variables_string_raw.include?(name)
+        instance_variable_set("@#{name}_raw", value.to_s)
+      elsif @variables_string.include?(name)
+        instance_variable_set("@#{name}", value.to_s)
+      else
+        print "unknown name: #{name} with value #{value}"
+        raise
+      end
 
       @_parametr_order.push(name)
-		}	
-	
-		self._rawToTable()
-	end
+    }
+
+    self._rawToTable
+  end
 	
 	def _rawToTable
 		
