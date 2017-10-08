@@ -271,33 +271,23 @@ class Lpar_profile
 
   def adapters_to_s_F type
 
-    if type == 'io_slots'
-      tmp = self.io_slots_to_s
-    elsif type == 'virtual_serial_adapters'
-      tmp = self.virtual_serial_adapters_to_s
-    elsif type == 'virtual_scsi_adapters'
-      tmp = self.virtual_scsi_adapters_to_s
-    elsif type == 'virtual_eth_adapters'
-      tmp = self.virtual_eth_adapters_to_s
-    elsif type == 'hca_adapters'
-      tmp = self.hca_adapters_to_s
-    elsif type == 'vtpm_adapters'
-      tmp = self.vtpm_adapters_to_s
-    elsif type == 'virtual_fc_adapters'
-      tmp = self.virtual_fc_adapters_to_s
-    elsif type == 'lhea_logical_ports'
-      tmp = self.lhea_logical_ports_to_s
-    elsif type == 'virtual_vasi_adapters'
-      tmp = self.virtual_vasi_adapters_to_s
-    elsif type == 'sriov_eth_logical_ports'
-        tmp = self.sriov_eth_logical_ports_to_s
-    elsif type == 'virtual_eth_vsi_profiles'
-        tmp = self.virtual_eth_vsi_profiles_to_s
-    else
-      raise 'class:lpar_profile, function:adapters_to_s_F unknown type'
+    string = case type
+            when 'io_slots'                 then self.io_slots_to_s
+            when 'virtual_serial_adapters'  then self.virtual_serial_adapters_to_s
+            when 'virtual_scsi_adapters'    then self.virtual_scsi_adapters_to_s
+            when 'virtual_eth_adapters'     then self.virtual_eth_adapters_to_s
+            when 'hca_adapters'             then self.hca_adapters_to_s
+            when 'vtpm_adapters'            then self.vtpm_adapters_to_s
+            when 'virtual_fc_adapters'      then self.virtual_fc_adapters_to_s
+            when 'lhea_logical_ports'       then self.lhea_logical_ports_to_s
+            when 'virtual_vasi_adapters'    then self.virtual_vasi_adapters_to_s
+            when 'sriov_eth_logical_ports'  then self.sriov_eth_logical_ports_to_s
+            when 'virtual_eth_vsi_profiles' then self.virtual_eth_vsi_profiles_to_s
+            else
+              raise 'class:lpar_profile, function:adapters_to_s_F unknown type'
     end
 
-    tmp
+    string
   end
 
   def get_mksyscfg
@@ -356,9 +346,7 @@ class Lpar_profile
 
 	def lssyscfgProfDecode string 
 
-		myHash = HmcString.parse(string)
-		
-		myHash.each { |name, value|
+    HmcString.parse(string).each { |name, value|
 
 #      puts "#{name}: #{value}"
 
