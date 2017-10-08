@@ -52,9 +52,17 @@ class TestVirtualEthAdapter < Test::Unit::TestCase
 		assert_equal('', adapter.macAddress)
 		assert_equal('all', adapter.allowedOsMacAddresses)
 		assert_equal('none', adapter.qosPiority)		
-	end 
-	
-	def test_validation 
+	end
+
+
+	def test_vlans
+
+		adapter = VirtualEthAdapter.new('2/1/1/3,4,5/0/1')
+		assert_equal('""2/1/1/3,4,5/0/1""', adapter.to_s)
+
+	end
+
+		def test_validation
 
 		adapter2 = VirtualEthAdapter.new()
 	

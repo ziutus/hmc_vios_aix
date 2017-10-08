@@ -35,12 +35,15 @@ class VirtualFCAdapter
 		#virtual-slot-number/client-or-server/[remote-lpar-ID]/[remote-lpar-name]/remote-slot-number/[wwpns]/is-required
 
 		
-		result = '""' + "#{@virtualSlotNumber}/#{clientOrServer}/#{@remoteLparID}/#{@remoteLparName}/#{@remoteSlotNumber}/"
-		result = result+"#{@wwpn1}" 	   unless (@wwpn1.nil?)
-		result = result+",#{@wwpn2}" 	   unless (@wwpn2.nil?)
-		result = result+"/#{@isRequired}"
-		result += '""'
-		
+		result = "#{@virtualSlotNumber}/#{clientOrServer}/#{@remoteLparID}/#{@remoteLparName}/#{@remoteSlotNumber}/"
+		result += "#{@wwpn1}" 	   unless (@wwpn1.nil?)
+		result += ",#{@wwpn2}" 	   unless (@wwpn2.nil?)
+		result += "/#{@isRequired}"
+
+    if result.include?(',')
+      result = '""' + result + '""'
+    end
+
 		result
 	end
 	
@@ -48,7 +51,7 @@ class VirtualFCAdapter
 
 		#virtual-slot-number/client-or-server/[remote-lpar-ID]/[remote-lpar-name]/remote-slot-number/[wwpns]/is-required
 	
-		regExp =  %r{^\s*(\d+)/(server|client)/(\d+)/([\w\-\_]+|)/(\d+)/(\w{16}\,\w{16}|\w{16}|)/(0|1)\s*$}
+		regExp =  %r{^\s*[\"]{0,2}(\d+)/(server|client)/(\d+)/([\w\-\_]+|)/(\d+)/(\w{16}\,\w{16}|\w{16}|)/(0|1)[\"]{0,2}\s*$}
 
 		match = regExp.match(string)
 		

@@ -12,9 +12,11 @@ class TestHMCLparProfile < Test::Unit::TestCase
 	def test_profile_decode
 			string = 'name=normal,lpar_name=nim1,lpar_id=5,lpar_env=aixlinux,all_resources=0,min_mem=2048,desired_mem=6144,max_mem=10240,min_num_huge_pages=0,desired_num_huge_pages=0,max_num_huge_pages=0,mem_mode=ded,hpt_ratio=1:64,proc_mode=shared,min_proc_units=0.1,desired_proc_units=0.3,max_proc_units=0.8,min_procs=1,desired_procs=1,max_procs=2,sharing_mode=cap,uncap_weight=0,io_slots=none,lpar_io_pool_ids=none,max_virtual_slots=10,"virtual_serial_adapters=0/server/1/any//any/1,1/server/1/any//any/1","virtual_scsi_adapters=2/client/2/vios1/2/1,3/client/3/vios2/2/1","virtual_eth_adapters=6/1/6//0/0,7/0/7//0/0",hca_adapters=none,boot_mode=norm,conn_monitoring=0,auto_start=0,power_ctrl_lpar_ids=none,work_group_id=none,redundant_err_path_reporting=0'
 		
-			profile = Lpar_profile.new('9131-52A-6535CCG', 'nim1', 5 )
+			profile = Lpar_profile.new()
 			profile.lssyscfgProfDecode(string)
-			
+
+      assert_equal(string, profile.to_s_F())
+
 			assert_equal('normal', profile.name)
 			assert_equal('nim1',   profile.lpar_name)
 			assert_equal(5,        profile.lpar_id)
@@ -65,7 +67,14 @@ class TestHMCLparProfile < Test::Unit::TestCase
 		string = 'name=normal,lpar_name=vios2,lpar_id=3,lpar_env=vioserver,all_resources=0,min_mem=1024,desired_mem=6144,max_mem=10240,mem_mode=ded,hpt_ratio=1:64,proc_mode=shared,min_proc_units=0.1,desired_proc_units=0.3,max_proc_units=0.6,min_procs=1,desired_procs=1,max_procs=1,sharing_mode=cap,uncap_weight=0,"io_slots=21010002/none/1,21050003/none/1",lpar_io_pool_ids=none,max_virtual_slots=200,"virtual_serial_adapters=0/server/1/any//any/1,1/server/1/any//any/1",virtual_scsi_adapters=2/server/5/nim1/3/0,"virtual_eth_adapters=6/0/6//2/1,8/0/8//2/1,9/0/6//0/0",hca_adapters=none,boot_mode=norm,conn_monitoring=0,auto_start=0,power_ctrl_lpar_ids=none,work_group_id=none,redundant_err_path_reporting=0'
 		profile = Lpar_profile.new("System", "vios2", 3, "normal")
 		profile.lssyscfgProfDecode(string)
-		
+
+    assert_equal(string, profile.to_s_F())
+
+    assert_equal(profile._parametr_order.count, 32)
+    assert_equal(profile._parametr_order[0], 'name')
+    assert_equal(profile._parametr_order[3], 'lpar_env')
+    assert_equal(profile._parametr_order[9], 'hpt_ratio')
+
 		assert_equal(profile.name, 							'normal')
 		assert_equal(profile.lpar_name,						'vios2')
 		assert_equal(profile.lpar_id,						3) 
@@ -113,7 +122,9 @@ class TestHMCLparProfile < Test::Unit::TestCase
 		
 			profile = Lpar_profile.new('unknown-frame', 1, 'op710-1-VIO-Server')
 			profile.lssyscfgProfDecode(string)
-			
+
+      assert_equal(string, profile.to_s_F())
+
 			assert_equal('normal',    profile.name)
 			assert_equal('op710-1-VIO-Server', profile.lpar_name)
 			assert_equal(1 ,          profile.lpar_id)
@@ -161,7 +172,9 @@ class TestHMCLparProfile < Test::Unit::TestCase
 
 		profile = Lpar_profile.new('unknown-frame', 15, 'lpar05')
 		profile.lssyscfgProfDecode(string)
-		
+
+    assert_equal(string, profile.to_s_F())
+
 		assert_equal('lpar05', profile.name)
 		assert_equal('lpar05', profile.lpar_name)
 		assert_equal(15, profile.lpar_id)
@@ -211,8 +224,11 @@ class TestHMCLparProfile < Test::Unit::TestCase
 		string = 'name=test_1,lpar_name=dump,lpar_id=1,lpar_env=aixlinux,all_resources=0,min_mem=1152,desired_mem=3200,max_mem=5248,min_num_huge_pages=0,desired_num_huge_pages=0,max_num_huge_pages=0,mem_mode=ded,hpt_ratio=1:64,proc_mode=shared,min_proc_units=0.1,desired_proc_units=0.2,max_proc_units=0.5,min_procs=1,desired_procs=1,max_procs=1,sharing_mode=cap,uncap_weight=0,io_slots=none,lpar_io_pool_ids=none,max_virtual_slots=10,"virtual_serial_adapters=0/server/1/any//any/1,1/server/1/any//any/1",virtual_scsi_adapters=none,"virtual_eth_adapters=""2/1/1/3,4,5/0/1""",hca_adapters=none,boot_mode=sms,conn_monitoring=1,auto_start=0,power_ctrl_lpar_ids=none,work_group_id=none,redundant_err_path_reporting=0'
 		profile = Lpar_profile.new('unknown-frame', 15, 'lpar05')
 		profile.lssyscfgProfDecode(string)
+
+    assert_equal(string, profile.to_s_F())
+
     assert_equal(nil,    profile.virtual_fc_adapters_raw)
-    assert_equal(string, profile.to_s)
+#    assert_equal(string, profile.to_s)
 	end
 	
 	# source od data: http://www.kfsolutions.nl/2013/03/where-do-all-the-virtual-disks-come-from/
@@ -221,11 +237,13 @@ class TestHMCLparProfile < Test::Unit::TestCase
 		profile = Lpar_profile.new('unknown-frame', 8, 'B8008')
 		profile.lssyscfgProfDecode(string)
 
+    assert_equal(string, profile.to_s_F())
+
     assert_equal('default', profile.lpar_proc_compat_mode)
     assert_equal(0, profile.bsr_arrays)
     assert_equal('none', profile.vtpm_adapters_raw)
 
-    assert_equal(string, profile.to_s)
+#    assert_equal(string, profile.to_s)
 	end
 	
 	# source of data: https://www.ibm.com/developerworks/community/forums/html/threadTopic?id=77777777-0000-0000-0000-000014412555
@@ -234,15 +252,21 @@ class TestHMCLparProfile < Test::Unit::TestCase
 		profile = Lpar_profile.new('unknown-frame', 1, 'bt10')
 		profile.lssyscfgProfDecode(string)
  #   assert_equal(string, profile.to_s)
+
+    assert_equal(profile.virtual_fc_adapters_raw, profile.virtual_fc_adapters_to_s)
+
+    assert_equal(string, profile.to_s_F())
+
 	end
 		
 	# source of data: https://chmod666.org/2014/11/configuration-of-a-remote-restart-capable-partition	
 	def test_profile_decode_8
 		string = 'name=default_profile,lpar_name=temp3-b642c120-00000133,lpar_id=11,lpar_env=aixlinux,all_resources=0,min_mem=8192,desired_mem=8192,max_mem=8192,min_num_huge_pages=0,desired_num_huge_pages=0,max_num_huge_pages=0,mem_mode=ded,mem_expansion=0.0,hpt_ratio=1:128,proc_mode=shared,min_proc_units=2.0,desired_proc_units=2.0,max_proc_units=2.0,min_procs=4,desired_procs=4,max_procs=4,sharing_mode=uncap,uncap_weight=128,shared_proc_pool_id=0,shared_proc_pool_name=DefaultPool,affinity_group_id=none,io_slots=none,lpar_io_pool_ids=none,max_virtual_slots=64,"virtual_serial_adapters=0/server/1/any//any/1,1/server/1/any//any/1",virtual_scsi_adapters=3/client/2/vios1/32/0,virtual_eth_adapters=32/0/1659//0/0/switcha/facc157c3e20/all/0,virtual_eth_vsi_profiles=none,"virtual_fc_adapters=""2/client/1/vios2/32/c050760727c5007a,c050760727c5007b/0"",""4/client/1/vios1/35/c050760727c5007c,c050760727c5007d/0"",""5/client/2/vios2/34/c050760727c5007e,c050760727c5007f/0"",""6/client/2/vios2/35/c050760727c50080,c050760727c50081/0""",vtpm_adapters=none,hca_adapters=none,boot_mode=norm,conn_monitoring=1,auto_start=0,power_ctrl_lpar_ids=none,work_group_id=none,redundant_err_path_reporting=0,bsr_arrays=0,lpar_proc_compat_mode=default,electronic_err_reporting=null,sriov_eth_logical_ports=none'
 		profile = Lpar_profile.new('unknown-frame', 11, 'temp3-b642c120-00000133')
-#		profile.lssyscfgProfDecode(string)
+		profile.lssyscfgProfDecode(string)
 
  #   assert_equal(string, profile.to_s)
+    assert_equal(string, profile.to_s_F())
 
 	end
 
@@ -252,7 +276,7 @@ class TestHMCLparProfile < Test::Unit::TestCase
 		profile = Lpar_profile.new('unknown-frame', 22, 'p590n22')
 		profile.lssyscfgProfDecode(string)
 
-#    assert_equal(string, profile.to_s)
+    assert_equal(string, profile.to_s_F())
 
 	end
 		
@@ -295,6 +319,24 @@ class TestHMCLparProfile < Test::Unit::TestCase
 		assert_equal(command, lpar.get_mksyscfg)
 
 	end
-	
+
+  #source of data, own Power5 frame
+  def test_profile_to_s_F_1
+    string = 'name=normal,lpar_name=nim1,lpar_id=5,lpar_env=aixlinux,all_resources=0,min_mem=2048,desired_mem=6144,max_mem=10240,min_num_huge_pages=0,desired_num_huge_pages=0,max_num_huge_pages=0,mem_mode=ded,hpt_ratio=1:64,proc_mode=shared,min_proc_units=0.1,desired_proc_units=0.3,max_proc_units=0.8,min_procs=1,desired_procs=1,max_procs=2,sharing_mode=cap,uncap_weight=0,io_slots=none,lpar_io_pool_ids=none,max_virtual_slots=10,"virtual_serial_adapters=0/server/1/any//any/1,1/server/1/any//any/1","virtual_scsi_adapters=2/client/2/vios1/2/1,3/client/3/vios2/2/1","virtual_eth_adapters=6/1/6//0/0,7/0/7//0/0",hca_adapters=none,boot_mode=norm,conn_monitoring=0,auto_start=0,power_ctrl_lpar_ids=none,work_group_id=none,redundant_err_path_reporting=0'
+
+    profile = Lpar_profile.new()
+    profile.lssyscfgProfDecode(string)
+
+    assert_equal(string, profile.to_s_F())
+    assert_equal('name=normal,lpar_name=nim1,lpar_id=5', profile.to_s_F("name,lpar_name,lpar_id"))
+    assert_equal('name=normal,lpar_name=nim1,min_mem=2048', profile.to_s_F("name,lpar_name,min_mem"))
+    assert_equal('name=normal,lpar_name=nim1,max_mem=10240', profile.to_s_F("name,lpar_name,max_mem"))
+
+    assert_equal('name=normal,lpar_name=nim1,io_slots=none', profile.to_s_F("name,lpar_name,io_slots"))
+    assert_equal('name=normal,lpar_name=nim1,min_mem=2048,io_slots=none,max_mem=10240', profile.to_s_F("name,lpar_name,min_mem,io_slots,max_mem"))
+
+ end
+
+
 end			
 		
