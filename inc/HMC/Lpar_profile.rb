@@ -39,13 +39,20 @@ class Lpar_profile
 
   attr_reader :sni_device_ids
 
+  attr_reader :virtual_vasi_adapters, :virtual_vasi_adapters_raw
+
+  attr_reader :virtual_eth_vsi_profiles, :virtual_eth_vsi_profiles_raw
 
   attr_reader :_compatibility
+  attr_reader :_parametr_order
 
 	def initialize sys='', lpar_name='', lpar_id='', name="normal"
-	
-		@sys = sys 
-	
+
+    @sys = sys
+    @name = name
+    @lpar_name = lpar_name
+    @lpar_id = lpar_id
+
 		@variables_int    = [ 'lpar_id', 'min_mem', 'desired_mem', 'max_mem', 'all_resources', 'min_procs',
 				'desired_procs', 'max_procs', 'max_virtual_slots', 'auto_start', 'conn_monitoring', 'uncap_weight',
 				'bsr_arrays', 'shared_proc_pool_id' ]
@@ -63,25 +70,15 @@ class Lpar_profile
 			'affinity_group_id', 'lhea_capabilities' 'lpar_proc_compat_mode', 'lhea_capabilities', 'lpar_proc_compat_mode',
 			'electronic_err_reporting', 'min_num_huge_pages', 'desired_num_huge_pages', 'max_num_huge_pages',
 			'shared_proc_pool_name', 'sni_device_ids' ]
-	
 
-		@name = name
-		@lpar_name = lpar_name
-		@lpar_id = lpar_id
-
-#		@allow_perf_collection=''
 		@all_resources = ''
 		@auto_start=0
 
 		@boot_mode='norm'
 		@conn_monitoring=1
 
-		@hca_adapters_raw=''
-
-		@io_slots_raw			=''
 		@lpar_env					='aixlinux'
 		@lpar_io_pool_ids	='none'
-#		@lpar_keylock			='none'
 
 		@min_mem     = 512
 		@desired_mem = 2048
@@ -102,45 +99,43 @@ class Lpar_profile
 
 		@redundant_err_path_reporting=0
 		
-#		@resource_config=''
 		@shared_proc_pool_util_auth='1'
 		@sharing_mode='uncap'
 		
-#		@sync_curr_profile=''
-
 		@uncap_weight=128
 		@virtual_eth_adapters_raw	 		= 'none'
 		@virtual_scsi_adapters_raw	 	= 'none'
 		@virtual_serial_adapters_raw 	= 'none'
-#		@virtual_fc_adapters_raw 	 		= 'none'
 		@hca_adapters_raw 			 			= 'none'
+    @io_slots_raw			=''
 
-		@virtual_eth_adapters    = []
-		@virtual_scsi_adapters   = []
-		@virtual_serial_adapters = []
-		@virtual_fc_adapters     = []
-		@io_slots = []	
-			
+		@virtual_eth_adapters     = []
+		@virtual_scsi_adapters    = []
+		@virtual_serial_adapters  = []
+		@virtual_fc_adapters      = []
+    @lhea_logical_ports       = []
+    @hca_adapters             = []
+		@io_slots                 = []
+
 		@work_group_id = ''
 
     @_compatibility = "power5"
+    @_parametr_order = []
 
 	end
 
   def io_slots_to_s
 
     if (@io_slots.size == 0)
-      result =  'io_slots=none'
+      result =  'none'
     elsif (@io_slots.size == 1)
-      result =  'io_slots=' + @io_slots[0].join('/')
+      result = @io_slots[0].join('/')
     else
-      result =  '"io_slots='
       adapters=[]
       @io_slots.each { |adapter|
         adapters.push(adapter.join('/'))
       }
-      result += adapters.join(',')
-      result +=  '"'
+      result = adapters.join(',')
     end
     result
   end
@@ -148,20 +143,14 @@ class Lpar_profile
 
   def virtual_eth_adapters_to_s
 
-    result = 'virtual_eth_adapters='
-
     if (@virtual_eth_adapters.size == 0)
-      result +=  'none'
+      result =  'none'
     else
       adapters=[]
       @virtual_eth_adapters.each { |adapter|
         adapters.push(adapter.to_s)
       }
-      result += adapters.join(',')
-    end
-
-    if result.include?('"')
-      result = '"' + result + '"'
+      result = adapters.join(',')
     end
 
     result
@@ -178,11 +167,7 @@ class Lpar_profile
       @virtual_fc_adapters.each { |adapter|
         adapters.push(adapter.to_s)
       }
-      result += adapters.join(',')
-    end
-
-    if result.include?('"')
-      result = '"' + result + '"'
+      result = adapters.join(',')
     end
 
     result
@@ -192,17 +177,15 @@ class Lpar_profile
   def virtual_serial_adapters_to_s
 
     if (@virtual_serial_adapters.size == 0)
-      result =  'virtual_serial_adapters=none'
+      result =  'none'
     elsif (@virtual_serial_adapters.size == 1)
-        result =  'virtual_serial_adapters=' + @virtual_serial_adapters[0].to_s
+        result = @virtual_serial_adapters[0].to_s
     else
-      result =  '"virtual_serial_adapters='
       adapters=[]
       @virtual_serial_adapters.each { |adapter|
         adapters.push(adapter.to_s)
       }
-      result += adapters.join(',')
-      result +=  '"'
+      result = adapters.join(',')
     end
     result
   end
@@ -210,27 +193,54 @@ class Lpar_profile
   def virtual_scsi_adapters_to_s
 
     if @virtual_scsi_adapters.size == 0
-      result =  'virtual_scsi_adapters=none'
+      result =  'none'
     elsif @virtual_scsi_adapters.size == 1
-      result =  'virtual_scsi_adapters=' + @virtual_scsi_adapters[0].to_s
+      result =  @virtual_scsi_adapters[0].to_s
     else
-      result =  '"virtual_scsi_adapters='
       adapters=[]
       @virtual_scsi_adapters.each { |adapter|
         adapters.push(adapter.to_s)
       }
-      result += adapters.join(',')
-      result +=  '"'
+      result = adapters.join(',')
     end
     result
   end
 
 
   def hca_adapters_to_s
-
-    'hca_adapters=none'
+    #TODO: it should have separate class of each adapter and function to analyze it (not used now on my Power5)
+    'none'
   end
 
+  def vtpm_adapters_to_s
+    #TODO: it should have separate class of each adapter and function to analyze it (not used now on my Power5)
+    'none'
+  end
+
+  def virtual_eth_vsi_profiles
+    #TODO: it should have separate class of each adapter and function to analyze it (not used now on my Power5)
+    'none'
+  end
+
+  def lhea_logical_ports_to_s
+    #TODO: it should have separate class of each adapter and function to analyze it (not used now on my Power5)
+    @lhea_logical_ports_raw
+  end
+
+  def virtual_vasi_adapters_to_s
+    #TODO: it should have separate class of each adapter and function to analyze it (not used now on my Power5)
+    'none'
+  end
+
+  def sriov_eth_logical_ports_to_s
+    #TODO: it should have separate class of each adapter and function to analyze it (not used now on my Power5)
+    'none'
+  end
+
+  def virtual_eth_vsi_profiles_to_s
+    #TODO: it should have separate class of each adapter and function to analyze it (not used now on my Power5)
+    'none'
+  end
 
  # the result of command it the same as: lssyscfg -r prof -m $FRAME
   def to_s
@@ -252,14 +262,14 @@ class Lpar_profile
       result += "shared_proc_pool_id=#{@shared_proc_pool_id},"     unless @shared_proc_pool_id == nil
       result += "shared_proc_pool_name=#{@shared_proc_pool_name}," unless @shared_proc_pool_name == nil
       result += "affinity_group_id=#{@affinity_group_id},"         unless @affinity_group_id == nil
-      result += self.io_slots_to_s() + ','
+      result += 'io_slots=' + self.io_slots_to_s() + ','
       result += "lpar_io_pool_ids=#{@lpar_io_pool_ids},"
       result += "max_virtual_slots=#{@max_virtual_slots},"
-      result += self.virtual_serial_adapters_to_s() + ','
-      result += self.virtual_scsi_adapters_to_s()   + ','
-      result += self.virtual_eth_adapters_to_s()    + ','
+      result += 'virtual_serial_adapters=' + self.virtual_serial_adapters_to_s() + ','
+      result += 'virtual_scsi_adapters=' + self.virtual_scsi_adapters_to_s()   + ','
+      result += 'virtual_eth_adapters=' + self.virtual_eth_adapters_to_s()    + ','
       result += "vtpm_adapters=#{@vtpm_adapters_raw},"         unless @vtpm_adapters_raw == nil
-      result += self.virtual_fc_adapters_to_s()     + ',' unless @virtual_fc_adapters_raw == nil
+      result += 'virtual_fc_adapters' + self.virtual_fc_adapters_to_s()     + ',' unless @virtual_fc_adapters_raw == nil
       result += "sni_device_ids=#{@sni_device_ids},"      unless @sni_device_ids == nil
       result += self.hca_adapters_to_s() + ','
       result += "boot_mode=#{@boot_mode},conn_monitoring=#{@conn_monitoring},auto_start=#{@auto_start},"
@@ -275,7 +285,70 @@ class Lpar_profile
       result
   end
 
-	def get_mksyscfg
+ # the result of command it the same as: lssyscfg -r prof -m $FRAME
+  def to_s_F params='all'
+
+      result_array    = []
+      params_to_print = []
+
+      if params == 'all'
+        params_to_print = @_parametr_order
+      else
+        params_to_print = params.split(',')
+      end
+
+      params_with_functions = [ 'io_slots', 'virtual_serial_adapters', 'virtual_scsi_adapters', 'virtual_eth_adapters', 'hca_adapters',
+                                'vtpm_adapters', 'virtual_fc_adapters', 'lhea_logical_ports', 'virtual_vasi_adapters',
+                                'sriov_eth_logical_ports', 'virtual_eth_vsi_profiles']
+
+      params_to_print.each { |parametr|
+
+          if  params_with_functions.include?(parametr)
+              tmp = parametr + '=' + self.adapters_to_s_F(parametr)
+              if tmp.include?('"') or tmp.include?(',')
+                tmp = '"' + tmp + '"'
+              end
+              result_array.push(tmp)
+          else
+            result_array.push (parametr + '=' + self.instance_variable_get("@#{parametr}").to_s)
+          end
+      }
+
+    result_array.join(',')
+  end
+
+  def adapters_to_s_F type
+
+    if type == 'io_slots'
+      tmp = self.io_slots_to_s
+    elsif type == 'virtual_serial_adapters'
+      tmp = self.virtual_serial_adapters_to_s
+    elsif type == 'virtual_scsi_adapters'
+      tmp = self.virtual_scsi_adapters_to_s
+    elsif type == 'virtual_eth_adapters'
+      tmp = self.virtual_eth_adapters_to_s
+    elsif type == 'hca_adapters'
+      tmp = self.hca_adapters_to_s
+    elsif type == 'vtpm_adapters'
+      tmp = self.vtpm_adapters_to_s
+    elsif type == 'virtual_fc_adapters'
+      tmp = self.virtual_fc_adapters_to_s
+    elsif type == 'lhea_logical_ports'
+      tmp = self.lhea_logical_ports_to_s
+    elsif type == 'virtual_vasi_adapters'
+      tmp = self.virtual_vasi_adapters_to_s
+    elsif type == 'sriov_eth_logical_ports'
+        tmp = self.sriov_eth_logical_ports_to_s
+    elsif type == 'virtual_eth_vsi_profiles'
+        tmp = self.virtual_eth_vsi_profiles_to_s
+    else
+      raise 'class:lpar_profile, function:adapters_to_s_F unknown type'
+    end
+
+    tmp
+  end
+
+  def get_mksyscfg
 		result = "mksyscfg -r lpar -m #{@sys} -i \"name=#{@lpar_name},lpar_id=#{@lpar_id},profile_name=#{@name},"
 		result += "lpar_env=#{@lpar_env},shared_proc_pool_util_auth=#{@shared_proc_pool_util_auth},min_mem=#{@min_mem},"
 		result += "desired_mem=#{@desired_mem},max_mem=#{@max_mem},proc_mode=#{@proc_mode},"
@@ -387,6 +460,7 @@ class Lpar_profile
 				raise 
 			end
 
+      @_parametr_order.push(name)
 		}	
 	
 		self._rawToTable()
@@ -434,7 +508,19 @@ class Lpar_profile
       end
     end
 
+    if @lhea_logical_ports_raw != nil
+      if @lhea_logical_ports_raw != "none"
+        @lhea_logical_ports_raw.split(',').each { |adapter_string|
+          @lhea_logical_ports.push(adapter_string.split('/'))
+        }
+        #pp @lhea_logical_ports_raw
+        #pp @lhea_logical_ports
+        #raise "lhea_logical ports issue"
+      end
+    end
+
 		#TODO: make decode code for @hca_adapters
+
 	
 	end
 end
