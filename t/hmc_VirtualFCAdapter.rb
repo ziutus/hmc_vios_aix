@@ -1,5 +1,5 @@
-$LOAD_PATH << File.dirname(__FILE__)+"./inc"
-$LOAD_PATH << File.dirname(__FILE__)
+$LOAD_PATH << File.dirname(__FILE__) + '/../inc'
+$LOAD_PATH << File.dirname(__FILE__) + './inc'
 
 require 'HMC/VirtualFCAdapter'
 require 'test/unit'
@@ -10,7 +10,7 @@ class TestVirtualFCAdapter < Test::Unit::TestCase
  
 	#example data: http://www-01.ibm.com/support/docview.wss?uid=nas8N1011009
 	def test_base
-		adapter = VirtualFCAdapter.new()
+		adapter = VirtualFCAdapter.new
 		
 		adapter.virtualSlotNumber=10
 		adapter.clientOrServer='client'
@@ -21,14 +21,14 @@ class TestVirtualFCAdapter < Test::Unit::TestCase
 		adapter.wwpn2='c0507602f9ac000b'
 		adapter.isRequired=1
 				
-		assert_equal('""10/client/20/VIOS1-Dilling/34/c0507602f9ac000a,c0507602f9ac000b/1""', adapter.to_s() )
+		assert_equal('""10/client/20/VIOS1-Dilling/34/c0507602f9ac000a,c0507602f9ac000b/1""', adapter.to_s)
 	end
 
 	#example data: http://www-01.ibm.com/support/docview.wss?uid=nas8N1011009	
 	def test_decode
 
     string = '""10/client/20/VIOS1-Dilling/34/c0507602f9ac000a,c0507602f9ac000b/1""'
-		adapter = VirtualFCAdapter.new()
+		adapter = VirtualFCAdapter.new
 		adapter.decode(string)
 
     assert_equal(string, adapter.to_s)
@@ -53,7 +53,7 @@ class TestVirtualFCAdapter < Test::Unit::TestCase
 
     #virtual-slot-number/client-or-server/[remote-lpar-ID]/[remote-lpar-name]/remote-slot-number/[wwpns]/is-required
     string = '21/server/10/bt11/21//0'
-    adapter = VirtualFCAdapter.new()
+    adapter = VirtualFCAdapter.new
     adapter.decode(string)
 
     assert_equal(string, adapter.to_s)

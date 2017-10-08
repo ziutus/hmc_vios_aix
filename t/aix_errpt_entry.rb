@@ -1,13 +1,12 @@
+$LOAD_PATH << File.dirname(__FILE__)+'/../inc'
 $LOAD_PATH << File.dirname(__FILE__)+'./inc'
-$LOAD_PATH << File.dirname(__FILE__)
 
 require 'AIX/ErrptEntry'
 require 'test/unit'
 require 'pp'
 
 
-
-
+# noinspection RubyResolve
 class TestAixErrptEntry < Test::Unit::TestCase
 
 #9DBCFDEE   0929104613 T O errdemon       ERROR LOGGING TURNED ON

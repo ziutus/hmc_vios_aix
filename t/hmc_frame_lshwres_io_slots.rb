@@ -1,8 +1,8 @@
-$LOAD_PATH << File.dirname(__FILE__)+"./inc"
-$LOAD_PATH << File.dirname(__FILE__)
+$LOAD_PATH << File.dirname(__FILE__) + '/../inc'
+$LOAD_PATH << File.dirname(__FILE__) + './inc'
 
 require 'HMC/FrameIOSlots'
-require "test/unit"
+require 'test/unit'
 
 class TestFrameIOSlots < Test::Unit::TestCase
  
@@ -11,7 +11,7 @@ class TestFrameIOSlots < Test::Unit::TestCase
 
 		slot = FrameIOSlots.new(DATA.read) 
 		
-		slot.get_lpar("vios2")
+		slot.get_lpar('vios2')
 	end
 end	
 

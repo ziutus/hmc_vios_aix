@@ -1,9 +1,9 @@
-$LOAD_PATH << File.dirname(__FILE__)+"./inc"
+$LOAD_PATH << File.dirname(__FILE__)+'/../inc'
 $LOAD_PATH << File.dirname(__FILE__)
 
 require 'Unix/Ps_ef'
-require "test/unit"
-require "pp"
+require 'test/unit'
+require 'pp'
 
 
 

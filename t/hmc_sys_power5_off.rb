@@ -1,10 +1,9 @@
-$LOAD_PATH << File.dirname(__FILE__)+"./inc"
-$LOAD_PATH << File.dirname(__FILE__)
+$LOAD_PATH << File.dirname(__FILE__)+'/../inc'
+$LOAD_PATH << File.dirname(__FILE__)+'./inc'
 
 require 'HMC/Sys'
-require "test/unit"
+require 'test/unit'
 require 'pp'
-
 
 class TestHMCSystem < Test::Unit::TestCase
 
