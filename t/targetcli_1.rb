@@ -1,3 +1,8 @@
+test_unit_version=`gem list test-unit`.to_s.scan(/test-unit \((\d\.\d\.\d)/).join
+autorunner_file="#{Gem.dir}/gems/test-unit-#{test_unit_version}/lib/test/unit/autorunner.rb"
+require autorunner_file if File.exist?(autorunner_file)
+
+
 $LOAD_PATH << File.dirname(__FILE__)+"./inc"
 $LOAD_PATH << File.dirname(__FILE__)
 

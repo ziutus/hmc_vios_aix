@@ -1,6 +1,10 @@
 $LOAD_PATH << File.dirname(__FILE__)+'/../inc'
 $LOAD_PATH << File.dirname(__FILE__)+'./inc'
 
+test_unit_version=`gem list test-unit`.to_s.scan(/test-unit \((\d\.\d\.\d)/).join
+autorunner_file="#{Gem.dir}/gems/test-unit-#{test_unit_version}/lib/test/unit/autorunner.rb"
+require autorunner_file if File.exist?(autorunner_file)
+
 require 'test/unit'
 require 'HMC/Lpar_profile'
 require 'HMC/VirtualEthAdapter'
@@ -358,6 +362,9 @@ class TestHMCLparProfile < Test::Unit::TestCase
 
     assert_equal('name=normal,lpar_name=nim1,io_slots=none', profile.to_s('name,lpar_name,io_slots'))
     assert_equal('name=normal,lpar_name=nim1,min_mem=2048,io_slots=none,max_mem=10240', profile.to_s('name,lpar_name,min_mem,io_slots,max_mem'))
+
+#		string_with_excluded='name=normal,lpar_name=nim1,lpar_id=5,lpar_env=aixlinux,all_resources=0,min_mem=2048,desired_mem=6144,max_mem=10240,min_num_huge_pages=0,desired_num_huge_pages=0,max_num_huge_pages=0,mem_mode=ded,hpt_ratio=1:64,proc_mode=shared,min_proc_units=0.1,desired_proc_units=0.3,max_proc_units=0.8,min_procs=1,desired_procs=1,max_procs=2,sharing_mode=cap,uncap_weight=0,io_slots=none,lpar_io_pool_ids=none,max_virtual_slots=10,hca_adapters=none,boot_mode=norm,conn_monitoring=0,auto_start=0,power_ctrl_lpar_ids=none,work_group_id=none,redundant_err_path_reporting=0'
+#    assert_equal(string_with_excluded, profile.to_s('all', 'virtual_serial_adapters,virtual_scsi_adapters,virtual_eth_adapters'))
 
  end
 
