@@ -1,9 +1,6 @@
 require 'pp'
 require 'HMC/HmcString'
-require 'HMC/VirtualEthAdapter'
-require 'HMC/VirtualScsiAdapter'
-require 'HMC/VirtualSerialAdapter'
-require 'HMC/VirtualFCAdapter'
+require 'HMC/Lpar_virtual_slots'
 
 include HmcString
 
@@ -39,10 +36,11 @@ class Lpar_profile
 
   attr_reader :virtual_vasi_adapters,    :virtual_vasi_adapters_raw
   attr_reader :virtual_eth_vsi_profiles, :virtual_eth_vsi_profiles_raw
-  attr_reader :virtual_fc_adapters,      :virtual_fc_adapters_raw
-  attr_reader :virtual_serial_adapters,  :virtual_serial_adapters_raw
-  attr_reader :virtual_scsi_adapters,    :virtual_scsi_adapters_raw
-  attr_reader :virtual_eth_adapters,     :virtual_eth_adapters_raw
+  attr_reader :virtual_fc_adapters_raw
+
+  attr_reader :virtual_serial_adapters_raw
+  attr_reader :virtual_scsi_adapters_raw
+  attr_reader :virtual_eth_adapters_raw
 
   attr_accessor :sni_device_ids
 
@@ -50,6 +48,8 @@ class Lpar_profile
   attr_accessor :_compatibility
   attr_reader   :_parametr_order
   attr_reader   :_default_params
+
+  attr_reader   :_virtual_slots
 
 	def initialize(lpar_id='', name='normal')
 
@@ -79,7 +79,6 @@ class Lpar_profile
 
     @virtual_eth_adapters = []
     @virtual_scsi_adapters = []
-    @virtual_serial_adapters = []
     @virtual_fc_adapters = []
 
     @lhea_logical_ports = []
@@ -88,6 +87,8 @@ class Lpar_profile
 
     @_compatibility = 'power5'
     @_parametr_order = []
+
+    @_virtual_slots = Lpar_virtual_slots.new()
 
   end
 
@@ -110,84 +111,6 @@ class Lpar_profile
 
     result
   end
-
-
-
-  def virtual_eth_adapters_to_s
-
-    result = nil
-    unless @virtual_eth_adapters_raw.nil?
-      if @virtual_eth_adapters.size == 0
-        result =  'none'
-      else
-        adapters=[]
-        @virtual_eth_adapters.each { |adapter|
-          adapters.push(adapter.to_s)
-        }
-        result = adapters.join(',')
-      end
-    end
-    result
-  end
-
-  def virtual_fc_adapters_to_s
-
-    result = nil
-    unless @virtual_fc_adapters_raw.nil?
-      result = 'virtual_fc_adapters='
-
-      if @virtual_fc_adapters.size == 0
-        result +=  'none'
-      else
-        adapters=[]
-        @virtual_fc_adapters.each { |adapter|
-          adapters.push(adapter.to_s)
-        }
-        result = adapters.join(',')
-      end
-    end
-
-    result
-  end
-
-  def virtual_serial_adapters_to_s
-
-    result = nil
-    unless @virtual_serial_adapters_raw.nil?
-      if    @virtual_serial_adapters.size == 0
-        result = 'none'
-      elsif @virtual_serial_adapters.size == 1
-        result = @virtual_serial_adapters[0].to_s
-      else
-        adapters=[]
-        @virtual_serial_adapters.each { |adapter|
-          adapters.push(adapter.to_s)
-        }
-        result = adapters.join(',')
-      end
-    end
-    result
-  end
-
-  def virtual_scsi_adapters_to_s
-
-    result = nil
-    unless @virtual_scsi_adapters_raw.nil?
-        if @virtual_scsi_adapters.size == 0
-          result =  'none'
-        elsif @virtual_scsi_adapters.size == 1
-          result =  @virtual_scsi_adapters[0].to_s
-        else
-          adapters=[]
-          @virtual_scsi_adapters.each { |adapter|
-            adapters.push(adapter.to_s)
-          }
-          result = adapters.join(',')
-        end
-    end
-    result
-  end
-
 
   def hca_adapters_to_s
     #TODO: it should have separate class of each adapter and function to analyze it (not used now on my Power5)
@@ -284,11 +207,11 @@ class Lpar_profile
                when 'hca_adapters'             then self.hca_adapters_to_s
                when 'vtpm_adapters'            then self.vtpm_adapters_to_s
                when 'lhea_logical_ports'       then self.lhea_logical_ports_to_s
-               when 'virtual_fc_adapters'      then self.virtual_fc_adapters_to_s
+               when 'virtual_fc_adapters'      then @_virtual_slots.adapters_virtual_fc_to_s
                when 'virtual_vasi_adapters'    then self.virtual_vasi_adapters_to_s
-               when 'virtual_serial_adapters'  then self.virtual_serial_adapters_to_s
-               when 'virtual_scsi_adapters'    then self.virtual_scsi_adapters_to_s
-               when 'virtual_eth_adapters'     then self.virtual_eth_adapters_to_s
+               when 'virtual_serial_adapters'  then @_virtual_slots.adapters_virtual_serial_to_s
+               when 'virtual_scsi_adapters'    then @_virtual_slots.adapters_virtual_scsi_to_s
+               when 'virtual_eth_adapters'     then @_virtual_slots.adapters_virtual_eth_to_s
                when 'virtual_eth_vsi_profiles' then self.virtual_eth_vsi_profiles_to_s
                else
                  raise 'class:lpar_profile, function:adapters_to_s_F unknown type'
@@ -303,12 +226,16 @@ class Lpar_profile
 	end
 
   def virtual_adapter_add adapter
+
+#      pp 'Adding adapter:'
+#      pp adapter
+
       if adapter.class == VirtualEthAdapter
-        self.adapter_virtual_eth_add(adapter)
+        @_virtual_slots.virtual_adapter_add(adapter)
       elsif adapter.class == VirtualScsiAdapter
-        self.adapter_virtual_scsi_add(adapter )
+        @_virtual_slots.virtual_adapter_add(adapter)
       elsif adapter.class == VirtualSerialAdapter
-        self.adapter_virtual_serial_add(adapter)
+        @_virtual_slots.virtual_adapter_add(adapter)
       elsif adapter.class == VirtualFCAdapter
         self.adapter_virtual_fc_add(adapter)
       else
@@ -325,14 +252,6 @@ class Lpar_profile
     @virtual_eth_adapters.push(adapter)
   end
 	
-	def adapter_virtual_scsi_add(adapter)
-    @virtual_scsi_adapters.push(adapter)
-  end
-
-  def adapter_virtual_serial_add(adapter)
-    @virtual_serial_adapters.push(adapter)
-  end
-
 	def remove
 		"rmsyscfg -m #{@sys} -r lpar -n #{@lpar_name}"
 	end
@@ -402,35 +321,19 @@ class Lpar_profile
 	def _rawToTable
 		
 		if @virtual_serial_adapters_raw != nil
-			if @virtual_serial_adapters_raw != "none"
-				@virtual_serial_adapters_raw.split(',').each { |adapter|
-          self.virtual_adapter_add(VirtualSerialAdapter.new(adapter))
-				}
-			end
-		end	
+      self._virtual_slots.virtual_serial_adapters_raw2 = @virtual_serial_adapters_raw
+		end
 
-		if @virtual_eth_adapters_raw != nil		
-			if @virtual_eth_adapters_raw != "none"
-				HmcString.parse_value(@virtual_eth_adapters_raw).each { |adapter_string|
-					@virtual_eth_adapters.push(VirtualEthAdapter.new(adapter_string))
-				}	
-			end
-		end	
+		if @virtual_eth_adapters_raw != nil
+      self._virtual_slots.virtual_eth_adapters_raw2 = @virtual_eth_adapters_raw
+		end
 
 		if @virtual_scsi_adapters_raw != nil
-			if @virtual_scsi_adapters_raw != "none"
-				@virtual_scsi_adapters_raw.split(',').each { |adapter|
-          self.virtual_adapter_add(VirtualScsiAdapter.new(adapter))
-				}
-			end
+      self._virtual_slots.virtual_scsi_adapters_raw2 = @virtual_scsi_adapters_raw
 		end	
 
 		if @virtual_fc_adapters_raw != nil
-			if @virtual_fc_adapters_raw != "none"
-				HmcString.parse_value(@virtual_fc_adapters_raw).each { |adapter_string|
-          self.virtual_adapter_add(VirtualFCAdapter.new(adapter_string))
-				}	
-			end	
+      self._virtual_slots.virtual_fc_adapters_raw2 = @virtual_fc_adapters_raw
 		end
 
     if @io_slots_raw != nil
