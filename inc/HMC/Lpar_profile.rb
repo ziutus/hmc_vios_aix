@@ -31,17 +31,18 @@ class Lpar_profile
   attr_accessor :mem_expansion, :affinity_group_id, :bsr_arrays, :lpar_proc_compat_mode
   attr_accessor :lhea_capabilities,  :lpar_proc_compat_mode, :electronic_err_reporting
 
+  attr_reader :io_slots,                 :io_slots_raw
+  attr_reader :sriov_eth_logical_ports,  :sriov_eth_logical_ports_raw
   attr_reader :lhea_logical_ports,       :lhea_logical_ports_raw
   attr_reader :vtpm_adapters,            :vtpm_adapters_raw
+  attr_reader :hca_adapters,             :hca_adapters_raw
+
+  attr_reader :virtual_vasi_adapters,    :virtual_vasi_adapters_raw
+  attr_reader :virtual_eth_vsi_profiles, :virtual_eth_vsi_profiles_raw
   attr_reader :virtual_fc_adapters,      :virtual_fc_adapters_raw
   attr_reader :virtual_serial_adapters,  :virtual_serial_adapters_raw
   attr_reader :virtual_scsi_adapters,    :virtual_scsi_adapters_raw
   attr_reader :virtual_eth_adapters,     :virtual_eth_adapters_raw
-  attr_reader :hca_adapters,             :hca_adapters_raw
-  attr_reader :virtual_vasi_adapters,    :virtual_vasi_adapters_raw
-  attr_reader :virtual_eth_vsi_profiles, :virtual_eth_vsi_profiles_raw
-  attr_reader :io_slots,                 :io_slots_raw
-  attr_reader :sriov_eth_logical_ports,  :sriov_eth_logical_ports_raw
 
   attr_accessor :sni_device_ids
 
@@ -80,6 +81,7 @@ class Lpar_profile
     @virtual_scsi_adapters = []
     @virtual_serial_adapters = []
     @virtual_fc_adapters = []
+
     @lhea_logical_ports = []
     @hca_adapters = []
     @io_slots = []
@@ -108,6 +110,7 @@ class Lpar_profile
 
     result
   end
+
 
 
   def virtual_eth_adapters_to_s
@@ -229,7 +232,7 @@ class Lpar_profile
   end
 
  # the result of command it the same as: lssyscfg -r prof -m $FRAME
-  def to_s(params='all')
+  def to_s(params='all', exclude_cols='none')
 
     result_array = []
     params_to_print = []
@@ -242,6 +245,12 @@ class Lpar_profile
       end
     else
       params_to_print = params.split(',')
+    end
+
+    if exclude_cols != 'none'
+        exclude_cols.split(',').each { |column|
+          params_to_print.delete(column)
+        }
     end
 
     params_with_functions = %w(io_slots virtual_serial_adapters virtual_scsi_adapters virtual_eth_adapters hca_adapters vtpm_adapters virtual_fc_adapters lhea_logical_ports virtual_vasi_adapters sriov_eth_logical_ports virtual_eth_vsi_profiles)
@@ -270,31 +279,20 @@ class Lpar_profile
   def adapters_to_s_F(type)
 
     string = case type
-               when 'io_slots' then
-                 self.io_slots_to_s
-               when 'virtual_serial_adapters' then
-                 self.virtual_serial_adapters_to_s
-               when 'virtual_scsi_adapters' then
-                 self.virtual_scsi_adapters_to_s
-               when 'virtual_eth_adapters' then
-                 self.virtual_eth_adapters_to_s
-               when 'hca_adapters' then
-                 self.hca_adapters_to_s
-               when 'vtpm_adapters' then
-                 self.vtpm_adapters_to_s
-               when 'virtual_fc_adapters' then
-                 self.virtual_fc_adapters_to_s
-               when 'lhea_logical_ports' then
-                 self.lhea_logical_ports_to_s
-               when 'virtual_vasi_adapters' then
-                 self.virtual_vasi_adapters_to_s
-               when 'sriov_eth_logical_ports' then
-                 self.sriov_eth_logical_ports_to_s
-               when 'virtual_eth_vsi_profiles' then
-                 self.virtual_eth_vsi_profiles_to_s
+               when 'io_slots'                 then self.io_slots_to_s
+               when 'sriov_eth_logical_ports'  then self.sriov_eth_logical_ports_to_s
+               when 'hca_adapters'             then self.hca_adapters_to_s
+               when 'vtpm_adapters'            then self.vtpm_adapters_to_s
+               when 'lhea_logical_ports'       then self.lhea_logical_ports_to_s
+               when 'virtual_fc_adapters'      then self.virtual_fc_adapters_to_s
+               when 'virtual_vasi_adapters'    then self.virtual_vasi_adapters_to_s
+               when 'virtual_serial_adapters'  then self.virtual_serial_adapters_to_s
+               when 'virtual_scsi_adapters'    then self.virtual_scsi_adapters_to_s
+               when 'virtual_eth_adapters'     then self.virtual_eth_adapters_to_s
+               when 'virtual_eth_vsi_profiles' then self.virtual_eth_vsi_profiles_to_s
                else
                  raise 'class:lpar_profile, function:adapters_to_s_F unknown type'
-             end
+     end
 
     string
   end
@@ -303,15 +301,38 @@ class Lpar_profile
 		"mksyscfg -r lpar -m #{@sys} -i \"" + self.to_s + '"'
 
 	end
-	
-	def adapter_eth_add(adapter)
+
+  def virtual_adapter_add adapter
+      if adapter.class == VirtualEthAdapter
+        self.adapter_virtual_eth_add(adapter)
+      elsif adapter.class == VirtualScsiAdapter
+        self.adapter_virtual_scsi_add(adapter )
+      elsif adapter.class == VirtualSerialAdapter
+        self.adapter_virtual_serial_add(adapter)
+      elsif adapter.class == VirtualFCAdapter
+        self.adapter_virtual_fc_add(adapter)
+      else
+        pp "strange type of adapter: #{adapter.class}"
+        raise 'unknown type of Virtual Adapter'
+      end
+  end
+
+  def adapter_virtual_fc_add(adapter)
+    @virtual_fc_adapters.push(adapter)
+  end
+
+  def adapter_virtual_eth_add(adapter)
     @virtual_eth_adapters.push(adapter)
   end
 	
-	def adapter_scsi_add(adapter)
+	def adapter_virtual_scsi_add(adapter)
     @virtual_scsi_adapters.push(adapter)
   end
-	
+
+  def adapter_virtual_serial_add(adapter)
+    @virtual_serial_adapters.push(adapter)
+  end
+
 	def remove
 		"rmsyscfg -m #{@sys} -r lpar -n #{@lpar_name}"
 	end
@@ -327,46 +348,26 @@ class Lpar_profile
 
       case key
 
-        when 'name' then
-          @name=value
-        when 'lpar_id' then
-          @lpar_id=value
-        when 'lpar_env' then
-          @lpar_env=value
-        when 'state' then
-          @state=value
-        when 'resource_config' then
-          @resource_config=value
-        when 'os_version' then
-          @os_version=value
-        when 'logical_serial_num' then
-          @logical_serial_num=value
-        when 'default_profile' then
-          @default_profile=value
-        when 'curr_profile' then
-          @curr_profile=value
-        when 'work_group_id' then
-          @work_group_id=value
-        when 'shared_proc_pool_util_auth' then
-          @shared_proc_pool_util_auth=value
-        when 'allow_perf_collection' then
-          @allow_perf_collection=value
-        when 'power_ctrl_lpar_ids' then
-          @power_ctrl_lpar_ids=value
-        when 'boot_mode' then
-          @boot_mode=value
-        when 'lpar_keylock' then
-          @lpar_keylock=value
-        when 'auto_start' then
-          @auto_start=value
-        when 'redundant_err_path_reporting' then
-          @redundant_err_path_reporting=value
-        when 'rmc_state' then
-          @rmc_state=value
-        when 'rmc_ipaddr' then
-          @rmc_ipaddr=value
-        when 'sync_curr_profile' then
-          @sync_curr_profile=value
+        when 'name'                         then           @name=value
+        when 'lpar_id'                      then           @lpar_id=value
+        when 'lpar_env'                     then           @lpar_env=value
+        when 'state'                        then           @state=value
+        when 'resource_config'              then           @resource_config=value
+        when 'os_version'                   then           @os_version=value
+        when 'logical_serial_num'           then           @logical_serial_num=value
+        when 'default_profile'              then           @default_profile=value
+        when 'curr_profile'                 then           @curr_profile=value
+        when 'work_group_id'                then           @work_group_id=value
+        when 'shared_proc_pool_util_auth'   then           @shared_proc_pool_util_auth=value
+        when 'allow_perf_collection'        then           @allow_perf_collection=value
+        when 'power_ctrl_lpar_ids'          then           @power_ctrl_lpar_ids=value
+        when 'boot_mode'                    then           @boot_mode=value
+        when 'lpar_keylock'                 then           @lpar_keylock=value
+        when 'auto_start'                   then           @auto_start=value
+        when 'redundant_err_path_reporting' then           @redundant_err_path_reporting=value
+        when 'rmc_state'                    then           @rmc_state=value
+        when 'rmc_ipaddr'                   then           @rmc_ipaddr=value
+        when 'sync_curr_profile'            then           @sync_curr_profile=value
         else
           raise "Unknown key #{key} with value #{value}, exiting... \n"
       end
@@ -403,7 +404,7 @@ class Lpar_profile
 		if @virtual_serial_adapters_raw != nil
 			if @virtual_serial_adapters_raw != "none"
 				@virtual_serial_adapters_raw.split(',').each { |adapter|
-					@virtual_serial_adapters.push(VirtualSerialAdapter.new(adapter))
+          self.virtual_adapter_add(VirtualSerialAdapter.new(adapter))
 				}
 			end
 		end	
@@ -419,7 +420,7 @@ class Lpar_profile
 		if @virtual_scsi_adapters_raw != nil
 			if @virtual_scsi_adapters_raw != "none"
 				@virtual_scsi_adapters_raw.split(',').each { |adapter|
-					@virtual_scsi_adapters.push(VirtualScsiAdapter.new(adapter))
+          self.virtual_adapter_add(VirtualScsiAdapter.new(adapter))
 				}
 			end
 		end	
@@ -427,7 +428,7 @@ class Lpar_profile
 		if @virtual_fc_adapters_raw != nil
 			if @virtual_fc_adapters_raw != "none"
 				HmcString.parse_value(@virtual_fc_adapters_raw).each { |adapter_string|
-					@virtual_fc_adapters.push(VirtualFCAdapter.new(adapter_string))
+          self.virtual_adapter_add(VirtualFCAdapter.new(adapter_string))
 				}	
 			end	
 		end
