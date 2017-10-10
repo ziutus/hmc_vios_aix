@@ -63,7 +63,6 @@ ruby hmc_lpar_profile.rb -n test_profile_decode_6
 ```
 
 # Contributors
-For now I'm the main developer. You can find info about me on LinkedIn profile: (https://www.linkedin.com/in/krzysztof-j%C3%B3%C5%BAwiak-b95a831a/)
 
 # License
 GPL
