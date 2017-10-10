@@ -53,17 +53,15 @@ class Lpar_virtual_slots
 
 
   def virtual_adapter_add(adapter)
-    if adapter.class == VirtualEthAdapter
-      self.adapter_virtual_eth_add(adapter)
-    elsif adapter.class == VirtualScsiAdapter
-      self.adapter_virtual_scsi_add(adapter)
-    elsif adapter.class == VirtualSerialAdapter
-      self.adapter_virtual_serial_add(adapter)
-    elsif adapter.class == VirtualFCAdapter
-      self.adapter_virtual_fc_add(adapter)
-    else
-      pp 'adapter class:' +  adapter.class
-      raise 'unknown type of Virtual Adapter'
+
+    case adapter.class.to_s
+      when 'VirtualEthAdapter'    then self.adapter_virtual_eth_add(adapter)
+      when 'VirtualScsiAdapter'   then self.adapter_virtual_scsi_add(adapter)
+      when 'VirtualSerialAdapter' then self.adapter_virtual_serial_add(adapter)
+      when 'VirtualFCAdapter'     then self.adapter_virtual_fc_add(adapter)
+      else
+        pp 'adapter class:' +  adapter.class
+        raise 'unknown type of Virtual Adapter'
     end
   end
 
@@ -151,80 +149,32 @@ class Lpar_virtual_slots
 
   end
 
+  def adapters_to_s type
 
-  def adapters_virtual_eth_to_s
+    return nil if type == 'virtual_fc' and @virtual_fc_adapters_raw.nil?
+    return nil if type == 'virtual_eth' and @virtual_eth_adapters_raw.nil?
+    return nil if type == 'virtual_serial' and @virtual_serial_adapters_raw.nil?
+    return nil if type == 'virtual_scsi' and @virtual_scsi_adapters_raw.nil?
 
-    result = nil
-    unless @virtual_eth_adapters_raw.nil?
-      if @virtual_eth_adapters.size == 0
-        result =  'none'
-      else
-        adapters=[]
-        @virtual_eth_adapters.each { |adapter|
-          adapters.push(adapter.to_s)
-        }
-        result = adapters.join(',')
-      end
-    end
-    result
-  end
+    adapters_tmp = case type
+                 when 'virtual_fc'     then @virtual_fc_adapters
+                 when 'virtual_eth'    then @virtual_eth_adapters
+                 when 'virtual_scsi'   then @virtual_scsi_adapters
+                 when 'virtual_serial' then @virtual_serial_adapters
+                 else
+                   raise 'unknown type ' + type
+               end
 
-  def adapters_virtual_scsi_to_s
-
-    result = nil
-    unless @virtual_scsi_adapters_raw.nil?
-      if @virtual_scsi_adapters.size == 0
-        result =  'none'
-      elsif @virtual_scsi_adapters.size == 1
-        result =  @virtual_scsi_adapters[0].to_s
-      else
-        adapters=[]
-        @virtual_scsi_adapters.each { |adapter|
-          adapters.push(adapter.to_s)
-        }
-        result = adapters.join(',')
-      end
-    end
-    result
-  end
-
-  def adapters_virtual_serial_to_s
-
-    result = nil
-    unless @virtual_serial_adapters_raw.nil?
-      if    @virtual_serial_adapters.size == 0
-        result = 'none'
-      elsif @virtual_serial_adapters.size == 1
-        result = @virtual_serial_adapters[0].to_s
-      else
-        adapters=[]
-        @virtual_serial_adapters.each { |adapter|
-          adapters.push(adapter.to_s)
-        }
-        result = adapters.join(',')
-      end
-    end
-    result
-  end
-
-  def adapters_virtual_fc_to_s
-
-    result = nil
-    unless @virtual_fc_adapters_raw.nil?
-      result = 'virtual_fc_adapters='
-
-      if @virtual_fc_adapters.size == 0
-        result +=  'none'
-      else
-        adapters=[]
-        @virtual_fc_adapters.each { |adapter|
-          adapters.push(adapter.to_s)
-        }
-        result = adapters.join(',')
-      end
+    if adapters_tmp.size == 0
+      return  'none'
+    else
+      adapters=[]
+      adapters_tmp.each { |adapter|
+        adapters.push(adapter.to_s)
+      }
+      return  adapters.join(',')
     end
 
-    result
   end
 
 end
