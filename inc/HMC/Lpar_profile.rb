@@ -98,7 +98,8 @@ class Lpar_profile
     @lpar_id = lpar_id
     @name    = name
 
-    @variables_int = %w(lpar_id min_mem desired_mem max_mem all_resources min_procs desired_procs max_procs max_virtual_slots auto_start conn_monitoring uncap_weight bsr_arrays shared_proc_pool_id)
+    @variables_int = %w(lpar_id min_mem desired_mem max_mem all_resources min_procs desired_procs max_procs max_virtual_slots
+            auto_start conn_monitoring uncap_weight bsr_arrays shared_proc_pool_id)
 
     @variables_float = %w(min_proc_units desired_proc_units max_proc_units mem_expansion)
 
@@ -229,7 +230,8 @@ class Lpar_profile
         }
     end
 
-    params_with_functions = %w(io_slots virtual_serial_adapters virtual_scsi_adapters virtual_eth_adapters hca_adapters vtpm_adapters virtual_fc_adapters lhea_logical_ports virtual_vasi_adapters sriov_eth_logical_ports virtual_eth_vsi_profiles)
+    params_with_functions = %w(io_slots virtual_serial_adapters virtual_scsi_adapters virtual_eth_adapters hca_adapters vtpm_adapters virtual_fc_adapters
+                                  lhea_logical_ports virtual_vasi_adapters sriov_eth_logical_ports virtual_eth_vsi_profiles)
 
     params_to_print.each {|parametr|
 
@@ -243,10 +245,10 @@ class Lpar_profile
                    when 'lhea_logical_ports'       then self.lhea_logical_ports_to_s
                    when 'virtual_vasi_adapters'    then self.virtual_vasi_adapters_to_s
                    when 'virtual_eth_vsi_profiles' then self.virtual_eth_vsi_profiles_to_s
-                   when 'virtual_fc_adapters'      then @virtual_slots.adapters_to_s('virtual_fc')
-                   when 'virtual_serial_adapters'  then @virtual_slots.adapters_to_s('virtual_serial')
-                   when 'virtual_scsi_adapters'    then @virtual_slots.adapters_to_s('virtual_scsi')
-                   when 'virtual_eth_adapters'     then @virtual_slots.adapters_to_s('virtual_eth')
+                   when 'virtual_fc_adapters'      then @virtual_slots.adapters_to_s('virtual_fc_adapters')
+                   when 'virtual_serial_adapters'  then @virtual_slots.adapters_to_s('virtual_serial_adapters')
+                   when 'virtual_scsi_adapters'    then @virtual_slots.adapters_to_s('virtual_scsi_adapters')
+                   when 'virtual_eth_adapters'     then @virtual_slots.adapters_to_s('virtual_eth_adapters')
                    else
                      raise 'class:lpar_profile, function:adapters_to_s_F unknown type'
                  end
@@ -332,6 +334,96 @@ class Lpar_profile
         }
       end
       @lhea_logical_ports_raw = string
+  end
+
+  def ==(another_profile)
+    self.to_s == another_profile.to_s
+  end
+
+  def diff_param_names (another_profile, calls_to_ignore)
+
+    diffs = []
+    diff_values_self = []
+    diff_values_other = []
+
+    ignore = calls_to_ignore.split(',')
+
+    @variables_int.each { |name|
+
+      next if ignore.include?(name)
+
+       if self.instance_variable_get("@#{name}") != another_profile.instance_variable_get("@#{name}")
+         val_self    = self.instance_variable_get("@#{name}")
+         val_profile = another_profile.instance_variable_get("@#{name}")
+
+         val_self    = 'nil' if val_self.nil?
+         val_profile = 'nil' if val_profile.nil?
+
+         diffs.push("#{name}: >" + val_self.to_s + '< vs >' + another_profile.instance_variable_get("@#{name}").to_s + '<' )
+       end
+    }
+
+    @variables_string.each { |name|
+
+      next if ignore.include?(name)
+
+      if self.instance_variable_get("@#{name}") != another_profile.instance_variable_get("@#{name}")
+        val_self    = self.instance_variable_get("@#{name}")
+        val_profile = another_profile.instance_variable_get("@#{name}")
+
+        val_self    = 'nil' if val_self.nil?
+        val_profile = 'nil' if val_profile.nil?
+
+        diffs.push("#{name}: >" + val_self + '< vs >' + another_profile.instance_variable_get("@#{name}").to_s + '<')
+      end
+    }
+
+    @variables_float.each { |name|
+
+      next if ignore.include?(name)
+
+      if self.instance_variable_get("@#{name}") != another_profile.instance_variable_get("@#{name}")
+        val_self    = self.instance_variable_get("@#{name}")
+        val_profile = another_profile.instance_variable_get("@#{name}")
+
+        val_self    = 'nil' if val_self.nil?
+        val_profile = 'nil' if val_profile.nil?
+
+        diffs.push("#{name}: >" + val_self.to_s + '< vs >' + another_profile.instance_variable_get("@#{name}").to_s  + '<')
+      end
+    }
+
+    @variables_string_raw.each { |name|
+
+      next if ignore.include?(name)
+
+      if self.instance_variable_get("@#{name}_raw") != another_profile.instance_variable_get("@#{name}_raw")
+        val_self    = self.instance_variable_get("@#{name}")
+        val_profile = another_profile.instance_variable_get("@#{name}")
+
+        val_self    = 'nil' if val_self.nil?
+        val_profile = 'nil' if val_profile.nil?
+
+        diffs.push("#{name}: >" + val_self + '< vs >' + another_profile.instance_variable_get("@#{name}").to_s  + '<' )
+      end
+    }
+
+    @variables_string_virtual_raw.each  { |name|
+
+      next if ignore.include?(name)
+
+      if self.virtual_slots.adapters_to_s(name) != another_profile.virtual_slots.adapters_to_s(name)
+        val_self    = self.virtual_slots.adapters_to_s(name)
+        val_profile = another_profile.virtual_slots.adapters_to_s(name)
+
+        val_self    = 'nil' if val_self.nil?
+        val_profile = 'nil' if val_profile.nil?
+
+        diffs.push("#{name}: >" + val_self + '< vs >' + another_profile.instance_variable_get("@#{name}").to_s  + '<' )
+      end
+    }
+
+    return diffs
   end
 
 end
