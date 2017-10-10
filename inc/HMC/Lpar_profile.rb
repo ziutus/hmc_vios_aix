@@ -6,41 +6,87 @@ include HmcString
 
 class Lpar_profile
 
-	attr_accessor :sys, :name, :lpar_name
-  attr_accessor :name, :lpar_id, :lpar_env
+	attr_accessor :sys
+  attr_accessor :name
+  attr_accessor :lpar_name
+
+  attr_accessor :lpar_id
+  attr_accessor :lpar_env
   attr_accessor :all_resources
-  attr_accessor :min_mem, :desired_mem, :max_mem, :mem_mode, :hpt_ratio
-  attr_accessor :min_num_huge_pages, :desired_num_huge_pages, :max_num_huge_pages
+  attr_accessor :min_mem
+  attr_accessor :desired_mem
+  attr_accessor :max_mem
+  attr_accessor :mem_mode
+  attr_accessor :hpt_ratio
+  attr_accessor :min_num_huge_pages
+  attr_accessor :desired_num_huge_pages
+  attr_accessor :max_num_huge_pages
 
-  attr_accessor :proc_mode, :min_proc_units, :desired_proc_units, :max_proc_units
-  attr_accessor :min_procs, 	 :desired_procs, 	  :max_procs
+  attr_accessor :proc_mode
+  attr_accessor :min_proc_units
+  attr_accessor :desired_proc_units
+  attr_accessor :max_proc_units
+  attr_accessor :min_procs
+  attr_accessor :desired_procs
+  attr_accessor :max_procs
 
-  attr_accessor :sharing_mode, :uncap_weight
-  attr_accessor :lpar_io_pool_ids, :lpar_io_pool_ids_raw
+  attr_accessor :sharing_mode
+  attr_accessor :uncap_weight
+  attr_accessor :lpar_io_pool_ids
+  attr_accessor :lpar_io_pool_ids_raw
   attr_accessor :max_virtual_slots
 
-  attr_accessor :auto_start, :conn_monitoring
+  attr_accessor :auto_start
+  attr_accessor :conn_monitoring
 
-  attr_accessor :resource_config, :os_version, :logical_serial_num, :default_profile, :curr_profile, :work_group_id, :shared_proc_pool_util_auth
+  attr_accessor :resource_config
+  attr_accessor :os_version
+  attr_accessor :logical_serial_num
+  attr_accessor :default_profile
+  attr_accessor :curr_profile
+  attr_accessor :work_group_id
+  attr_accessor :shared_proc_pool_util_auth
   attr_accessor :allow_perf_collection
-  attr_accessor :power_ctrl_lpar_ids, :boot_mode, :lpar_keylock, :redundant_err_path_reporting, :rmc_state, :rmc_ipaddr, :sync_curr_profile
+  attr_accessor :power_ctrl_lpar_ids
+  attr_accessor :boot_mode
+  attr_accessor :lpar_keylock
+  attr_accessor :redundant_err_path_reporting
+  attr_accessor :rmc_state
+  attr_accessor :rmc_ipaddr
+  attr_accessor :sync_curr_profile
 
-  attr_accessor :mem_expansion, :affinity_group_id, :bsr_arrays, :lpar_proc_compat_mode
-  attr_accessor :lhea_capabilities,  :lpar_proc_compat_mode, :electronic_err_reporting
+  attr_accessor :mem_expansion
+  attr_accessor :affinity_group_id
+  attr_accessor :bsr_arrays
+  attr_accessor :lpar_proc_compat_mode
+  attr_accessor :lhea_capabilities
+  attr_accessor :lpar_proc_compat_mode
+  attr_accessor :electronic_err_reporting
 
   attr_reader :io_slots
   attr_reader :io_slots_raw
 
-  attr_reader :sriov_eth_logical_ports,  :sriov_eth_logical_ports_raw
-  attr_reader :lhea_logical_ports,       :lhea_logical_ports_raw
-  attr_reader :vtpm_adapters,            :vtpm_adapters_raw
-  attr_reader :hca_adapters,             :hca_adapters_raw
+  # ports
+  attr_reader :sriov_eth_logical_ports
+  attr_reader :lhea_logical_ports
+  attr_reader :vtpm_adapters
+  attr_reader :hca_adapters
 
-  attr_reader :virtual_vasi_adapters,    :virtual_vasi_adapters_raw
-  attr_reader :virtual_eth_vsi_profiles, :virtual_eth_vsi_profiles_raw
+  attr_accessor :lhea_logical_ports_raw
+  attr_accessor :vtpm_adapters_raw
+  attr_accessor :hca_adapters_raw
+  attr_accessor :sriov_eth_logical_ports_raw
+
+
+  attr_reader :virtual_vasi_adapters
+  attr_reader :virtual_eth_vsi_profiles
+
+  attr_accessor :virtual_vasi_adapters_raw
+  attr_reader   :virtual_eth_vsi_profiles_raw
 
   attr_accessor :sni_device_ids
 
+   # own attributes
   attr_accessor :_compatibility
   attr_reader   :_parametr_order
   attr_reader   :_default_params
@@ -58,7 +104,7 @@ class Lpar_profile
 
     @variables_string_raw = %w( hca_adapters vtpm_adapters virtual_vasi_adapters virtual_eth_vsi_profiles sriov_eth_logical_ports vnic_adapters)
 
-    @variables_string_virtual_raw = %(virtual_serial_adapters virtual_scsi_adapters virtual_eth_adapters virtual_fc_adapters)
+    @variables_string_virtual_raw = %w(virtual_serial_adapters virtual_scsi_adapters virtual_eth_adapters virtual_fc_adapters)
 
     @variables_string = ['name', 'lpar_name', 'lpar_env', 'mem_mode', 'proc_mode', 'sharing_mode',
                          'lpar_io_pool_ids', 'boot_mode',
@@ -81,6 +127,20 @@ class Lpar_profile
 
     @_compatibility = 'power5'
     @_parametr_order = []
+
+    @sriov_eth_logical_ports = nil
+    @vtpm_adapters = nil
+    @virtual_vasi_adapters = nil
+    @virtual_eth_vsi_profiles = nil
+
+    @hca_adapters_raw = nil
+    @vtpm_adapters_raw = nil
+    @virtual_eth_vsi_profiles_raw = nil
+    @virtual_vasi_adapters_raw = nil
+    @sriov_eth_logical_ports_raw = nil
+    @sys  = nil
+    @lpar_name = nil
+
 
     @virtual_slots = Lpar_virtual_slots.new
 
@@ -152,7 +212,6 @@ class Lpar_profile
   def to_s(params='all', exclude_cols='none')
 
     result_array = []
-    params_to_print = []
 
     if params == 'all'
       if @_parametr_order.count > 0
@@ -175,7 +234,23 @@ class Lpar_profile
     params_to_print.each {|parametr|
 
       if params_with_functions.include?(parametr)
-        tmp = self.adapters_to_s_F(parametr)
+
+        tmp = case parametr
+                   when 'io_slots'                 then self.io_slots_to_s
+                   when 'sriov_eth_logical_ports'  then self.sriov_eth_logical_ports_to_s
+                   when 'hca_adapters'             then self.hca_adapters_to_s
+                   when 'vtpm_adapters'            then self.vtpm_adapters_to_s
+                   when 'lhea_logical_ports'       then self.lhea_logical_ports_to_s
+                   when 'virtual_vasi_adapters'    then self.virtual_vasi_adapters_to_s
+                   when 'virtual_eth_vsi_profiles' then self.virtual_eth_vsi_profiles_to_s
+                   when 'virtual_fc_adapters'      then @virtual_slots.adapters_virtual_fc_to_s
+                   when 'virtual_serial_adapters'  then @virtual_slots.adapters_virtual_serial_to_s
+                   when 'virtual_scsi_adapters'    then @virtual_slots.adapters_virtual_scsi_to_s
+                   when 'virtual_eth_adapters'     then @virtual_slots.adapters_virtual_eth_to_s
+                   else
+                     raise 'class:lpar_profile, function:adapters_to_s_F unknown type'
+                 end
+
         unless tmp.nil?
           tmp = parametr + '=' + tmp
           if tmp.include?('"') or tmp.include?(',')
@@ -191,27 +266,6 @@ class Lpar_profile
     }
 
     result_array.join(',')
-  end
-
-  def adapters_to_s_F(type)
-
-    string = case type
-               when 'io_slots'                 then self.io_slots_to_s
-               when 'sriov_eth_logical_ports'  then self.sriov_eth_logical_ports_to_s
-               when 'hca_adapters'             then self.hca_adapters_to_s
-               when 'vtpm_adapters'            then self.vtpm_adapters_to_s
-               when 'lhea_logical_ports'       then self.lhea_logical_ports_to_s
-               when 'virtual_vasi_adapters'    then self.virtual_vasi_adapters_to_s
-               when 'virtual_eth_vsi_profiles' then self.virtual_eth_vsi_profiles_to_s
-               when 'virtual_fc_adapters'      then @virtual_slots.adapters_virtual_fc_to_s
-               when 'virtual_serial_adapters'  then @virtual_slots.adapters_virtual_serial_to_s
-               when 'virtual_scsi_adapters'    then @virtual_slots.adapters_virtual_scsi_to_s
-               when 'virtual_eth_adapters'     then @virtual_slots.adapters_virtual_eth_to_s
-               else
-                 raise 'class:lpar_profile, function:adapters_to_s_F unknown type'
-     end
-
-    string
   end
 
   def get_mksyscfg
@@ -240,6 +294,8 @@ class Lpar_profile
           when 'virtual_eth_adapters'    then @virtual_slots.virtual_eth_adapters_raw = value
           when 'virtual_scsi_adapters'   then @virtual_slots.virtual_scsi_adapters_raw = value
           when 'virtual_serial_adapters' then @virtual_slots.virtual_serial_adapters_raw = value
+          else
+            raise 'unknown virtual slot type' + name
         end
       elsif name == 'io_slots'
         self.io_slots_raw = value
@@ -261,7 +317,7 @@ class Lpar_profile
 
 
   def io_slots_raw=(string)
-      if string != "none"
+      if string != 'none'
         string.split(',').each { |adapter_string|
           @io_slots.push(adapter_string.split('/'))
         }
@@ -270,7 +326,7 @@ class Lpar_profile
   end
 
   def lhea_logical_ports_raw=(string)
-      if string != "none"
+      if string != 'none'
         string.split(',').each { |adapter_string|
           @lhea_logical_ports.push(adapter_string.split('/'))
         }
