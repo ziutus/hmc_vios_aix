@@ -243,10 +243,10 @@ class Lpar_profile
                    when 'lhea_logical_ports'       then self.lhea_logical_ports_to_s
                    when 'virtual_vasi_adapters'    then self.virtual_vasi_adapters_to_s
                    when 'virtual_eth_vsi_profiles' then self.virtual_eth_vsi_profiles_to_s
-                   when 'virtual_fc_adapters'      then @virtual_slots.adapters_virtual_fc_to_s
-                   when 'virtual_serial_adapters'  then @virtual_slots.adapters_virtual_serial_to_s
-                   when 'virtual_scsi_adapters'    then @virtual_slots.adapters_virtual_scsi_to_s
-                   when 'virtual_eth_adapters'     then @virtual_slots.adapters_virtual_eth_to_s
+                   when 'virtual_fc_adapters'      then @virtual_slots.adapters_to_s('virtual_fc')
+                   when 'virtual_serial_adapters'  then @virtual_slots.adapters_to_s('virtual_serial')
+                   when 'virtual_scsi_adapters'    then @virtual_slots.adapters_to_s('virtual_scsi')
+                   when 'virtual_eth_adapters'     then @virtual_slots.adapters_to_s('virtual_eth')
                    else
                      raise 'class:lpar_profile, function:adapters_to_s_F unknown type'
                  end

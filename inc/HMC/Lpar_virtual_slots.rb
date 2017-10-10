@@ -149,7 +149,7 @@ class Lpar_virtual_slots
 
   end
 
-  def adapters_to_s type
+  def adapters_to_s(type)
 
     return nil if type == 'virtual_fc' and @virtual_fc_adapters_raw.nil?
     return nil if type == 'virtual_eth' and @virtual_eth_adapters_raw.nil?
@@ -157,22 +157,26 @@ class Lpar_virtual_slots
     return nil if type == 'virtual_scsi' and @virtual_scsi_adapters_raw.nil?
 
     adapters_tmp = case type
-                 when 'virtual_fc'     then @virtual_fc_adapters
-                 when 'virtual_eth'    then @virtual_eth_adapters
-                 when 'virtual_scsi'   then @virtual_scsi_adapters
-                 when 'virtual_serial' then @virtual_serial_adapters
-                 else
-                   raise 'unknown type ' + type
-               end
+                     when 'virtual_fc' then
+                       @virtual_fc_adapters
+                     when 'virtual_eth' then
+                       @virtual_eth_adapters
+                     when 'virtual_scsi' then
+                       @virtual_scsi_adapters
+                     when 'virtual_serial' then
+                       @virtual_serial_adapters
+                     else
+                       raise 'unknown type ' + type
+                   end
 
     if adapters_tmp.size == 0
-      return  'none'
+      'none'
     else
       adapters=[]
-      adapters_tmp.each { |adapter|
+      adapters_tmp.each {|adapter|
         adapters.push(adapter.to_s)
       }
-      return  adapters.join(',')
+      adapters.join(',')
     end
 
   end
