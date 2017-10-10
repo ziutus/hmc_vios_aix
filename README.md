@@ -8,7 +8,7 @@ ping_all.rb -s server1,server2
 I'm the AIX SysAdmin and I don't like to do every day the same jobs. If something is repetitive, maybe we can write script for that?
 This repository hold scripts which I wrote or rewrite from different projects / persons to have all in one place.
 
-## Why OOP (Object-oriented programming?
+## Why OOP (Object-oriented programming) for SA (System Administrators)?
 OOP is used in this project as I want to reuse code each time, where it is possible, 
 it is not big difference in code when you want to use
 output from "lsmap -npiv" to check if all virtual adapters are logged, you want to compare with older output (for example between reboots during
@@ -49,7 +49,6 @@ Configuration file with default data for HMC script (hmc_manage.rb) should provi
 Example of config:
 
 ```
---- 
 :hmc: 192.168.200.33
 :username: hscroot
 :password: TopSecretPasswordAbc1234
@@ -64,6 +63,7 @@ ruby hmc_lpar_profile.rb -n test_profile_decode_6
 ```
 
 # Contributors
+For now I'm the main developer. You can find info about me on LinkedIn profile: (https://www.linkedin.com/in/krzysztof-j%C3%B3%C5%BAwiak-b95a831a/)
 
 # License
 GPL
