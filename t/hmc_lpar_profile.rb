@@ -49,13 +49,13 @@ class TestHMCLparProfile < Test::Unit::TestCase
 			assert_equal('none',   profile.io_slots_raw)
 			assert_equal('none',   profile.lpar_io_pool_ids)
 			assert_equal(10,       profile.max_virtual_slots)
-			assert_equal('0/server/1/any//any/1,1/server/1/any//any/1', profile.virtual_serial_adapters_raw)
-			assert_equal('2/client/2/vios1/2/1,3/client/3/vios2/2/1',   profile.virtual_scsi_adapters_raw)
-			assert_equal('6/1/6//0/0,7/0/7//0/0',                       profile.virtual_eth_adapters_raw)
+			assert_equal('0/server/1/any//any/1,1/server/1/any//any/1', profile.virtual_slots.virtual_serial_adapters_raw)
+			assert_equal('2/client/2/vios1/2/1,3/client/3/vios2/2/1',   profile.virtual_slots.virtual_scsi_adapters_raw)
+			assert_equal('6/1/6//0/0,7/0/7//0/0',                       profile.virtual_slots.virtual_eth_adapters_raw)
 
-#			assert_equal(2, profile.virtual_serial_adapters.count)
-#			assert_equal(2, profile.virtual_scsi_adapters.count)
-#			assert_equal(2, profile.virtual_eth_adapters.count)
+			assert_equal(2, profile.virtual_slots.virtual_serial_adapters.count)
+			assert_equal(2, profile.virtual_slots.virtual_scsi_adapters.count)
+			assert_equal(2, profile.virtual_slots.virtual_eth_adapters.count)
 			assert_equal(0, profile.io_slots.count)
 
 			assert_equal('none', profile.hca_adapters_raw)
@@ -104,13 +104,13 @@ class TestHMCLparProfile < Test::Unit::TestCase
 		assert_equal(profile.io_slots_raw,					'21010002/none/1,21050003/none/1')
 		assert_equal(profile.lpar_io_pool_ids,				'none')
 		assert_equal(profile.max_virtual_slots,				200)
-		assert_equal('0/server/1/any//any/1,1/server/1/any//any/1', profile.virtual_serial_adapters_raw)
-		assert_equal('2/server/5/nim1/3/0',						    profile.virtual_scsi_adapters_raw)
-		assert_equal('6/0/6//2/1,8/0/8//2/1,9/0/6//0/0',			profile.virtual_eth_adapters_raw)
+		assert_equal('0/server/1/any//any/1,1/server/1/any//any/1', profile.virtual_slots.virtual_serial_adapters_raw)
+		assert_equal('2/server/5/nim1/3/0',						    profile.virtual_slots.virtual_scsi_adapters_raw)
+		assert_equal('6/0/6//2/1,8/0/8//2/1,9/0/6//0/0',			profile.virtual_slots.virtual_eth_adapters_raw)
 
-#		assert_equal(2, profile.virtual_serial_adapters.count)
-#		assert_equal(1 , profile.virtual_scsi_adapters.count)
-#		assert_equal(3, profile.virtual_eth_adapters.count)
+		assert_equal(2, profile.virtual_slots.virtual_serial_adapters.count)
+		assert_equal(1, profile.virtual_slots.virtual_scsi_adapters.count)
+		assert_equal(3, profile.virtual_slots.virtual_eth_adapters.count)
 		assert_equal(2, profile.io_slots.count)
 
 		assert_equal('none', profile.hca_adapters_raw)
@@ -160,15 +160,15 @@ class TestHMCLparProfile < Test::Unit::TestCase
 			assert_equal('none',  profile.work_group_id)
 			assert_equal('null',  profile.redundant_err_path_reporting)
 			
-			assert_equal('2/0/1//1/1', profile.virtual_eth_adapters_raw)
+			assert_equal('2/0/1//1/1', profile.virtual_slots.virtual_eth_adapters_raw)
 			assert_equal('21040002/none/1,21010002/none/1', profile.io_slots_raw)
-			assert_equal('1/server/1/any//any/1,0/server/1/any//any/1' , profile.virtual_serial_adapters_raw)
-			assert_equal('4/server/3/op710-1-Client2-RHAS4U3/3/1,6/server/5/op710-1-Client4-openSUSE-10.1/3/1,3/server/2/op710-1-Client1-SLES9SP3/3/1,7/server/6/op710-1-Client5-Fedora-Core-4/3/1,5/server/4/op710-1-Client3-Debian-3.1/3/1' , profile.virtual_scsi_adapters_raw)
+			assert_equal('1/server/1/any//any/1,0/server/1/any//any/1' , profile.virtual_slots.virtual_serial_adapters_raw)
+			assert_equal('4/server/3/op710-1-Client2-RHAS4U3/3/1,6/server/5/op710-1-Client4-openSUSE-10.1/3/1,3/server/2/op710-1-Client1-SLES9SP3/3/1,7/server/6/op710-1-Client5-Fedora-Core-4/3/1,5/server/4/op710-1-Client3-Debian-3.1/3/1' , profile.virtual_slots.virtual_scsi_adapters_raw)
 
-#			assert_equal(1, profile.virtual_eth_adapters.count)
+			assert_equal(1, profile.virtual_slots.virtual_eth_adapters.count)
 			assert_equal(2, profile.io_slots.count)
-#			assert_equal(2, profile.virtual_serial_adapters.count)
-#			assert_equal(5, profile.virtual_scsi_adapters.count)
+			assert_equal(2, profile.virtual_slots.virtual_serial_adapters.count)
+			assert_equal(5, profile.virtual_slots.virtual_scsi_adapters.count)
 	
 	end
 
@@ -205,12 +205,12 @@ class TestHMCLparProfile < Test::Unit::TestCase
 		assert_equal('none', profile.io_slots_raw)
 		assert_equal('none', profile.lpar_io_pool_ids)
 		assert_equal(1000, profile.max_virtual_slots)
-		assert_equal('0/server/1/any//any/1,1/server/1/any//any/1', profile.virtual_serial_adapters_raw)
-		assert_equal('304/client/2/vio_server1/4/1,404/client/3/vio_server2/6/1', profile.virtual_scsi_adapters_raw)
-		assert_equal('10/0/1//0/0/ETHERNET0//all/none,11/0/97//0/0/ETHERNET0//all/none,12/0/98//0/0/ETHERNET0//all/none', profile.virtual_eth_adapters_raw)
+		assert_equal('0/server/1/any//any/1,1/server/1/any//any/1', profile.virtual_slots.virtual_serial_adapters_raw)
+		assert_equal('304/client/2/vio_server1/4/1,404/client/3/vio_server2/6/1', profile.virtual_slots.virtual_scsi_adapters_raw)
+		assert_equal('10/0/1//0/0/ETHERNET0//all/none,11/0/97//0/0/ETHERNET0//all/none,12/0/98//0/0/ETHERNET0//all/none', profile.virtual_slots.virtual_eth_adapters_raw)
 		assert_equal('none', profile.vtpm_adapters_raw)
-#		assert_equal('""504/client/2/vio_server1/8/c050760431670010,c050760431670011/1"",""604/client/3/vio_server2/5/c050760431670012,c050760431670013/1""', profile.virtual_fc_adapters_raw)
-#		assert_equal(2, profile.virtual_fc_adapters.count)
+		assert_equal('""504/client/2/vio_server1/8/c050760431670010,c050760431670011/1"",""604/client/3/vio_server2/5/c050760431670012,c050760431670013/1""', profile.virtual_slots.virtual_fc_adapters_raw)
+		assert_equal(2, profile.virtual_slots.virtual_fc_adapters.count)
 		assert_equal('none', profile.hca_adapters_raw)
 		assert_equal('norm', profile.boot_mode)
 		assert_equal(1, profile.conn_monitoring)
@@ -232,7 +232,7 @@ class TestHMCLparProfile < Test::Unit::TestCase
 		profile = Lpar_profile.new( 15, 'lpar05')
 		profile.lssyscfgProfDecode(string)
 
-    assert_equal(nil,    profile.virtual_fc_adapters_raw)
+    assert_equal(nil,    profile.virtual_slots.virtual_fc_adapters_raw)
     assert_equal(string, profile.to_s)
 	end
 
@@ -258,7 +258,7 @@ class TestHMCLparProfile < Test::Unit::TestCase
 		profile.lssyscfgProfDecode(string)
  #   assert_equal(string, profile.to_s)
 
-    profile._virtual_slots
+    profile.virtual_slots
 
 #    assert_equal(profile.virtual_fc_adapters_raw, profile.virtual_fc_adapters_to_s)
 
@@ -316,11 +316,11 @@ class TestHMCLparProfile < Test::Unit::TestCase
 	
 		profile = Lpar_profile.new(10, 'normal')
 
-    profile.virtual_adapter_add(vent1)
-    profile.virtual_adapter_add(vent2)
+    profile.virtual_slots.virtual_adapter_add(vent1)
+    profile.virtual_slots.virtual_adapter_add(vent2)
 
-    profile.virtual_adapter_add(vscsi1)
-    profile.virtual_adapter_add(vscsi2)
+    profile.virtual_slots.virtual_adapter_add(vscsi1)
+    profile.virtual_slots.virtual_adapter_add(vscsi2)
 
     profile.sys='test_frame'
     profile.lpar_name='test_lpar'

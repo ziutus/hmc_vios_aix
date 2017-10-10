@@ -12,41 +12,45 @@ class Lpar_virtual_slots
 
   attr_accessor :max_virtual_slots
 
+  #TODO: implement functions for virtual vasi and vsi adapters
   attr_reader :virtual_vasi_adapters
   attr_reader :virtual_eth_vsi_profiles
+  attr_accessor :virtual_vasi_adapters_raw
+  attr_accessor :virtual_eth_vsi_profiles_raw
+
   attr_reader :virtual_fc_adapters
   attr_reader :virtual_serial_adapters
   attr_reader :virtual_scsi_adapters
   attr_reader :virtual_eth_adapters
 
-  attr_accessor :virtual_vasi_adapters_raw
-  attr_accessor :virtual_eth_vsi_profiles_raw
-  attr_accessor :virtual_fc_adapters_raw
-  attr_accessor :virtual_serial_adapters_raw
-  attr_accessor :virtual_scsi_adapters_raw
-  attr_accessor :virtual_eth_adapters_raw
+  attr_reader :virtual_fc_adapters_raw
+  attr_reader :virtual_serial_adapters_raw
+  attr_reader :virtual_scsi_adapters_raw
+  attr_reader :virtual_eth_adapters_raw
 
-
+  #TODO: check max virtual slots number
   def initialize(max_virtual_slots = 65000)
     @max_virtual_slots = max_virtual_slots
-    @virtual_slots = Hash.new()
+    @virtual_slots = Hash.new
 
     @virtual_vasi_adapters    = []
     @virtual_eth_vsi_profiles = []
+    @virtual_vasi_adapters_raw    = nil
+    @virtual_eth_vsi_profiles_raw = nil
+
     @virtual_fc_adapters      = []
     @virtual_scsi_adapters    = []
     @virtual_serial_adapters  = []
     @virtual_eth_adapters     = []
 
-    @virtual_vasi_adapters_raw    = nil
-    @virtual_eth_vsi_profiles_raw = nil
+
     @virtual_fc_adapters_raw      = nil
     @virtual_scsi_adapters_raw    = nil
     @virtual_serial_adapters_raw  = nil
     @virtual_eth_adapters_raw     = nil
 
-
   end
+
 
   def virtual_adapter_add(adapter)
     if adapter.class == VirtualEthAdapter
@@ -99,49 +103,50 @@ class Lpar_virtual_slots
     end
   end
 
-  def virtual_serial_adapters_raw2=(string)
+  def virtual_serial_adapters_raw=(string)
 
     if string == 'none'
-      self.virtual_serial_adapters_raw = 'none'
+      @virtual_serial_adapters_raw = 'none'
     else
       string.split(',').each { |adapter|
         self.virtual_adapter_add(VirtualSerialAdapter.new(adapter))
       }
-      self.virtual_serial_adapters_raw = string
+      @virtual_serial_adapters_raw = string
     end
   end
 
-  def virtual_eth_adapters_raw2=(string)
+  def virtual_eth_adapters_raw=(string)
 
   if string == 'none'
-      self.virtual_eth_adapters_raw = 'none'
+      @virtual_eth_adapters_raw = 'none'
     else
       HmcString.parse_value(string).each { |adapter_string|
-       self.virtual_adapter_add(VirtualEthAdapter.new(adapter_string))
+        self.virtual_adapter_add(VirtualEthAdapter.new(adapter_string))
       }
-      self.virtual_eth_adapters_raw = string
+      @virtual_eth_adapters_raw = string
     end
   end
 
-  def virtual_scsi_adapters_raw2=(string)
+  def virtual_scsi_adapters_raw=(string)
 
     if string == 'none'
-      self.virtual_scsi_adapters_raw = 'none'
+      @virtual_scsi_adapters_raw = 'none'
     else
       string.split(',').each { |adapter|
         self.virtual_adapter_add(VirtualScsiAdapter.new(adapter))
       }
-      self.virtual_scsi_adapters_raw = string
+      @virtual_scsi_adapters_raw = string
     end
   end
 
-  def virtual_fc_adapters_raw2=(string)
-    if string != "none"
+  def virtual_fc_adapters_raw=(string)
+    if string != 'none'
       HmcString.parse_value(string).each { |adapter_string|
         self.virtual_adapter_add(VirtualFCAdapter.new(adapter_string))
       }
+      @virtual_fc_adapters_raw = string
     else
-      self.virtual_fc_adapters_raw = 'none'
+      @virtual_fc_adapters_raw = 'none'
     end
 
   end
@@ -221,6 +226,5 @@ class Lpar_virtual_slots
 
     result
   end
-
 
 end
