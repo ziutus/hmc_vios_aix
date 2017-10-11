@@ -101,52 +101,45 @@ class Lpar_virtual_slots
     end
   end
 
-  def virtual_serial_adapters_raw=(string)
+  def virtual_adapters_raw(string, adapter_type)
 
-    if string == 'none'
-      @virtual_serial_adapters_raw = 'none'
-    else
-      string.split(',').each { |adapter|
-        self.virtual_adapter_add(VirtualSerialAdapter.new(adapter))
+    unless string == 'none'
+      HmcString.parse_value(string).each { |adapter|
+        case adapter_type
+          when 'virtual_fc_adapters'  then self.virtual_adapter_add(VirtualFCAdapter.new(adapter))
+          when 'virtual_eth_adapters'   then self.virtual_adapter_add(VirtualEthAdapter.new(adapter))
+          when 'virtual_scsi_adapters'  then self.virtual_adapter_add(VirtualScsiAdapter.new(adapter))
+          when 'virtual_serial_adapters' then self.virtual_adapter_add(VirtualSerialAdapter.new(adapter))
+          else
+            raise 'unknown type of virtual adapter'
+        end
       }
-      @virtual_serial_adapters_raw = string
     end
+
+    case adapter_type
+      when 'virtual_fc_adapters' then @virtual_fc_adapters_raw = string
+      when 'virtual_eth_adapters' then @virtual_eth_adapters_raw = string
+      when 'virtual_scsi_adapters' then @virtual_scsi_adapters_raw = string
+      when 'virtual_serial_adapters' then @virtual_serial_adapters_raw = string
+      else
+        raise 'unknown type of virtual adapter'
+    end
+  end
+
+  def virtual_serial_adapters_raw=(string)
+    self.virtual_adapters_raw(string, 'virtual_serial_adapters')
   end
 
   def virtual_eth_adapters_raw=(string)
-
-  if string == 'none'
-      @virtual_eth_adapters_raw = 'none'
-    else
-      HmcString.parse_value(string).each { |adapter_string|
-        self.virtual_adapter_add(VirtualEthAdapter.new(adapter_string))
-      }
-      @virtual_eth_adapters_raw = string
-    end
-  end
+    self.virtual_adapters_raw(string, 'virtual_eth_adapters')
+ end
 
   def virtual_scsi_adapters_raw=(string)
-
-    if string == 'none'
-      @virtual_scsi_adapters_raw = 'none'
-    else
-      string.split(',').each { |adapter|
-        self.virtual_adapter_add(VirtualScsiAdapter.new(adapter))
-      }
-      @virtual_scsi_adapters_raw = string
-    end
+    self.virtual_adapters_raw(string, 'virtual_scsi_adapters')
   end
 
   def virtual_fc_adapters_raw=(string)
-    if string != 'none'
-      HmcString.parse_value(string).each { |adapter_string|
-        self.virtual_adapter_add(VirtualFCAdapter.new(adapter_string))
-      }
-      @virtual_fc_adapters_raw = string
-    else
-      @virtual_fc_adapters_raw = 'none'
-    end
-
+    self.virtual_adapters_raw(string, 'virtual_fc_adapters')
   end
 
   def adapters_to_s(type)
@@ -163,7 +156,7 @@ class Lpar_virtual_slots
                      when 'virtual_serial_adapters' then @virtual_serial_adapters
                      else
                        raise 'unknown type ' + type
-                   end
+   end
 
     if adapters_tmp.size == 0
       'none'
@@ -174,7 +167,23 @@ class Lpar_virtual_slots
       }
       adapters.join(',')
     end
-
   end
+
+  def virtual_fc_adapters_to_s
+    self.adapters_to_s('virtual_fc_adapters')
+  end
+
+  def virtual_scsi_adapters_to_s
+    self.adapters_to_s('virtual_scsi_adapters')
+  end
+
+  def virtual_eth_adapters_to_s
+    self.adapters_to_s('virtual_eth_adapters')
+  end
+
+  def virtual_serial_adapters_to_s
+    self.adapters_to_s('virtual_serial_adapters')
+  end
+
 
 end
