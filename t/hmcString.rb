@@ -70,8 +70,15 @@ class TestString < Test::Unit::TestCase
       array = HmcString.parse_value(string)
 
       assert_equal('2/1/1/3,4,5/0/1', array[0])
-	
   end
 
+  def test_make_string
+
+    assert_equal(nil, make_string('name', nil))
+    assert_equal('virtual_eth_adapters=2/1/1//0/1', make_string('virtual_eth_adapters', '2/1/1//0/1'))
+    assert_equal('"virtual_serial_adapters=0/server/1/any//any/1,1/server/1/any//any/1"', make_string('virtual_serial_adapters', '0/server/1/any//any/1,1/server/1/any//any/1'))
+    assert_equal('"virtual_fc_adapters=""504/client/2/vio_server1/8/c050760431670010,c050760431670011/1"",""604/client/3/vio_server2/5/c050760431670012,c050760431670013/1"""', make_string('virtual_fc_adapters', '""504/client/2/vio_server1/8/c050760431670010,c050760431670011/1"",""604/client/3/vio_server2/5/c050760431670012,c050760431670013/1""') )
+
+  end
   
 end

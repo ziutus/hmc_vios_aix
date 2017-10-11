@@ -95,4 +95,16 @@ module HmcString
 	array
   end
 
+  def make_string(parametr, string)
+
+    unless string.nil?
+      string = parametr + '=' + string
+      if string.include?('"') or string.include?(',')
+        string = '"' + string + '"'
+      end
+    end
+
+    string
+  end
+
 end
