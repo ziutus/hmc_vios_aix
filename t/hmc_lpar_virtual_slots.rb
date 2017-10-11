@@ -33,8 +33,10 @@ class Test_Lpar_virtual_slots < Test::Unit::TestCase
     vent1.virtualSlotNumber=2
     vent1.portVlanID=1
 
+
     slots.virtual_adapter_add(vent1)
-    assert_equal('2/0/1//0/0', slots.adapters_virtual_eth_to_s)
+    result = slots.virtual_eth_adapters_to_s
+    assert_equal('2/0/1//0/0',result )
   end
 
   def test_virtual_scsi_adapter
@@ -49,7 +51,7 @@ class Test_Lpar_virtual_slots < Test::Unit::TestCase
     vscsi1.isRequired=1
 
     slots.virtual_adapter_add(vscsi1)
-    assert('4/client/2/vios1/11/1', slots.adapters_virtual_scsi_to_s)
+    assert('4/client/2/vios1/11/1', slots.virtual_scsi_adapters_to_s)
   end
 
   def test_virtual_serial_adapter
@@ -66,7 +68,7 @@ class Test_Lpar_virtual_slots < Test::Unit::TestCase
 
     slots.virtual_adapter_add(vserial)
     #virtual-slot-number/client-or-server/[supports-HMC]/[remote-lpar-ID]/[remote-lpar-name]/[remote-slot-number]/is-required
-    assert_equal('0/server/1/any//any/1', slots.adapters_virtual_serial_to_s )
+    assert_equal('0/server/1/any//any/1', slots.virtual_serial_adapters_to_s )
   end
 
 
@@ -84,31 +86,31 @@ class Test_Lpar_virtual_slots < Test::Unit::TestCase
     adapter.isRequired=1
     slots.virtual_adapter_add(adapter)
 
-    assert_equal('""10/client/20/VIOS1-Dilling/34/c0507602f9ac000a,c0507602f9ac000b/1""', slots.adapters_virtual_fc_to_s)
+    assert_equal('""10/client/20/VIOS1-Dilling/34/c0507602f9ac000a,c0507602f9ac000b/1""', slots.virtual_fc_adapters_to_s)
   end
 
-  def test_virtual_serial_raw2
+  def test_virtual_serial_raw
     slots = Lpar_virtual_slots.new(20)
-    slots.virtual_serial_adapters_raw2 = '0/server/1/any//any/1'
-    assert_equal('0/server/1/any//any/1', slots.adapters_virtual_serial_to_s )
+    slots.virtual_serial_adapters_raw = '0/server/1/any//any/1'
+    assert_equal('0/server/1/any//any/1', slots.virtual_serial_adapters_to_s )
   end
 
-  def test_virtual_eth_raw2
+  def test_virtual_eth_raw
     slots = Lpar_virtual_slots.new(20)
-    slots.virtual_eth_adapters_raw2 = '32/0/1659//0/0/switcha/facc157c3e20/all/0'
-    assert_equal('32/0/1659//0/0/switcha/facc157c3e20/all/0', slots.adapters_virtual_eth_to_s )
+    slots.virtual_eth_adapters_raw = '32/0/1659//0/0/switcha/facc157c3e20/all/0'
+    assert_equal('32/0/1659//0/0/switcha/facc157c3e20/all/0', slots.virtual_eth_adapters_to_s )
   end
 
-  def test_virtual_scsi_raw2
+  def test_virtual_scsi_raw
     slots = Lpar_virtual_slots.new(20)
-    slots.virtual_scsi_adapters_raw2 = '3/client/2/vios1/32/0'
-    assert_equal('3/client/2/vios1/32/0', slots.adapters_virtual_scsi_to_s )
+    slots.virtual_scsi_adapters_raw = '3/client/2/vios1/32/0'
+    assert_equal('3/client/2/vios1/32/0', slots.virtual_scsi_adapters_to_s )
   end
 
-  def test_virtual_fc_raw2
+  def test_virtual_fc_raw
     slots = Lpar_virtual_slots.new(20)
-    slots.virtual_fc_adapters_raw2 = '21/server/10/bt11/21//0'
-    assert_equal('21/server/10/bt11/21//0', slots.adapters_virtual_fc_to_s )
+    slots.virtual_fc_adapters_raw = '21/server/10/bt11/21//0'
+    assert_equal('21/server/10/bt11/21//0', slots.virtual_fc_adapters_to_s )
   end
 
 
