@@ -115,9 +115,12 @@ class Lpar_profile
 
     @_variables['string_virtual_raw'] = %w(virtual_serial_adapters virtual_scsi_adapters virtual_eth_adapters virtual_fc_adapters)
 
+    @_functions_self = %w(io_slots hca_adapters vtpm_adapters lhea_logical_ports sriov_eth_logical_ports virtual_vasi_adapters virtual_eth_vsi_profiles)
+    @_functions_virtual_slots = %w( virtual_serial_adapters virtual_scsi_adapters virtual_eth_adapters  virtual_fc_adapters)
+
+
 
     @_default_params = Hash.new
-
     @_default_params['power5'] = %w{name lpar_name lpar_id lpar_env all_resources min_mem desired_mem max_mem min_num_huge_pages
       desired_num_huge_pages max_num_huge_pages mem_mode hpt_ratio proc_mode min_proc_units
       desired_proc_units max_proc_units min_procs desired_procs max_procs sharing_mode uncap_weight
@@ -232,36 +235,21 @@ class Lpar_profile
         }
     end
 
-    params_with_functions = %w(io_slots virtual_serial_adapters virtual_scsi_adapters virtual_eth_adapters hca_adapters vtpm_adapters virtual_fc_adapters
-                                  lhea_logical_ports virtual_vasi_adapters sriov_eth_logical_ports virtual_eth_vsi_profiles)
 
     params_to_print.each {|parametr|
 
-      if params_with_functions.include?(parametr)
+      if @_functions_self.include?(parametr)
 
-        tmp = case parametr
-                   when 'io_slots'                 then self.io_slots_to_s
-                   when 'sriov_eth_logical_ports'  then self.sriov_eth_logical_ports_to_s
-                   when 'hca_adapters'             then self.hca_adapters_to_s
-                   when 'vtpm_adapters'            then self.vtpm_adapters_to_s
-                   when 'lhea_logical_ports'       then self.lhea_logical_ports_to_s
-                   when 'virtual_vasi_adapters'    then self.virtual_vasi_adapters_to_s
-                   when 'virtual_eth_vsi_profiles' then self.virtual_eth_vsi_profiles_to_s
-                   when 'virtual_fc_adapters'      then @virtual_slots.adapters_to_s('virtual_fc_adapters')
-                   when 'virtual_serial_adapters'  then @virtual_slots.adapters_to_s('virtual_serial_adapters')
-                   when 'virtual_scsi_adapters'    then @virtual_slots.adapters_to_s('virtual_scsi_adapters')
-                   when 'virtual_eth_adapters'     then @virtual_slots.adapters_to_s('virtual_eth_adapters')
-                   else
-                     raise 'class:lpar_profile, function:adapters_to_s_F unknown type'
-                 end
+        tmp = self.send("#{parametr}_to_s")
+        tmp = make_string(parametr, tmp)
+        result_array.push(tmp) unless tmp.nil?
 
-        unless tmp.nil?
-          tmp = parametr + '=' + tmp
-          if tmp.include?('"') or tmp.include?(',')
-            tmp = '"' + tmp + '"'
-          end
-          result_array.push(tmp)
-        end
+      elsif @_functions_virtual_slots.include?(parametr)
+
+          tmp = @virtual_slots.send("#{parametr}_to_s")
+          tmp = make_string(parametr, tmp)
+          result_array.push(tmp) unless tmp.nil?
+
       else
         unless self.instance_variable_get("@#{parametr}") == nil
           result_array.push (parametr + '=' + self.instance_variable_get("@#{parametr}").to_s)
@@ -342,10 +330,10 @@ class Lpar_profile
     self.to_s == another_profile.to_s
   end
 
-  def diff_show (another_profile, calls_to_ignore)
+  def diff_show (another_profile, columns_to_ignore)
 
     diffs = Hash.new
-    ignore = calls_to_ignore.split(',')
+    ignore = columns_to_ignore.split(',')
 
     @_variables.keys.each { |type|
       @_variables[type].each { |name|
@@ -368,8 +356,6 @@ class Lpar_profile
           difference[another_profile.name] = val_profile
           difference[self.name]            = val_self
 
-
-#          message = "#{name}: >" + val_self.to_s + '< vs >' + val_profile.to_s + '<'
           diffs[name] =  difference
         end
       }
