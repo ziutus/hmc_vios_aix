@@ -382,10 +382,11 @@ class TestHMCLparProfile < Test::Unit::TestCase
 
   end
 
-  def disabled_test_compare_profiles_1
+  # data source: own Power5
+  def test_compare_profiles_1
 
-      profile_string1 = 'name=normal,lpar_name=nim1,lpar_id=5,lpar_env=aixlinux,all_resources=0,min_mem=2048,desired_mem=6144,max_mem=10240'
-      profile_string2 = 'name=minimal,lpar_name=nim1,lpar_id=5,lpar_env=aixlinux,all_resources=0,min_mem=1048,desired_mem=2048,max_mem=3096'
+      profile_string1 = 'name=normal,lpar_name=nim1,lpar_id=5,lpar_env=aixlinux,all_resources=0,min_mem=2048,desired_mem=6144,max_mem=10240,"virtual_scsi_adapters=2/client/2/vios1/2/1,3/client/3/vios2/2/1"'
+      profile_string2 = 'name=minimal,lpar_name=nim1,lpar_id=5,lpar_env=aixlinux,all_resources=0,min_mem=1024,desired_mem=2048,max_mem=3096,"virtual_scsi_adapters=5/client/2/vios2/2/1,2/client/3/vios1/2/1"'
 
       profile1 = Lpar_profile.new
       profile1.lssyscfgProfDecode(profile_string1)
@@ -393,7 +394,21 @@ class TestHMCLparProfile < Test::Unit::TestCase
       profile2 = Lpar_profile.new
       profile2.lssyscfgProfDecode(profile_string2)
 
-      diff = profie1.diff(profile2)
+			diff   = profile1.diff_show(profile2, 'name')
+			diff
+
+      assert_equal(2048, Integer(diff['min_mem']['normal']))
+			assert_equal(1024, Integer(diff['min_mem']['minimal']))
+
+      assert_equal(6144, Integer(diff['desired_mem']['normal']))
+      assert_equal(2048, Integer(diff['desired_mem']['minimal']))
+
+      assert_equal(10240, Integer(diff['max_mem']['normal']))
+      assert_equal(3096, Integer(diff['max_mem']['minimal']))
+
+      assert_equal('2/client/2/vios1/2/1,3/client/3/vios2/2/1', diff['virtual_scsi_adapters']['normal'])
+      assert_equal('5/client/2/vios2/2/1,2/client/3/vios1/2/1', diff['virtual_scsi_adapters']['minimal'])
+
   end
 
 end			

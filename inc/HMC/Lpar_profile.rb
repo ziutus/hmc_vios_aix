@@ -272,11 +272,12 @@ class Lpar_profile
     result_array.join(',')
   end
 
-  def get_mksyscfg
+  def mksyscfg_cmd
 		"mksyscfg -r lpar -m #{@sys} -i \"" + self.to_s + '"'
 	end
 
-	def remove
+
+	def remove_cmd
 		"rmsyscfg -m #{@sys} -r lpar -n #{@lpar_name}"
 	end
 	
@@ -343,7 +344,7 @@ class Lpar_profile
 
   def diff_show (another_profile, calls_to_ignore)
 
-    diffs = []
+    diffs = Hash.new
     ignore = calls_to_ignore.split(',')
 
     @_variables.keys.each { |type|
@@ -363,8 +364,13 @@ class Lpar_profile
           val_self    = 'nil' if val_self.nil?
           val_profile = 'nil' if val_profile.nil?
 
-          message = "#{name}: >" + val_self.to_s + '< vs >' + val_profile.to_s + '<'
-          diffs.push(message )
+          difference = Hash.new()
+          difference[another_profile.name] = val_profile
+          difference[self.name]            = val_self
+
+
+#          message = "#{name}: >" + val_self.to_s + '< vs >' + val_profile.to_s + '<'
+          diffs[name] =  difference
         end
       }
     }

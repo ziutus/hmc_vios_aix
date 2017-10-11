@@ -1,28 +1,83 @@
 class Lpar_real
 
-	attr_reader :sys, :dataString, :name
-	attr_reader :name, :lpar_id, :lpar_env
-	attr_reader :state, :resource_config, :os_version, :logical_serial_num, :default_profile, :curr_profile, :work_group_id, :shared_proc_pool_util_auth, :allow_perf_collection 
-	attr_reader :power_ctrl_lpar_ids, :boot_mode, :lpar_keylock, :auto_start, :redundant_err_path_reporting, :rmc_state, :rmc_ipaddr, :sync_curr_profile 
+	attr_reader :sys
+  attr_reader :dataString
+  attr_reader	:name
+	attr_reader :name
+  attr_reader :lpar_id
+  attr_reader :lpar_env
+	attr_reader :state
+  attr_reader :resource_config
+  attr_reader :os_version
+  attr_reader :logical_serial_num
+  attr_reader :default_profile
+  attr_reader :curr_profile
+  attr_reader :work_group_id
+  attr_reader :shared_proc_pool_util_auth
+  attr_reader :allow_perf_collection
+	attr_reader :power_ctrl_lpar_ids
+  attr_reader :boot_mode
+  attr_reader :lpar_keylock
+  attr_reader :auto_start
+  attr_reader :redundant_err_path_reporting
+  attr_reader :rmc_state
+  attr_reader :rmc_ipaddr
+  attr_reader :sync_curr_profile
 
 	#from memory string (lshwres -r mem --level lpar -m $MS) 				
-	attr_reader	:curr_min_mem, :curr_mem, :curr_max_mem, :pend_min_mem, :pend_mem, :pend_max_mem, :run_min_mem, :run_mem, :curr_min_num_huge_pages, :curr_num_huge_pages
-	attr_reader	:curr_max_num_huge_pages, :pend_min_num_huge_pages, :pend_num_huge_pages, :pend_max_num_huge_pages, :run_num_huge_pages, :mem_mode, :curr_hpt_ratio	
+	attr_reader	:curr_min_mem
+  attr_reader :curr_mem
+  attr_reader :curr_max_mem
+  attr_reader :pend_min_mem
+  attr_reader :pend_mem
+  attr_reader :pend_max_mem
+  attr_reader :run_min_mem
+  attr_reader :run_mem
+  attr_reader :curr_min_num_huge_pages
+  attr_reader :curr_num_huge_pages
+	attr_reader	:curr_max_num_huge_pages
+  attr_reader :pend_min_num_huge_pages
+  attr_reader :pend_num_huge_pages
+  attr_reader :pend_max_num_huge_pages
+  attr_reader :run_num_huge_pages
+  attr_reader :mem_mode
+  attr_reader :curr_hpt_ratio
 	
 	#
-	attr_reader :curr_proc_mode, :curr_min_procs, :curr_procs, :curr_max_procs, :curr_sharing_mode 
-	attr_reader	:pend_proc_mode, :pend_min_procs, :pend_procs, :pend_max_procs, :pend_sharing_mode
+	attr_reader :curr_proc_mode
+  attr_reader :curr_min_procs
+  attr_reader :curr_procs
+  attr_reader :curr_max_procs
+  attr_reader :curr_sharing_mode
+	attr_reader	:pend_proc_mode
+  attr_reader :pend_min_procs
+  attr_reader :pend_procs
+  attr_reader :pend_max_procs
+  attr_reader :pend_sharing_mode
 	attr_reader :run_procs
 	
 	#
-	attr_reader :curr_min_proc_units, :curr_proc_units, :curr_max_proc_units, :curr_uncap_weight, :curr_shared_proc_pool_id
-	attr_reader :pend_min_proc_units, :pend_proc_units, :pend_max_proc_units, :pend_uncap_weight, :pend_shared_proc_pool_id
-	attr_reader :run_proc_units, :run_procs, :run_uncap_weight
+	attr_reader :curr_min_proc_units
+  attr_reader :curr_proc_units
+  attr_reader :curr_max_proc_units
+  attr_reader :curr_uncap_weight
+  attr_reader :curr_shared_proc_pool_id
+	attr_reader :pend_min_proc_units
+  attr_reader :pend_proc_units
+  attr_reader :pend_max_proc_units
+  attr_reader :pend_uncap_weight
+  attr_reader :pend_shared_proc_pool_id
+	attr_reader :run_proc_units
+  attr_reader :run_procs
+  attr_reader :run_uncap_weight
 	
 	#from slots: lshwres -r virtualio --level lpar --rsubtype slot -m $MS
-	attr_reader	:curr_max_virtual_slots, :pend_max_virtual_slots, :next_avail_virtual_slot
+	attr_reader	:curr_max_virtual_slots
+  attr_reader :pend_max_virtual_slots
+  attr_reader :next_avail_virtual_slot
 	
-	attr_reader :adaptersVirtual, :adaptersReal
+	attr_reader :adaptersVirtual
+  attr_reader :adaptersReal
 	
 	attr_reader :virtual_scsi_adapters
 	
@@ -33,27 +88,27 @@ class Lpar_real
 		@name = name
 		@sys = sys
 		@lpar_id= lpar_id.to_i
-		@dataString = ""
+		@dataString = ''
 		
 
-		@lpar_env=""
-		@state=""
-		@resource_config=""
-		@os_version=""
-		@logical_serial_num=""
-		@default_profile=""
-		@curr_profile=""
-		@work_group_id=""
-		@shared_proc_pool_util_auth=""
-		@allow_perf_collection=""
-		@power_ctrl_lpar_ids=""
-		@boot_mode=""
-		@lpar_keylock=""
-		@auto_start=""
-		@redundant_err_path_reporting=""
-		@rmc_state=""
-		@rmc_ipaddr=""
-		@sync_curr_profile=""
+		@lpar_env=''
+		@state=''
+		@resource_config=''
+		@os_version=''
+		@logical_serial_num=''
+		@default_profile=''
+		@curr_profile=''
+		@work_group_id=''
+		@shared_proc_pool_util_auth=''
+		@allow_perf_collection=''
+		@power_ctrl_lpar_ids=''
+		@boot_mode=''
+		@lpar_keylock=''
+		@auto_start=''
+		@redundant_err_path_reporting=''
+		@rmc_state=''
+		@rmc_ipaddr=''
+		@sync_curr_profile=''
 		
 		
 		#from memory string 
@@ -81,7 +136,6 @@ class Lpar_real
 		@adaptersReal = []
 		
 		@virtual_eth_adapters = []
-#		@virtual_scsi_adapters = Hash.new()
 		@virtual_scsi_adapters = []
 
 		@virtual_serial_adapters = []
@@ -305,7 +359,7 @@ class Lpar_real
 			
 				next unless match[2].to_i == @lpar_id.to_i
 				
-				 adapter = VirtualEthAdapter.new()
+				 adapter = VirtualEthAdapter.new
 				
 				 adapter.virtualSlotNumber = match[3].to_i
 				 adapter.isIEEE			  = match[4].to_i
