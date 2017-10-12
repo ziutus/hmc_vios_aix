@@ -35,13 +35,13 @@ class VirtualScsiAdapter
 		raise "clinetOrServer has wrong value #{@clientOrServer}" unless clientOrServer_allowed.include?(@clientOrServer)
 		
 		raise 'remoteLparID not defined' 		if 	   (@remoteLparID.== nil)
-		raise 'remoteLparID is not number' 		unless (@remoteLparID.is_a? Numeric)
+		raise 'remoteLparID is not number or "all"' 		unless (@remoteLparID.is_a? Numeric or @remoteLparID == 'all')
 		
 		raise 'remoteLparName not defined' 		if	   (@remoteLparName == nil)
 		raise 'remoteLparName is not string'	unless (@remoteLparName.is_a? String)
 
 		raise 'remoteSlotNumber not defined' 	if     (@remoteSlotNumber == nil)
-		raise 'remoteSlotNumber is not number' 	unless (@remoteSlotNumber.is_a? Numeric)
+		raise 'remoteSlotNumber is not number or "all"' 	unless (@remoteSlotNumber.is_a? Numeric or @remoteSlotNumber == "all")
 		
 		raise 'isRequired not defined' 			if     (@isRequired == nil)
 		raise 'isRequired is not number'		unless (@isRequired.is_a? Numeric)
