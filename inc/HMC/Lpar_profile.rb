@@ -1,6 +1,7 @@
 require 'pp'
 require 'HMC/HmcString'
 require 'HMC/Lpar_virtual_slots'
+require 'HMC/Lpar_IO_slot'
 
 include HmcString
 
@@ -72,7 +73,7 @@ class Lpar_profile
   attr_reader :vtpm_adapters
   attr_reader :hca_adapters
 
-  attr_accessor :lhea_logical_ports_raw
+  attr_reader :lhea_logical_ports_raw
   attr_accessor :vtpm_adapters_raw
   attr_accessor :hca_adapters_raw
   attr_accessor :sriov_eth_logical_ports_raw
@@ -163,7 +164,7 @@ class Lpar_profile
       else
         adapters=[]
         @io_slots.each { |adapter|
-          adapters.push(adapter.join('/'))
+          adapters.push(adapter.to_s)
         }
         result = adapters.join(',')
       end
@@ -268,7 +269,8 @@ class Lpar_profile
 	def remove_cmd
 		"rmsyscfg -m #{@sys} -r lpar -n #{@lpar_name}"
 	end
-	
+
+
 	def lssyscfgProfDecode(string)
 
     HmcString.parse(string).each {|name, value|
@@ -307,11 +309,13 @@ class Lpar_profile
 
   end
 
+   alias :parse :lssyscfgProfDecode
+
 
   def io_slots_raw=(string)
       if string != 'none'
         string.split(',').each { |adapter_string|
-          @io_slots.push(adapter_string.split('/'))
+          @io_slots.push(Lpar_IO_slot.new(adapter_string))
         }
       end
       @io_slots_raw = string
