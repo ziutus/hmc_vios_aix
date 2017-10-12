@@ -26,7 +26,6 @@ class TestVirtualScsiAdapter < Test::Unit::TestCase
 	end
 	
 	def test_bas2
-	
 	#
 		adapter2 = VirtualScsiAdapter.new
 		adapter2.decode('2/server/5/nim1/3/0')
@@ -39,21 +38,38 @@ class TestVirtualScsiAdapter < Test::Unit::TestCase
 		assert_equal(0, 	    adapter2.isRequired)
 	end	
 	
-	def test_decode_real_adapter
-	
-		adapter = VirtualScsiAdapter.new
-		adapter.decode('slot_num=8,state=0,is_required=0,adapter_type=server,remote_lpar_id=8,remote_lpar_name=null,remote_slot_num=2')
-		
-		assert_equal(8, 	    adapter.virtualSlotNumber)
-		assert_equal('server',adapter.clientOrServer)
-		assert_equal(8, 	    adapter.remoteLparID)
-		assert_equal('null',  adapter.remoteLparName)
-		assert_equal(2, 	    adapter.remoteSlotNumber)
-		assert_equal(0, 	    adapter.isRequired)
-		
-	end
-	
-	def test_validation_1
+	# def test_decode_real_adapter
+	#
+	# 	adapter = VirtualScsiAdapter.new
+	# 	adapter.decode('slot_num=8,state=0,is_required=0,adapter_type=server,remote_lpar_id=8,remote_lpar_name=null,remote_slot_num=2')
+	#
+	# 	assert_equal(8, 	    adapter.virtualSlotNumber)
+	# 	assert_equal('server',adapter.clientOrServer)
+	# 	assert_equal(8, 	    adapter.remoteLparID)
+	# 	assert_equal('null',  adapter.remoteLparName)
+	# 	assert_equal(2, 	    adapter.remoteSlotNumber)
+	# 	assert_equal(0, 	    adapter.isRequired)
+	#
+	# end
+
+  def test_any_any
+    #
+    adapter = VirtualScsiAdapter.new
+    adapter.decode('2/server/any//any/0')
+
+    assert_equal(2, 	    adapter.virtualSlotNumber)
+    assert_equal('server',adapter.clientOrServer)
+    assert_equal('any', 	    adapter.remoteLparID)
+    assert_equal('',  adapter.remoteLparName)
+    assert_equal('any', 	    adapter.remoteSlotNumber)
+    assert_equal(0, 	    adapter.isRequired)
+
+    assert_equal('2/server/any//any/0', adapter.to_s)
+
+  end
+
+
+  def test_validation_1
 	
 		adapter = VirtualScsiAdapter.new
 	
