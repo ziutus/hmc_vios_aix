@@ -5,9 +5,7 @@ test_unit_version=`gem list test-unit`.to_s.scan(/test-unit \((\d\.\d\.\d)/).joi
 autorunner_file="#{Gem.dir}/gems/test-unit-#{test_unit_version}/lib/test/unit/autorunner.rb"
 require autorunner_file if File.exist?(autorunner_file)
 
-
 require 'HMC/Lpar_real'
-require 'HMC/VirtualEthAdapter'
 require 'test/unit'
 require 'pp'
 
@@ -15,8 +13,8 @@ class TestHMCLpar < Test::Unit::TestCase
  
 	def test_lpar_commands
 		lpar = Lpar_real.new('Frame1', 1, 'lpar1')
-		assert_equal('chsysstate -m Frame1 -r lpar -n lpar1 -o shutdown', lpar.stop)
-		assert_equal('chsysstate -m Frame1 -r lpar -n lpar1 -o on -f normal', lpar.start('normal') )
+		assert_equal('chsysstate -m Frame1 -r lpar -n lpar1 -o shutdown',     lpar.stop_cmd)
+		assert_equal('chsysstate -m Frame1 -r lpar -n lpar1 -o on -f normal', lpar.start_cmd('normal') )
 	end
   
 	def test_lpar_lssyscfg_decode
@@ -26,7 +24,7 @@ class TestHMCLpar < Test::Unit::TestCase
 		lpar.lssyscfgDecode(string)
 		
 		assert_equal('aix53_15', lpar.name)
-		assert_equal('15',       lpar.lpar_id)
+		assert_equal(15,       lpar.lpar_id)
 		assert_equal('aixlinux', lpar.lpar_env)
 		assert_equal('Not Activated', lpar.state)
 		assert_equal('0', lpar.resource_config)
@@ -35,16 +33,16 @@ class TestHMCLpar < Test::Unit::TestCase
 		assert_equal('normal',   lpar.default_profile)
 		assert_equal('',         lpar.curr_profile)
 		assert_equal('none',      lpar.work_group_id)
-		assert_equal('1',        lpar.shared_proc_pool_util_auth)
-		assert_equal('1',        lpar.allow_perf_collection)
+		assert_equal(1,        lpar.shared_proc_pool_util_auth)
+		assert_equal(1,        lpar.allow_perf_collection)
 		assert_equal('none',     lpar.power_ctrl_lpar_ids)
 		assert_equal('norm',     lpar.boot_mode)
 		assert_equal('norm',     lpar.lpar_keylock)
-		assert_equal('0',        lpar.auto_start)
-		assert_equal('0',        lpar.redundant_err_path_reporting,)
+		assert_equal(0,        lpar.auto_start)
+		assert_equal(0,        lpar.redundant_err_path_reporting,)
 		assert_equal('inactive', lpar.rmc_state)
 		assert_equal('',         lpar.rmc_ipaddr)
-		assert_equal('0',        lpar.sync_curr_profile)
+		assert_equal(0,        lpar.sync_curr_profile)
 	end
 	
 	def test_memory_decode
@@ -53,23 +51,23 @@ class TestHMCLpar < Test::Unit::TestCase
 			lpar = Lpar_real.new('9131-52A-6535CCG', 15, 'aix53_15')
 			lpar.decodeMem(string)
 			
-			assert_equal(lpar.curr_min_mem, 			  1)
-			assert_equal(lpar.curr_mem, 				  2)
-			assert_equal(lpar.curr_max_mem, 			  3)
-			assert_equal(lpar.pend_min_mem, 			  4)
-			assert_equal(lpar.pend_mem, 			 	  5)
-			assert_equal(lpar.pend_max_mem, 			  6)
-			assert_equal(lpar.run_min_mem, 			  7)
-			assert_equal(lpar.run_mem, 				  8)
-			assert_equal(lpar.curr_min_num_huge_pages,  9)
-			assert_equal(lpar.curr_num_huge_pages, 	 10)
+			assert_equal(lpar.curr_min_mem, 			     1)
+			assert_equal(lpar.curr_mem, 				       2)
+			assert_equal(lpar.curr_max_mem, 			     3)
+			assert_equal(lpar.pend_min_mem, 			     4)
+			assert_equal(lpar.pend_mem, 			 	       5)
+			assert_equal(lpar.pend_max_mem, 			     6)
+			assert_equal(lpar.run_min_mem, 			       7)
+			assert_equal(lpar.run_mem, 				         8)
+			assert_equal(lpar.curr_min_num_huge_pages, 9)
+			assert_equal(lpar.curr_num_huge_pages, 	   10)
 			assert_equal(lpar.curr_max_num_huge_pages, 11)
 			assert_equal(lpar.pend_min_num_huge_pages, 12)
-			assert_equal(lpar.pend_num_huge_pages, 	 13)
+			assert_equal(lpar.pend_num_huge_pages, 	   13)
 			assert_equal(lpar.pend_max_num_huge_pages, 14)
-			assert_equal(lpar.run_num_huge_pages, 	 15)
-			assert_equal(lpar.mem_mode, 'ded')
-			assert_equal(lpar.curr_hpt_ratio, '1:64')
+			assert_equal(lpar.run_num_huge_pages, 	   15)
+			assert_equal(lpar.mem_mode,             'ded')
+			assert_equal(lpar.curr_hpt_ratio,      '1:64')
 
 
 			
@@ -110,9 +108,9 @@ class TestHMCLpar < Test::Unit::TestCase
 		
 		assert_equal(0,         lpar.curr_shared_proc_pool_id)
 		assert_equal('shared', 	lpar.curr_proc_mode)
-		assert_equal('0.2', 	lpar.curr_min_proc_units)
-		assert_equal('1.0', 	lpar.curr_proc_units)
-		assert_equal('2.0', 	lpar.curr_max_proc_units)
+		assert_equal(0.2, 	lpar.curr_min_proc_units)
+		assert_equal(1.0, 	lpar.curr_proc_units)
+		assert_equal(2.0, 	lpar.curr_max_proc_units)
 		assert_equal(1,			lpar.curr_min_procs)
 		assert_equal(1,			lpar.curr_procs)
 		assert_equal(2, 		lpar.curr_max_procs)
@@ -120,15 +118,15 @@ class TestHMCLpar < Test::Unit::TestCase
 		assert_equal(128,		lpar.curr_uncap_weight)
 		assert_equal(0,			lpar.pend_shared_proc_pool_id)
 		assert_equal('shared',	lpar.pend_proc_mode)
-		assert_equal('0.2',		lpar.pend_min_proc_units)
-		assert_equal('1.0',		lpar.pend_proc_units)
-		assert_equal('2.0',		lpar.pend_max_proc_units)
+		assert_equal(0.2,		lpar.pend_min_proc_units)
+		assert_equal(1.0,		lpar.pend_proc_units)
+		assert_equal(2.0,		lpar.pend_max_proc_units)
 		assert_equal(1,			lpar.pend_min_procs)
 		assert_equal(1,			lpar.pend_procs)
 		assert_equal(2,			lpar.pend_max_procs)
 		assert_equal('uncap',	lpar.pend_sharing_mode)
 		assert_equal(128,		lpar.pend_uncap_weight)
-		assert_equal('0.0',		lpar.run_proc_units)
+		assert_equal(0.0,		lpar.run_proc_units)
 		assert_equal(0,			lpar.run_procs)
 		assert_equal(0,			lpar.run_uncap_weight)
 	
