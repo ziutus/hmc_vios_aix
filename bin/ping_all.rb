@@ -105,20 +105,18 @@ unless regexp.nil?
   servers_tmp = servers
   servers = []
   servers_tmp.each { |server|
-    servers.push(server) if server =~ /#{regexp}/
+    servers.push(server) if server =~ /#{regexp}/i
   }
-
 end
 
 if servers.empty?
 	puts ''
 	puts 'No servers to ping!'
 	puts "Try #{my_name} -h"
-#	puts opts
 	exit
 end 
 
-puts 'Will check status of ' + servers.count.to_s + ' servers'
+puts "Will check status of #{servers.count.to_s} servers "
 puts ''
 
 numbers = [*0..servers.count-1]
