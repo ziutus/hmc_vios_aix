@@ -1,0 +1,67 @@
+#! /usr/bin/expect
+
+### manual for command lsmap:  https://www.ibm.com/support/knowledgecenter/en/POWER6/iphcg/lsmap.htm
+### manual for command swrole: https://www.ibm.com/support/knowledgecenter/en/ssw_aix_61/com.ibm.aix.cmds5/swrole.htm
+### 
+
+# timeout for commands, when running external scripts, it should be enough for long running scripts.
+set timeout  20
+# put output to console (do not hide it) 
+log_user 1     
+# diagnostic output
+exp_internal 0 
+
+set LOGIN [exec whoami]
+set PASSWORD XXX
+
+set user_prompt "\$"
+set root_prompt "#"
+set FILENAME="/tmp/result.txt"
+
+if { $PASSWORD == "XXX" } {
+	puts "please setup password, it is default now"
+	exit 2
+}
+
+## usage if no options
+if {[llength $argv] != 1} {
+    puts "usage: MYNAME <SERVER>"
+    exit 1
+}
+
+set SERVER [lindex $argv 0]
+
+spawn ssh "$LOGIN\@$SERVER"
+
+expect "*password:"
+send "$PASSWORD\r"
+
+send "swrole ALL\r"
+expect "*s Password:"
+send "$PASSWORD\r"
+
+sleep 5
+send "echo 'working - lsmap -all!'; /usr/ios/cli/ioscli lsmap -all > $FILENAME;echo \"RESULT:\$\?\"\r"
+
+expect  {
+     ".*RESULT:0"  {  send_user "$SERVER; Command execution: \[OK\]\r\n" }
+     default {  send_user "$SERVER; Error during execution of command, timeout?  \[Error\]\r\n "; close; exit 2 }
+}
+
+
+send "echo 'working - lsmap -all -npiv!'; /usr/ios/cli/ioscli lsmap -all -npiv >> $FILENAME;echo \"RESULT:\$\?\"\r"
+expect  {
+     ".*RESULT:0"  {  send_user "$SERVER; Command execution: \[OK\]\r\n" }
+     default {  send_user "$SERVER; Error during execution of command, timeout?  \[Error\]\r\n "; close; exit 2 }
+}
+
+send "echo 'working - lsmap -all -net!'; /usr/ios/cli/ioscli lsmap -all -net >> $FILENAME;echo \"RESULT:\$\?\"\r"
+expect  {
+     ".*RESULT:0"  {  send_user "$SERVER; Command execution: \[OK\]\r\n" }
+     default {  send_user "$SERVER; Error during execution of command, timeout?  \[Error\]\r\n "; close; exit 2 }
+}
+
+
+send "exit\r"
+
+close

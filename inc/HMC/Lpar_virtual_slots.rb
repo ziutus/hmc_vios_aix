@@ -55,17 +55,19 @@ class Lpar_virtual_slots
   def virtual_adapter_add(adapter)
 
     case adapter.class.to_s
-      when 'VirtualEthAdapter'    then self.adapter_virtual_eth_add(adapter)
-      when 'VirtualScsiAdapter'   then self.adapter_virtual_scsi_add(adapter)
-      when 'VirtualSerialAdapter' then self.adapter_virtual_serial_add(adapter)
-      when 'VirtualFCAdapter'     then self.adapter_virtual_fc_add(adapter)
+      when 'VirtualEthAdapter'    then self.virtual_eth_adapters_add(adapter)
+      when 'VirtualScsiAdapter'   then self.virtual_scsi_adapters_add(adapter)
+      when 'VirtualSerialAdapter' then self.virtual_serial_adapters_add(adapter)
+      when 'VirtualFCAdapter'     then self.virtual_fc_adapters_add(adapter)
       else
         pp 'adapter class:' +  adapter.class
         raise 'unknown type of Virtual Adapter'
     end
   end
 
-  def adapter_virtual_eth_add(adapter)
+  alias :add :virtual_adapter_add
+
+  def virtual_eth_adapters_add(adapter)
     @virtual_eth_adapters.push(adapter)
     if @virtual_eth_adapters_raw.nil?
       @virtual_eth_adapters_raw = adapter.to_s
@@ -74,7 +76,7 @@ class Lpar_virtual_slots
     end
   end
 
-  def adapter_virtual_fc_add(adapter)
+  def virtual_fc_adapters_add(adapter)
     @virtual_fc_adapters.push(adapter)
     if @virtual_fc_adapters_raw.nil?
       @virtual_fc_adapters_raw = adapter.to_s + ','
@@ -83,7 +85,7 @@ class Lpar_virtual_slots
     end
   end
 
-  def adapter_virtual_scsi_add(adapter)
+  def virtual_scsi_adapters_add(adapter)
     @virtual_scsi_adapters.push(adapter)
     if @virtual_scsi_adapters_raw.nil?
       @virtual_scsi_adapters_raw = adapter.to_s + ','
@@ -92,7 +94,7 @@ class Lpar_virtual_slots
     end
   end
 
-  def adapter_virtual_serial_add(adapter)
+  def virtual_serial_adapters_add(adapter)
     @virtual_serial_adapters.push(adapter)
     if @virtual_serial_adapters_raw.nil?
       @virtual_serial_adapters_raw = adapter.to_s + ','

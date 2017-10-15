@@ -9,9 +9,9 @@ include Dnsruby
 
 
 # own libraries
-$LOAD_PATH << File.dirname(__FILE__)+"/inc"
+$LOAD_PATH << File.dirname(__FILE__)+ '/inc'
 
-myName = File.basename(__FILE__)
+my_name = File.basename(__FILE__)
 
 # own functions
 def up?(host)
@@ -27,14 +27,14 @@ def ip (server)
     begin
         ip =  resolver.getname(server)
     rescue Exception => e
-      ip = "DNS query failed"
+      ip = 'DNS query failed'
     end
 
   else
     begin
         ip =  resolver.getaddress(server)
     rescue Exception => e
-      ip = "DNS query failed"
+      ip = 'DNS query failed'
     end
   end
 
@@ -63,14 +63,14 @@ ipsLengthMax=0
 pingResults =  {}
 ips = []
 
-serverString=""
+serverString=''
 
 #parsing command line options
 optparse = OptionParser.new do |opts|
 
-	opts.banner = "This script ping in the same time many servers and provide result in nice way"
+	opts.banner = 'This script ping in the same time many servers and provide result in nice way'
 	
-    opts.on("-s", "--server SERVER[,SERVER]", "SERVER for test ping") do |server|
+    opts.on('-s', '--server SERVER[,SERVER]', 'SERVER for test ping') do |server|
 		serverString += server + "," 
 	end
   
@@ -79,10 +79,10 @@ optparse = OptionParser.new do |opts|
 		exit
 	end 
  
-	opts.on("-f", "--filename FILENAME", "FILENAME with list of servers to test") do |fileName|
-	 		file = File.new(fileName, "r")
+	opts.on('-f', '--filename FILENAME', 'FILENAME with list of servers to test') do |fileName|
+	 		file = File.new(fileName, 'r')
 			while (line = file.gets)
-				serverString += line + "," 
+				serverString += line + ','
 			end
 			file.close
 	end
@@ -95,20 +95,20 @@ end
 serverString.gsub!("\n",'')
 serverString.gsub!("\r",'')
 
-servers = serverString.split(",")
+servers = serverString.split(',')
 
 servers.uniq! #removing duplicates 
 
-if (servers.empty?)
-	puts ""
-	puts "No servers to ping!"
-	puts "Try #{myName} -h"
+if servers.empty?
+	puts ''
+	puts 'No servers to ping!'
+	puts "Try #{my_name} -h"
 #	puts opts
 	exit
 end 
 
-puts "Will check status of " + servers.count.to_s + " servers"
-puts ""
+puts 'Will check status of ' + servers.count.to_s + ' servers'
+puts ''
 
 numbers = [*0..servers.count-1]
 
@@ -120,7 +120,7 @@ numbers.each {|i|
         
 	  result = up?(servers[i])
 	   
-      Thread.current["result"] =  result.to_s   
+      Thread.current['result'] =  result.to_s
 	  
 	  result ? status_ok +=1 :  status_failed+=1
 	  
@@ -136,7 +136,7 @@ numbers.each {|i|
 	t = arr[i] 
 	t.join
 	
-	puts strMax(servers[i], serverLengthMax) + strMax( " (" + ips[i] + ") ", ipsLengthMax+4) + t["result"] 	
+	puts strMax(servers[i], serverLengthMax) + strMax( ' (' + ips[i] + ') ', ipsLengthMax+4) + t['result']
 	
 }
 

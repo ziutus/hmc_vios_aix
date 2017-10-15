@@ -1,4 +1,4 @@
-#! /usr/bin/ruby
+#! /usr/bin/env ruby
 
 $LOAD_PATH << File.dirname(__FILE__)+"/inc"
 

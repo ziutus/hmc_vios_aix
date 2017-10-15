@@ -1,11 +1,13 @@
-#! /usr/bin/ruby
+#! /usr/bin/env ruby
+
+$LOAD_PATH << File.dirname(__FILE__) + './inc'
 
 require 'optparse'
 require 'yaml'
 require 'net/ssh'
 require 'pp'
 
-require_relative 'inc/MyExec'
+require_relative 'inc/nc/MyExec'
 require_relative 'inc/HMC/Sys'
 #require_relative 'inc/HMC/HmcString'
 require_relative 'inc/HMC/Lpar_real'
@@ -56,11 +58,13 @@ vscsi2.remoteLparName="vios2"
 vscsi2.remoteSlotNumber=12
 vscsi2.isRequired=1	
 
-lpar = Lpar_profile.new(frame, lparName, lparID)
+lpar = Lpar_profile.new(lparID)
+lpar.name = lparName
+lpar.sys = frame
 lpar.adapter_eth_add(vent1)
 lpar.adapter_eth_add(vent2)
 
-lpar.adapter_scsi_add(vscsi1)
+lpar.virtual_slots.adapter_scsi_add(vscsi1)
 lpar.adapter_scsi_add(vscsi2)
 
 #puts Exec.Exec(lpar.get_mksyscfg)

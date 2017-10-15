@@ -80,4 +80,7 @@ HMC\sBuild\slevel\s([\d\.]+)\s*
     return @patches.has_key?(fixName)
   end
 
+  def version_cmd
+    'lshmc -V'
+  end
 end
