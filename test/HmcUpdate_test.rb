@@ -1,10 +1,6 @@
 $LOAD_PATH << File.dirname(__FILE__) + '/../inc'
 $LOAD_PATH << File.dirname(__FILE__) + './inc'
 
-test_unit_version=`gem list test-unit`.to_s.scan(/test-unit \((\d\.\d\.\d)/).join
-autorunner_file="#{Gem.dir}/gems/test-unit-#{test_unit_version}/lib/test/unit/autorunner.rb"
-require autorunner_file if File.exist?(autorunner_file)
-
 require 'test/unit'
 require 'HMC/Hmc_upgrade'
 
@@ -33,7 +29,6 @@ class HmcUpdateTest < Test::Unit::TestCase
 
     expected = 'updhmc -t s -h 192.168.200.20 -u ziutus -p password -f /hmc/HMC_Update_V7R790_SP1.iso'
     assert_equal(expected,upgradeCmd.cmd)
-
 
   end
 end

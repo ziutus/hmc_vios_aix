@@ -1,17 +1,10 @@
-$LOAD_PATH << File.dirname(__FILE__)+"./inc"
-$LOAD_PATH << File.dirname(__FILE__)
-
-test_unit_version=`gem list test-unit`.to_s.scan(/test-unit \((\d\.\d\.\d)/).join
-autorunner_file="#{Gem.dir}/gems/test-unit-#{test_unit_version}/lib/test/unit/autorunner.rb"
-require autorunner_file if File.exist?(autorunner_file)
-
+$LOAD_PATH << File.dirname(__FILE__)+"/../inc"
 
 require 'HMC/Version'
 require "test/unit"
 require 'pp'
 
 # Test data taken from: https://sites.google.com/site/rhdisk0/unix/aix/hmc-in-virtualbox
-
 class TestHMVersion < Test::Unit::TestCase
 
   def test_only82
@@ -52,5 +45,4 @@ MH01454: Required fix for HMC V8R8.2.0 (11-05-2014)
     assert_equal("V8R8.2.0", myHmc.base_version)
 
   end
-
 end

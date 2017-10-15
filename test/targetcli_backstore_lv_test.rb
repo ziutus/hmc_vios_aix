@@ -67,6 +67,5 @@ class TestTargetcli < Test::Unit::TestCase
 		assert_equal(cmd, testcli.ls_all_cmd)
 		
 	end
-	
-	
+
 end
