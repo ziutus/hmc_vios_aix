@@ -1,4 +1,5 @@
 #! /usr/bin/env ruby
+$LOAD_PATH << File.dirname(__FILE__)+ '/inc'
 
 # standard libraries
 require 'pp'
@@ -7,9 +8,6 @@ require 'net/ping'
 require 'dnsruby'
 include Dnsruby
 
-
-# own libraries
-$LOAD_PATH << File.dirname(__FILE__)+ '/inc'
 
 my_name = File.basename(__FILE__)
 
@@ -43,7 +41,6 @@ end
 
 
 def strMax (string, length)
-
 	(string + ' ' * length)[0, length]
 end
 
@@ -64,6 +61,7 @@ pingResults =  {}
 ips = []
 
 serverString=''
+regexp = nil
 
 #parsing command line options
 optparse = OptionParser.new do |opts|
@@ -85,7 +83,11 @@ optparse = OptionParser.new do |opts|
 				serverString += line + ','
 			end
 			file.close
-	end
+  end
+
+  opts.on('-e', '--regexp REGEXP', 'regexp to take only some servers from list') do |string|
+  	regexp = string
+  end
 end  
 
 begin
@@ -98,6 +100,15 @@ serverString.gsub!("\r",'')
 servers = serverString.split(',')
 
 servers.uniq! #removing duplicates 
+
+unless regexp.nil?
+  servers_tmp = servers
+  servers = []
+  servers_tmp.each { |server|
+    servers.push(server) if server =~ /#{regexp}/
+  }
+
+end
 
 if servers.empty?
 	puts ''
