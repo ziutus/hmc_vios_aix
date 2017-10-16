@@ -39,6 +39,14 @@ If you known how to really buy newer version of this software please write to me
 I will use some example data found on Internet (manual pages, example data, posts etc) but I can't promise that it will be working on your setup.
 
 # Installation
+Needed ruby games:
+* json
+* dns-ruby
+* net-ssh
+* net-ping
+* test-unit
+* shoulda-context
+
 if you want to add libraries to your path, you can use below code:
 
 ```
