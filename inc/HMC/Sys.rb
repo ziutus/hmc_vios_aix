@@ -6,7 +6,8 @@ include HmcString
 class Sys
 
 	#attr_accessor :sys, :dataString
-	attr_reader :sys, :dataString
+	attr_reader :sys
+  attr_reader :dataString
 	
 	#power5 
 	attr_reader :name

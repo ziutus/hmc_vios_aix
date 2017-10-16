@@ -3,8 +3,13 @@ class VirtualFCAdapter
 	#see: http://www-01.ibm.com/support/docview.wss?uid=nas8N1011009
 	#see: https://www.ibm.com/support/knowledgecenter/en/POWER8/p8edm/mksyscfg.html
 	
-	attr_accessor :virtualSlotNumber, :clientOrServer, :remoteLparID, :remoteLparName, :remoteSlotNumber 
-	attr_accessor :wwpn1, :wwpn2
+	attr_accessor :virtualSlotNumber
+	attr_accessor :clientOrServer
+	attr_accessor :remoteLparID
+	attr_accessor :remoteLparName
+	attr_accessor :remoteSlotNumber
+	attr_accessor :wwpn1
+	attr_accessor :wwpn2
 	attr_accessor :isRequired 
 
 	def initialize string='' 

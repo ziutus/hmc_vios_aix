@@ -1,9 +1,27 @@
 class RemoteAccess
 
-  attr_reader :ssh, :sshprotocol
-  attr_reader :remotewebui, :xntp, :xntpserver, :syslogserver,  :syslogtcpserver, :syslogtlsserver, :altdiskboot, :ldap, :kerberos, :kerberos_default_realm
-  attr_reader :kerberos_realm_kdc, :kerberos_clockskew, :kerberos_ticket_lifetime, :kpasswd_admin, :trace, :kerberos_keyfile_present, :kerberos_allow_weak_crypto
-  attr_reader :legacyhmccomm, :security, :sol
+  attr_reader :ssh
+  attr_reader :sshprotocol
+  attr_reader :remotewebui
+  attr_reader :xntp
+  attr_reader :xntpserver
+  attr_reader :syslogserver
+  attr_reader :syslogtcpserver
+  attr_reader :syslogtlsserver
+  attr_reader :altdiskboot
+  attr_reader :ldap
+  attr_reader :kerberos
+  attr_reader :kerberos_default_realm
+  attr_reader :kerberos_realm_kdc
+  attr_reader :kerberos_clockskew
+  attr_reader :kerberos_ticket_lifetime
+  attr_reader :kpasswd_admin
+  attr_reader :trace
+  attr_reader :kerberos_keyfile_present
+  attr_reader :kerberos_allow_weak_crypto
+  attr_reader :legacyhmccomm
+  attr_reader :security
+  attr_reader :sol
 
 
   def initialize string

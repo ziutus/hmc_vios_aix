@@ -2,7 +2,12 @@ class VirtualScsiAdapter
 
 	#TODO: analyze if in case that remote lpar or slot is 'any' can we do simpler code (not so many if..elsif...)
 
-	attr_accessor :virtualSlotNumber, :clientOrServer, :remoteLparID, :remoteLparName, :remoteSlotNumber, :isRequired 
+	attr_accessor :virtualSlotNumber
+	attr_accessor :clientOrServer
+	attr_accessor :remoteLparID
+	attr_accessor :remoteLparName
+	attr_accessor :remoteSlotNumber
+	attr_accessor :isRequired
 
 	def initialize string='' 
 		@virtualSlotNumber

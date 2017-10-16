@@ -1,8 +1,17 @@
 class VirtualEthAdapter
 
 
-	attr_accessor :virtualSlotNumber, :isIEEE, :portVlanID, :additionalVlanIDs, :trunkPriority, :isTrunk
-	attr_accessor :isRequired, :virtualSwitch, :macAddress, :allowedOsMacAddresses, :qosPiority 
+	attr_accessor :virtualSlotNumber
+	attr_accessor :isIEEE
+	attr_accessor :portVlanID
+	attr_accessor :additionalVlanIDs
+	attr_accessor :trunkPriority
+	attr_accessor :isTrunk
+	attr_accessor :isRequired
+	attr_accessor :virtualSwitch
+	attr_accessor :macAddress
+	attr_accessor :allowedOsMacAddresses
+	attr_accessor :qosPiority
 
 	def initialize string='' 
 		@virtualSlotNumber
@@ -34,7 +43,7 @@ class VirtualEthAdapter
 		
 	def to_s
 	
-		self.validate()
+		self.validate
 	
 		result ="#{@virtualSlotNumber}/#{@isIEEE}/#{@portVlanID}/#{@additionalVlanIDs}/#{@trunkPriority}/#{@isRequired}" 
 		result = result+"/#{@virtualSwitch}" 		 unless (@virtualSwitch.nil?)
@@ -49,18 +58,18 @@ class VirtualEthAdapter
 		result
 	end
 	
-	def decode string
+	def decode(string)
 
 #virtual-slot-number/is-IEEE/port-vlan-ID/[additional-vlan-IDs]/[trunk-priority]/is-required[/[virtual-switch][/[MAC-address]/ 
 #[allowed-OS-MAC-addresses]/[QoS-priority]]]
 	
-		regExp_minimum 			   = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)\s*$}
-		regExp_vswitch 			   = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\-]+)\s*$}
-		regExp_mac_address 		   = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\-]+)/(\w+|)\s*$}
-		regExp_allowed_mac_address = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\-]+)/(\w+|)/([\w\,]+|all)\s*$}
-		regExp_qos_priority 	   = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\-]+)/(\w+|)/([\w\,]+|all)/(\d+|none)\s*$}
+		regexp_minimum 			   = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)\s*$}
+		regexp_vswitch 			   = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\-]+)\s*$}
+		regexp_mac_address 		   = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\-]+)/(\w+|)\s*$}
+		regexp_allowed_mac_address = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\-]+)/(\w+|)/([\w\,]+|all)\s*$}
+		regexp_qos_priority 	   = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\-]+)/(\w+|)/([\w\,]+|all)/(\d+|none)\s*$}
 
-		if match = regExp_minimum.match(string) 
+		if match = regexp_minimum.match(string)
 		
 			@virtualSlotNumber	= match[1].to_i	
 			@isIEEE				= match[2].to_i	
@@ -69,7 +78,7 @@ class VirtualEthAdapter
 			@trunkPriority		= match[5].to_i
 			@isRequired			= match[6].to_i
 
-		elsif match = regExp_vswitch.match(string) 
+		elsif match = regexp_vswitch.match(string)
 		
 			@virtualSlotNumber	= match[1].to_i	
 			@isIEEE				= match[2].to_i	
@@ -79,7 +88,7 @@ class VirtualEthAdapter
 			@isRequired			= match[6].to_i
 			@virtualSwitch		= match[7].to_i
 
-		elsif match = regExp_mac_address.match(string) 
+		elsif match = regexp_mac_address.match(string)
 		
 			@virtualSlotNumber	= match[1].to_i	
 			@isIEEE				= match[2].to_i	
@@ -90,7 +99,7 @@ class VirtualEthAdapter
 			@virtualSwitch		= match[7]
 			@macAddress			= match[8]
 			
-		elsif match = regExp_allowed_mac_address.match(string) 
+		elsif match = regexp_allowed_mac_address.match(string)
 
 			@virtualSlotNumber	= match[1].to_i	
 			@isIEEE				= match[2].to_i	
@@ -102,7 +111,7 @@ class VirtualEthAdapter
 			@macAddress			= match[8]
 			@allowedOsMacAddresses = match[9]
 
-		elsif match = regExp_qos_priority.match(string) 
+		elsif match = regexp_qos_priority.match(string)
 
 			@virtualSlotNumber	= match[1].to_i	
 			@isIEEE				= match[2].to_i	

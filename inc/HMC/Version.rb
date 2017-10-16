@@ -1,7 +1,12 @@
 class Version
 
-  attr_reader :version, :release, :servicePack, :hmcBuildLevel, :base_version
-  attr_reader :patches, :patches_raw
+  attr_reader :version
+  attr_reader :release
+  attr_reader :servicePack
+  attr_reader :hmcBuildLevel
+  attr_reader :base_version
+  attr_reader :patches
+  attr_reader :patches_raw
 
 
   def initialize string=''

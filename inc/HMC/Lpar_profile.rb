@@ -348,7 +348,7 @@ class Lpar_profile
     self.to_s == another_profile.to_s
   end
 
-  def diff_show (another_profile, columns_to_compare, columns_to_ignore)
+  def diff_show (another_profile, columns_to_compare = 'all', columns_to_ignore = 'none')
 
     diffs = Hash.new
     ignore = columns_to_ignore.split(',')

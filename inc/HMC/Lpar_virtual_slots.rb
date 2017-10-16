@@ -61,7 +61,7 @@ class Lpar_virtual_slots
       when 'VirtualFCAdapter'     then self.virtual_fc_adapters_add(adapter)
       else
         pp 'adapter class:' +  adapter.class
-        raise 'unknown type of Virtual Adapter'
+        raise 'unknown type of adapter'
     end
   end
 

@@ -6,8 +6,12 @@ include HmcString
 
 class TaskRole
 
-  attr_reader :name, :parent, :resources_raw
-  attr_reader :resources_frame, :resources_cec, :resources_HMCConsole
+  attr_reader :name
+  attr_reader :parent
+  attr_reader :resources_raw
+  attr_reader :resources_frame
+  attr_reader :resources_cec
+  attr_reader :resources_HMCConsole
 
   def initialize string
 

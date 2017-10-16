@@ -2,7 +2,10 @@ require 'pp'
 
 class Resource
 
-	attr_reader :type, :lpar, :frame, :type_long  
+	attr_reader :type
+	attr_reader :lpar
+	attr_reader :frame
+	attr_reader :type_long
 
 
 	#cec:root/ibmhscS1_0|9131-52A*6535CCG|IBMHSC_ComputerSystem,

@@ -15,7 +15,9 @@ class Lpar_netboot
 	attr_accessor :spanning_tree # -T 
 	attr_accessor :verbose		# -v 
 	
-	attr_accessor :lpar_name, :lpar_profile, :machine
+	attr_accessor :lpar_name
+	attr_accessor :lpar_profile
+	attr_accessor :machine
 	
 	def initialize
 		

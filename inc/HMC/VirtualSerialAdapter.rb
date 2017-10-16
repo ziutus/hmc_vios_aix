@@ -1,7 +1,12 @@
 class VirtualSerialAdapter
 
-	attr_accessor :virtualSlotNmuber, :clientOrServer, :supportsHMC, :remoteLparID 
-	attr_accessor :remoteLparName, :remoteSlotNumber, :isRequired 
+	attr_accessor :virtualSlotNmuber
+	attr_accessor :clientOrServer
+	attr_accessor :supportsHMC
+	attr_accessor :remoteLparID
+	attr_accessor :remoteLparName
+	attr_accessor :remoteSlotNumber
+	attr_accessor :isRequired
 
 	def initialize string='' 
 		@virtualSlotNmuber

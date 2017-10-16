@@ -5,10 +5,28 @@ include HmcString
 
 class FrameIOSlot
 
-	attr_reader :unit_phys_loc, :bus_id, :phys_loc, :drc_index, :lpar_name, :lpar_id, :slot_io_pool_id 
-	attr_reader :pci_vendor_id, :pci_subs_vendor, :pci_subs_device_id, :pci_class, :pci_revision_id
-	attr_reader :bus_grouping, :iop, :parent_slot_drc_index, :drc_name, :interposer_present, :interposer_pcie
-	attr_reader :description, :feature_codes, :pci_device_id, :pci_subs_vendor_id
+	attr_reader :unit_phys_loc
+	attr_reader :bus_id
+	attr_reader :phys_loc
+	attr_reader :drc_index
+	attr_reader :lpar_name
+	attr_reader :lpar_id
+	attr_reader :slot_io_pool_id
+	attr_reader :pci_vendor_id
+	attr_reader :pci_subs_vendor
+	attr_reader :pci_subs_device_id
+	attr_reader :pci_class
+	attr_reader :pci_revision_id
+	attr_reader :bus_grouping
+	attr_reader :iop
+	attr_reader :parent_slot_drc_index
+	attr_reader :drc_name
+	attr_reader :interposer_present
+	attr_reader :interposer_pcie
+	attr_reader :description
+	attr_reader :feature_codes
+	attr_reader :pci_device_id
+	attr_reader :pci_subs_vendor_id
 
 	attr_reader :data_string_raw
 	
