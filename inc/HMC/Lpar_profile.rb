@@ -153,6 +153,20 @@ class Lpar_profile
 
   end
 
+  def adapter_add(adapter)
+
+    case adapter.class.to_s
+      when 'VirtualEthAdapter'    then self.virtual_slots.virtual_eth_adapters_add(adapter)
+      when 'VirtualScsiAdapter'   then self.virtual_slots.virtual_scsi_adapters_add(adapter)
+      when 'VirtualSerialAdapter' then self.virtual_slots.virtual_serial_adapters_add(adapter)
+      when 'VirtualFCAdapter'     then self.virtual_slots.virtual_fc_adapters_add(adapter)
+      else
+        pp 'adapter class:' +  adapter.class
+        raise 'unknown type of Virtual Adapter'
+    end
+  end
+
+
   def io_slots_to_s
 
     result = nil
@@ -334,15 +348,17 @@ class Lpar_profile
     self.to_s == another_profile.to_s
   end
 
-  def diff_show (another_profile, columns_to_ignore)
+  def diff_show (another_profile, columns_to_compare, columns_to_ignore)
 
     diffs = Hash.new
     ignore = columns_to_ignore.split(',')
+    compare = columns_to_compare.split(',')
 
     @_variables.keys.each { |type|
       @_variables[type].each { |name|
 
         next if ignore.include?(name)
+        next if columns_to_compare != 'all' and ! compare.include?(name)
 
         if type == 'string_virtual_raw'
           val_self    = self.virtual_slots.adapters_to_s(name)

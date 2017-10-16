@@ -390,7 +390,7 @@ class TestHMCLparProfile < Test::Unit::TestCase
       profile2 = Lpar_profile.new
       profile2.lssyscfgProfDecode(profile_string2)
 
-			diff   = profile1.diff_show(profile2, 'name')
+			diff   = profile1.diff_show(profile2, 'all', 'name')
 			diff
 
       assert_equal(2048, Integer(diff['min_mem']['normal']))
