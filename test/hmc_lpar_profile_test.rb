@@ -8,7 +8,7 @@ require 'HMC/VirtualEthAdapter'
 
 # noinspection ALL
 class TestHMCLparProfile < Test::Unit::TestCase
- 
+
 	#source of data, own Power5 frame
 	# noinspection RubyResolve
 	def test_profile_decode
@@ -49,6 +49,10 @@ class TestHMCLparProfile < Test::Unit::TestCase
 			assert_equal('2/client/2/vios1/2/1,3/client/3/vios2/2/1',   profile.virtual_slots.virtual_scsi_adapters_raw)
 			assert_equal('6/1/6//0/0,7/0/7//0/0',                       profile.virtual_slots.virtual_eth_adapters_raw)
 
+      assert_equal(2, profile.vlans.count)
+      assert_equal(6, profile.vlans[0])
+      assert_equal(7, profile.vlans[1])
+
 			assert_equal(2, profile.virtual_slots.virtual_serial_adapters.count)
 			assert_equal(2, profile.virtual_slots.virtual_scsi_adapters.count)
 			assert_equal(2, profile.virtual_slots.virtual_eth_adapters.count)
@@ -67,7 +71,7 @@ class TestHMCLparProfile < Test::Unit::TestCase
 	#source of data, own Power5 frame
 	def test_profile_decode_2
 
-		string = 'name=normal,lpar_name=vios2,lpar_id=3,lpar_env=vioserver,all_resources=0,min_mem=1024,desired_mem=6144,max_mem=10240,mem_mode=ded,hpt_ratio=1:64,proc_mode=shared,min_proc_units=0.1,desired_proc_units=0.3,max_proc_units=0.6,min_procs=1,desired_procs=1,max_procs=1,sharing_mode=cap,uncap_weight=0,"io_slots=21010002/none/1,21050003/none/1",lpar_io_pool_ids=none,max_virtual_slots=200,"virtual_serial_adapters=0/server/1/any//any/1,1/server/1/any//any/1",virtual_scsi_adapters=2/server/5/nim1/3/0,"virtual_eth_adapters=6/0/6//2/1,8/0/8//2/1,9/0/6//0/0",hca_adapters=none,boot_mode=norm,conn_monitoring=0,auto_start=0,power_ctrl_lpar_ids=none,work_group_id=none,redundant_err_path_reporting=0'
+		string = 'name=normal,lpar_name=vios2,lpar_id=3,lpar_env=vioserver,all_resources=0,min_mem=1024,desired_mem=6144,max_mem=10240,mem_mode=ded,hpt_ratio=1:64,proc_mode=shared,min_proc_units=0.1,desired_proc_units=0.3,max_proc_units=0.6,min_procs=1,desired_procs=1,max_procs=1,sharing_mode=cap,uncap_weight=0,"io_slots=21010002/none/1,21050003/none/1",lpar_io_pool_ids=none,max_virtual_slots=200,"virtual_serial_adapters=0/server/1/any//any/1,1/server/1/any//any/1",virtual_scsi_adapters=2/server/5/nim1/3/0,"virtual_eth_adapters=6/0/6//2/1,8/0/8//2/1,9/0/9//0/0",hca_adapters=none,boot_mode=norm,conn_monitoring=0,auto_start=0,power_ctrl_lpar_ids=none,work_group_id=none,redundant_err_path_reporting=0'
 		profile = Lpar_profile.new( 3, 'normal')
 		profile.lssyscfgProfDecode(string)
 
@@ -102,7 +106,12 @@ class TestHMCLparProfile < Test::Unit::TestCase
 		assert_equal(profile.max_virtual_slots,				200)
 		assert_equal('0/server/1/any//any/1,1/server/1/any//any/1', profile.virtual_slots.virtual_serial_adapters_raw)
 		assert_equal('2/server/5/nim1/3/0',						    profile.virtual_slots.virtual_scsi_adapters_raw)
-		assert_equal('6/0/6//2/1,8/0/8//2/1,9/0/6//0/0',			profile.virtual_slots.virtual_eth_adapters_raw)
+		assert_equal('6/0/6//2/1,8/0/8//2/1,9/0/9//0/0',			profile.virtual_slots.virtual_eth_adapters_raw)
+
+    assert_equal(3, profile.vlans.count)
+    assert_equal(6, profile.vlans[0])
+    assert_equal(8, profile.vlans[1])
+    assert_equal(9, profile.vlans[2])
 
 		assert_equal(2, profile.virtual_slots.virtual_serial_adapters.count)
 		assert_equal(1, profile.virtual_slots.virtual_scsi_adapters.count)

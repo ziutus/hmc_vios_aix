@@ -275,6 +275,17 @@ class Lpar_profile
     result_array.join(',')
   end
 
+  def vlans
+    result = []
+    self.virtual_slots.virtual_eth_adapters.each { |adapter|
+      result.push(adapter.portVlanID)
+      adapter.additionalVlanIDs.split(',').each { |vlan|
+        result.push(vlan)
+      }
+    }
+    result.sort
+  end
+
   def mksyscfg_cmd
 		"mksyscfg -r lpar -m #{@sys} -i \"" + self.to_s + '"'
 	end
