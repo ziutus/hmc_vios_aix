@@ -3,10 +3,7 @@ $LOAD_PATH << File.dirname(__FILE__)+'./inc'
 
 require 'test/unit'
 require 'HMC/Lpar_profile'
-require 'HMC/VirtualEthAdapter'
 
-
-# noinspection ALL
 class TestHMCLparProfile < Test::Unit::TestCase
 
 	#source of data, own Power5 frame
@@ -415,6 +412,4 @@ class TestHMCLparProfile < Test::Unit::TestCase
       assert_equal('5/client/2/vios2/2/1,2/client/3/vios1/2/1', diff['virtual_scsi_adapters']['minimal'])
 
   end
-
-end			
-		
+end
