@@ -332,6 +332,8 @@ class Lpar_profile
       @_parametr_order.push(name)
     }
 
+    raise 'wrong parsing of profile string' if self.to_s != string
+
   end
 
    alias :parse :lssyscfgProfDecode
