@@ -32,6 +32,9 @@ class TestHMCLpar < Test::Unit::TestCase
     assert_equal(false,  lpar.profile_exist?('low'))
     assert_equal(false, lpar.profile_exist?('big'))
 
+    lpar.profile_add(string_low)
+    assert_equal(true,  lpar.profile_exist?('low'))
+
   end
 
 

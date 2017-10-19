@@ -1,3 +1,5 @@
+require 'HMC/Lpar_profile'
+
 class HmcLpar
 
 	attr_accessor :sys
@@ -14,6 +16,15 @@ class HmcLpar
 	end
 
   def profile_add(profile)
+
+    if profile.class.to_s == 'String'
+      profile_tmp = Lpar_profile.new
+      profile_tmp.parse(profile)
+      profile = profile_tmp
+    end
+
+    raise 'profile to add is not proper profile object or string with profile' unless profile.class.to_s == 'Lpar_profile'
+
     @profiles[profile.name]= profile
   end
 
