@@ -1,12 +1,12 @@
-$LOAD_PATH << File.dirname(__FILE__) + '/../inc'
-$LOAD_PATH << File.dirname(__FILE__) + './inc'
+$LOAD_PATH << File.dirname(__FILE__)+'/../inc'
+$LOAD_PATH << File.dirname(__FILE__)+'./inc'
 
-require 'HMC/Resource'
 require 'test/unit'
 require 'pp'
+require 'HMC/Resource'
 
 class TestHMCResource < Test::Unit::TestCase
-  
+
 	def test_name
 		string = 'lpar:root/ibmhscS1_0|1*9131-52A*6535CCG|IBMHSC_Partition'
 
@@ -28,9 +28,7 @@ class TestHMCResource < Test::Unit::TestCase
 		assert_equal('lpar',             resource.type, )
 		assert_equal('ALL_PARTITIONS',   resource.lpar)
 		assert_equal('9131-52A*6535CCG', resource.frame)
-		
 	end
-	
-	
+
 end			
 		
