@@ -298,9 +298,10 @@ class Lpar_profile
 
 	def lssyscfgProfDecode(string)
 
-    HmcString.parse(string).each {|name, value|
+    string.gsub!("\n", '')
+    string.gsub!("\r", '')
 
-#      puts "#{name}: #{value}"
+    HmcString.parse(string).each {|name, value|
 
       if @_variables['variables_int'].include?(name)
         instance_variable_set("@#{name}", value.to_i)
