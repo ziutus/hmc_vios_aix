@@ -267,7 +267,7 @@ class Lpar_profile
 
       else
         unless self.instance_variable_get("@#{parametr}") == nil
-          result_array.push (parametr + '=' + self.instance_variable_get("@#{parametr}").to_s)
+          result_array.push (make_string(parametr, self.instance_variable_get("@#{parametr}").to_s))
         end
       end
     }
@@ -332,7 +332,13 @@ class Lpar_profile
       @_parametr_order.push(name)
     }
 
-    raise 'wrong parsing of profile string' if self.to_s != string
+    if self.to_s != string
+      puts "Incoming string:"
+      pp string
+      puts "Analysed data as result of to_s:"
+      puts self.to_s
+      raise 'wrong parsing of profile string'
+    end
 
   end
 
