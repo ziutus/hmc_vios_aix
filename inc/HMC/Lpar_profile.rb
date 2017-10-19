@@ -126,8 +126,8 @@ class Lpar_profile
 
     @@_variables['string_virtual_raw'] = %w(virtual_serial_adapters virtual_scsi_adapters virtual_eth_adapters virtual_fc_adapters)
 
-    @_functions_self = %w(io_slots hca_adapters vtpm_adapters lhea_logical_ports sriov_eth_logical_ports virtual_vasi_adapters virtual_eth_vsi_profiles)
-    @_functions_virtual_slots = %w( virtual_serial_adapters virtual_scsi_adapters virtual_eth_adapters  virtual_fc_adapters)
+    @@_functions_self = %w(io_slots hca_adapters vtpm_adapters lhea_logical_ports sriov_eth_logical_ports virtual_vasi_adapters virtual_eth_vsi_profiles)
+    @@_functions_virtual_slots = %w( virtual_serial_adapters virtual_scsi_adapters virtual_eth_adapters  virtual_fc_adapters)
 
 
 
@@ -267,13 +267,13 @@ class Lpar_profile
 
     params_to_print.each {|parametr|
 
-      if @_functions_self.include?(parametr)
+      if @@_functions_self.include?(parametr)
 
         tmp = self.send("#{parametr}_to_s")
         tmp = make_string(parametr, tmp)
         result_array.push(tmp) unless tmp.nil?
 
-      elsif @_functions_virtual_slots.include?(parametr)
+      elsif @@_functions_virtual_slots.include?(parametr)
 
           tmp = @virtual_slots.send("#{parametr}_to_s")
           tmp = make_string(parametr, tmp)
