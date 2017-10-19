@@ -96,6 +96,16 @@ class Lpar_profile
 
 	def initialize(lpar_id='', name='normal')
 
+    string = ''
+
+    if lpar_id.class.to_s == 'String'
+      if lpar_id.include?('=')
+        string = lpar_id
+        lpar_id = ''
+      end
+    end
+
+
     @lpar_id = lpar_id
     @name    = name
 
@@ -150,6 +160,10 @@ class Lpar_profile
 
 
     @virtual_slots = Lpar_virtual_slots.new
+
+    if string.length > 0
+      self.parse(string)
+    end
 
   end
 
