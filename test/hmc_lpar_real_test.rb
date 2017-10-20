@@ -1,5 +1,5 @@
-$LOAD_PATH << File.dirname(__FILE__) + '/../inc'
-$LOAD_PATH << File.dirname(__FILE__) + './inc'
+$LOAD_PATH << File.dirname(__FILE__)+'/../inc'
+$LOAD_PATH << File.dirname(__FILE__)+'./inc'
 
 require 'HMC/Lpar_real'
 require 'test/unit'
@@ -40,8 +40,19 @@ class TestHMCLpar < Test::Unit::TestCase
 		assert_equal('',         lpar.rmc_ipaddr)
 		assert_equal(0,        lpar.sync_curr_profile)
 	end
-	
-	def test_memory_decode
+
+		def test_lpar_lssyscfg_decode_part
+    lpar = Lpar_real.new('9131-52A-6535CCG', 15, 'aix53_15')
+    string = 'name=aix53_15,lpar_id=15'
+
+    lpar.lssyscfgDecode(string)
+
+    assert_equal('aix53_15', lpar.name)
+    assert_equal(15,       lpar.lpar_id)
+
+    end
+
+    def test_memory_decode
 			string = 'lpar_name=aix53_15,lpar_id=15,curr_min_mem=1,curr_mem=2,curr_max_mem=3,pend_min_mem=4,pend_mem=5,pend_max_mem=6,run_min_mem=7,run_mem=8,curr_min_num_huge_pages=9,curr_num_huge_pages=10,curr_max_num_huge_pages=11,pend_min_num_huge_pages=12,pend_num_huge_pages=13,pend_max_num_huge_pages=14,run_num_huge_pages=15,mem_mode=ded,curr_hpt_ratio=1:64'
 		
 			lpar = Lpar_real.new('9131-52A-6535CCG', 15, 'aix53_15')
@@ -152,8 +163,8 @@ lpar_name=vios1,lpar_id=15,slot_num=9,state=1,is_required=0,is_trunk=1,trunk_pri
 		
 		#pp myLpar
 		assert_equal(0,     lpar.virtual_adapter_first_free)
-		assert_equal(false, lpar.virtual_adapter_exit?(2))
-		assert_equal(true,  lpar.virtual_adapter_exit?(6))
+		assert_equal(false, lpar.virtual_adapter_exist?(2))
+		assert_equal(true,  lpar.virtual_adapter_exist?(6))
 		
 	end
 	

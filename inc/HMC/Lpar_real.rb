@@ -198,7 +198,7 @@ class Lpar_real
 		"chhwres -m #{@sys} -p #{@name} -r proc -o r --procunits #{howMuch.to_s}"
 	end	
 	
-	def memoryRestoreToProfile
+	def memoryRestoreToProfile_cmd
 		""
 	end
 	
@@ -362,8 +362,7 @@ class Lpar_real
 		end 
 	end
 
-	def virtual_adapter_exit? adapterID  
-		
+	def virtual_adapter_exist? adapterID
 		@adaptersVirtual.key?(adapterID)
 	end
 

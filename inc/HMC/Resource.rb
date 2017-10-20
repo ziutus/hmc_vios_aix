@@ -13,41 +13,27 @@ class Resource
 	#lpar:root/ibmhscS1_0|ALL_PARTITIONS*9131-52A*6535CCG|IBMHSC_Partition
 	#lpar:root/ibmhscS1_0|1*9131-52A*6535CCG|IBMHSC_Partition,
 	#lpar:root/ibmhscS1_0|5*9131-52A*6535CCG|IBMHSC_Partition
-	def initialize string=""
+	def initialize(string='')
 		if string.length > 0
-			decode(string)
+			self.decode(string)
 		end
 	end 
 	
 
-	def decode string 
+	def decode(string)
 		
-		regexp = /lpar:root\/ibmhscS1_0\|(\d+|ALL_PARTITIONS)\*(\d{4}\-\w{3}\*\w{7})\|IBMHSC_Partition/
-		
-		match = regexp.match(string)
-		
-		
-		if match 
+		if match = /lpar:root\/ibmhscS1_0\|(\d+|ALL_PARTITIONS)\*(\d{4}\-\w{3}\*\w{7})\|IBMHSC_Partition/.match(string)
 				@type_long  =  "IBMHSC_Partition"
 				@type		= "lpar"
 				@lpar 		= match[1]
 				@frame 		= match[2]
-		end
-		
-		unless match 
-			puts string 
+    else
+      puts string
 			puts regexp
 			puts match 
 			puts "regexp couldn't decode string #{string}"
 			raise 
 		end
-		
-#		pp match
-		
-#		@name=match[1]
-#		puts match[2]
-		
-		
 		
 	end
 

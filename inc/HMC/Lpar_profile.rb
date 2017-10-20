@@ -109,12 +109,12 @@ class Lpar_profile
     @lpar_id = lpar_id
     @name    = name
 
-    @@_variables = Hash.new
-    @@_variables['variables_int'] = %w(lpar_id min_mem desired_mem max_mem all_resources min_procs desired_procs max_procs max_virtual_slots
+    @_variables = Hash.new
+    @_variables['variables_int'] = %w(lpar_id min_mem desired_mem max_mem all_resources min_procs desired_procs max_procs max_virtual_slots
             auto_start conn_monitoring uncap_weight bsr_arrays shared_proc_pool_id)
-    @@_variables['variables_float'] = %w(min_proc_units desired_proc_units max_proc_units mem_expansion)
+    @_variables['variables_float'] = %w(min_proc_units desired_proc_units max_proc_units mem_expansion)
 
-    @@_variables['string'] = ['name', 'lpar_name', 'lpar_env', 'mem_mode', 'proc_mode', 'sharing_mode',
+    @_variables['string'] = ['name', 'lpar_name', 'lpar_env', 'mem_mode', 'proc_mode', 'sharing_mode',
                               'lpar_io_pool_ids', 'boot_mode',
                               'power_ctrl_lpar_ids', 'work_group_id', 'redundant_err_path_reporting', 'hpt_ratio',
                               'affinity_group_id', 'lhea_capabilities' 'lpar_proc_compat_mode', 'lhea_capabilities', 'lpar_proc_compat_mode',
@@ -122,12 +122,12 @@ class Lpar_profile
                               'shared_proc_pool_name', 'sni_device_ids']
 
 
-    @@_variables['string_raw'] = %w( hca_adapters vtpm_adapters virtual_vasi_adapters virtual_eth_vsi_profiles sriov_eth_logical_ports vnic_adapters)
+    @_variables['string_raw'] = %w( hca_adapters vtpm_adapters virtual_vasi_adapters virtual_eth_vsi_profiles sriov_eth_logical_ports vnic_adapters)
 
-    @@_variables['string_virtual_raw'] = %w(virtual_serial_adapters virtual_scsi_adapters virtual_eth_adapters virtual_fc_adapters)
+    @_variables['string_virtual_raw'] = %w(virtual_serial_adapters virtual_scsi_adapters virtual_eth_adapters virtual_fc_adapters)
 
-    @@_functions_self = %w(io_slots hca_adapters vtpm_adapters lhea_logical_ports sriov_eth_logical_ports virtual_vasi_adapters virtual_eth_vsi_profiles)
-    @@_functions_virtual_slots = %w( virtual_serial_adapters virtual_scsi_adapters virtual_eth_adapters  virtual_fc_adapters)
+    @_functions_self = %w(io_slots hca_adapters vtpm_adapters lhea_logical_ports sriov_eth_logical_ports virtual_vasi_adapters virtual_eth_vsi_profiles)
+    @_functions_virtual_slots = %w( virtual_serial_adapters virtual_scsi_adapters virtual_eth_adapters  virtual_fc_adapters)
 
 
 
@@ -267,13 +267,13 @@ class Lpar_profile
 
     params_to_print.each {|parametr|
 
-      if @@_functions_self.include?(parametr)
+      if @_functions_self.include?(parametr)
 
         tmp = self.send("#{parametr}_to_s")
         tmp = make_string(parametr, tmp)
         result_array.push(tmp) unless tmp.nil?
 
-      elsif @@_functions_virtual_slots.include?(parametr)
+      elsif @_functions_virtual_slots.include?(parametr)
 
           tmp = @virtual_slots.send("#{parametr}_to_s")
           tmp = make_string(parametr, tmp)
@@ -317,11 +317,11 @@ class Lpar_profile
 
     HmcString.parse(string).each {|name, value|
 
-      if @@_variables['variables_int'].include?(name)
+      if @_variables['variables_int'].include?(name)
         instance_variable_set("@#{name}", value.to_i)
-      elsif @@_variables['variables_float'].include?(name)
+      elsif @_variables['variables_float'].include?(name)
         instance_variable_set("@#{name}", value.to_f)
-      elsif @@_variables['string_virtual_raw'].include?(name)
+      elsif @_variables['string_virtual_raw'].include?(name)
 
         case name
           when 'virtual_fc_adapters'     then @virtual_slots.virtual_fc_adapters_raw = value
@@ -335,9 +335,9 @@ class Lpar_profile
         self.io_slots_raw = value
       elsif name == 'lhea_logical_ports'
         self.lhea_logical_ports_raw = value
-      elsif  @@_variables['string_raw'].include?(name)
+      elsif  @_variables['string_raw'].include?(name)
         instance_variable_set("@#{name}_raw", value.to_s)
-      elsif @@_variables['string'].include?(name)
+      elsif @_variables['string'].include?(name)
         instance_variable_set("@#{name}", value.to_s)
       else
         print "unknown name: #{name} with value #{value}"
@@ -348,9 +348,9 @@ class Lpar_profile
     }
 
     if self.to_s != string
-      puts "Incoming string:"
+      puts 'Incoming string:'
       pp string
-      puts "Analysed data as result of to_s:"
+      puts 'Analysed data as result of to_s:'
       puts self.to_s
       raise 'wrong parsing of profile string'
     end
@@ -388,8 +388,8 @@ class Lpar_profile
     ignore = columns_to_ignore.split(',')
     compare = columns_to_compare.split(',')
 
-    @@_variables.keys.each { |type|
-      @@_variables[type].each { |name|
+    @_variables.keys.each { |type|
+      @_variables[type].each { |name|
 
         next if ignore.include?(name)
         next if columns_to_compare != 'all' and ! compare.include?(name)
@@ -406,7 +406,7 @@ class Lpar_profile
           val_self    = 'nil' if val_self.nil?
           val_profile = 'nil' if val_profile.nil?
 
-          difference = Hash.new()
+          difference = Hash.new
           difference[another_profile.name] = val_profile
           difference[self.name]            = val_self
 

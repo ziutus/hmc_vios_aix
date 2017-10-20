@@ -10,7 +10,7 @@ class ResourceRole
 	attr_reader :resources 
 
 	#name=L2support,"resources=cec:root/ibmhscS1_0|9131-52A*6535CCG|IBMHSC_ComputerSystem,lpar:root/ibmhscS1_0|ALL_PARTITIONS*9131-52A*6535CCG|IBMHSC_Partition"
-	def initialize string=""
+	def initialize(string='')
 
 		@resources = Array.new()
 		
@@ -20,44 +20,41 @@ class ResourceRole
 	end 
 	
 
-	def decode string 
-		
-		regexp = /name=([\w]+),"resources=(.*)"/
-		match = regexp.match(string)
-		
-		unless match 
+	def decode(string)
+
+    raise 'new line character in string' if string.include?("\n")
+
+		if match = /^name=([\w]+),"resources=(.*?)"$/.match(string)
+
+			@name=match[1]
+			match[2].split(',').each { |resource|
+				@resources.push(Resource.new(resource))
+			}
+		else
 			puts string 
 			puts regexp
-			puts match 
-			puts "regexp couldn't decode string #{string}"
+			puts "regexp couldn't decode string"
 			raise 
 		end
 		
-		@name=match[1]
 
-		resources = match[2].split(",")
-		
-		resources.each { |resource|
-				@resources << Resource.new(resource)	
-		}
-		
 	end
 	
-	def hasResource frame,lparID  
+	def has_lpar?(type_model_serial, lpar_id)
 		
 		@resources.each { |resource|
-				if resource.type == "lpar" 
-					if resource.frame == frame and resource.lpar == "ALL_PARTITIONS"
-						return 1
+				if resource.type == 'lpar'
+					if resource.frame == type_model_serial and resource.lpar == 'ALL_PARTITIONS'
+						return true
 					end
 
-					if resource.frame == frame and resource.lpar == lparID.to_s
-						return 1
+					if resource.frame == type_model_serial and resource.lpar == lpar_id.to_s
+						return true
 					end
 				end
 		}		
 		
-		0
+		false
 	end
 
 end

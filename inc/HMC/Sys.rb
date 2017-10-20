@@ -1,4 +1,5 @@
 require 'HMC/HmcString'
+require 'HMC/HmcLpar'
 
 include HmcString
 
@@ -90,6 +91,8 @@ class Sys
 
   attr_reader :_variables
 
+  attr_reader :lpars
+
 	def initialize name = ''
 
 		@name = name
@@ -117,12 +120,13 @@ class Sys
       curr_mfg_default_ipl_source pend_mfg_default_ipl_source curr_mfg_default_boot_mode pend_mfg_default_boot_mode
     )
 
+    @lpars = Array.new
 
   end
 	
 	def dataSet dataString
 		@dataString = dataString
-	end
+  end
 
   def parse_f string, format
 
@@ -171,15 +175,15 @@ class Sys
 
   alias_method :parse, :decodeString
 
-	def statusCheck
+	def statusCheck_cmd
 		"lssyscfg -m #{@name} -r sys -F state"
 	end
 	
-	def dataGet
+	def dataGet_cmd
 		"lssyscfg -r sys"
 	end
 	
-	def start
+	def start_cmd
 		"chsysstate -m #{@name} -r sys -o on"
 	end
 	
@@ -189,34 +193,40 @@ class Sys
 		return 120 
 	end
 	
-	def stop
+	def stop_cmd
 		"chsysstate -m #{@name} -r sys -o off"
 	end
 	
-	def findLparID lparName
+	def findLparID_cmd lparName
 		"lssyscfg -r lpar -m #{@name} --filter \"lpar_names=#{lparName}\" -F lpar_id"
 	end	
 	
-	def findLparName lparID
+	def findLparName_cmd lparID
 		"lssyscfg -r lpar -m #{@name} --filter \"lpar_ids=#{lparID}\" -F name"
 	end
 
-	def getLparsList
+	def getLparsList_cmd
 	    "lssyscfg -r lpar -m #{@name} -F \"lpar_id,name\""
 	end 
 	
-	def getLparsScsiSlots
+	def getLparsScsiSlots_cmd
 		"lshwres -r virtualio --rsubtype scsi -m #{@name} --level lpar"
 	end
 	
 	
-	def getProfiles
+	def getProfiles_cmd
 		"lssyscfg -r prof -m #{@name}"
 	end 
 	
 	# https://www.ibm.com/support/knowledgecenter/P8ESS/p8edm/lslic.html
 	# lslic - list Licensed Internal Code levels
-	def lslic
+	def lslic_cmd
 		"lslic -m #{@name} -t syspower"
-	end
+  end
+
+  def lpar_add_by_profile(profile_or_string)
+#      lpar.sys = @name
+#      @lpars.push(lpar)
+  end
+
 end	

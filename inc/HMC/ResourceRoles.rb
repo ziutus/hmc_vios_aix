@@ -20,29 +20,21 @@ class ResourceRoles
 		end			
 	end 
 	
-	def decode string 
+	def decode(string)
 	
-
-		lines = string.split("\n")
-		
-		lines.each { |resourceroleString|
-				#pp resourceroleString
-				@resourceRoles << ResourceRole.new(resourceroleString)	
+		string.split("\n").each { |resourceroleString|
+				@resourceRoles << ResourceRole.new(resourceroleString)
 		}	
 	
 	end
 	
-	def resourRoleHasResource role,frame,lpar 
+	def has_resource?(role_name, model_type_serial, lpar)
 	
-		@resourceRoles.each { |resoureRole|
-			if resoureRole.name == role
-				if resoureRole.hasResource(frame,lpar) == 1
-					return 1
-				end
-			end
+		@resourceRoles.each { |role|
+			return true  if role.name == role_name and role.has_lpar?(model_type_serial, lpar)
 		}
 		
-		return 0
+		false
 	end
 	
 end	

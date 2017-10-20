@@ -1,9 +1,9 @@
 $LOAD_PATH << File.dirname(__FILE__) + '/../inc'
 $LOAD_PATH << File.dirname(__FILE__) + './inc'
 
+require 'test/unit'
 require 'HMC/ResourceRole'
 require 'HMC/ResourceRoles'
-require 'test/unit'
 
 class TestHMCResourceRole < Test::Unit::TestCase
  
@@ -14,11 +14,11 @@ class TestHMCResourceRole < Test::Unit::TestCase
 		myResourceRole = ResourceRole.new
 		myResourceRole.decode(string)
 		
-		myResourceRole.hasResource('9131-52A*6535CCG', 1)
+		myResourceRole.has_lpar?('9131-52A*6535CCG', 1)
 		
 		assert_equal(myResourceRole.name, 'LparAdmin')
-		assert_equal(myResourceRole.hasResource('9131-52A*6535CCG', 1), 1)
-		assert_equal(myResourceRole.hasResource('9131-52A*6535CCG', 4), 0)
+		assert_equal(myResourceRole.has_lpar?('9131-52A*6535CCG', 1), true)
+		assert_equal(myResourceRole.has_lpar?('9131-52A*6535CCG', 4), false)
 		
 	end
 
@@ -28,10 +28,10 @@ class TestHMCResourceRole < Test::Unit::TestCase
 		myResourceRole = ResourceRole.new
 		myResourceRole.decode(string)
 		
-		myResourceRole.hasResource('9131-52A*6535CCG', 'ALL_PARTITIONS')
+		myResourceRole.has_lpar?('9131-52A*6535CCG', 'ALL_PARTITIONS')
 		
 		assert_equal(myResourceRole.name, 'LparAdmin')
-		assert_equal(myResourceRole.hasResource('9131-52A*6535CCG', 1), 1)
+		assert_equal(myResourceRole.has_lpar?('9131-52A*6535CCG', 1), true)
 		
 	end
 
@@ -40,11 +40,9 @@ class TestHMCResourceRole < Test::Unit::TestCase
 
 		myResourceRole = ResourceRole.new(string)
 		
-		myResourceRole.hasResource('9131-52A*6535CCG', 1)
-		
 		assert_equal(myResourceRole.name, 'LparAdmin')
-		assert_equal(myResourceRole.hasResource('9131-52A*6535CCG', 1), 1)
-		assert_equal(myResourceRole.hasResource('9131-52A*6535CCG', 4), 0)
+		assert_equal(myResourceRole.has_lpar?('9131-52A*6535CCG', 1), true)
+		assert_equal(myResourceRole.has_lpar?('9131-52A*6535CCG', 4), false)
 		
 	end
 
