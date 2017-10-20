@@ -31,6 +31,27 @@ class Lpar_real
   attr_reader :rmc_ipaddr
   attr_reader :sync_curr_profile
 
+	#power7
+  attr_reader :time_ref
+  attr_reader :lpar_avail_priority
+  attr_reader :remote_restart_capable
+  attr_reader :suspend_capable
+  attr_reader :desired_lpar_proc_compat_mode
+  attr_reader :curr_lpar_proc_compat_mode
+  attr_reader :affinity_group_id
+
+  #stolen from https://github.com/vfoucault/powervmtools
+  #and from https://www.ibm.com/support/knowledgecenter/en/POWER8/p8edm/mksyscfg.html
+  #vtpm_enabled - virtual Trusted Platform Module (enabled or disabled)
+  #power8
+  attr_reader :vtpm_enabled
+  attr_reader :simplified_remote_restart_capable
+  attr_reader :remote_restart_status
+
+  #taken from doc for power8: https://www.ibm.com/support/knowledgecenter/en/POWER8/p8edm/mksyscfg.html
+  attr_reader :msp #mover service partition
+  attr_reader :powervm_mgmt_capable #Linux only: allow this partition to provide PowerVM management functions
+
 	#from memory string (lshwres -r mem --level lpar -m $MS) 				
 	attr_reader	:curr_min_mem
   attr_reader :curr_mem
@@ -155,9 +176,11 @@ class Lpar_real
 		@virtual_serial_adapters = []
 
     @_variables = Hash.new
-    @_variables['variables_int']    = %w(lpar_id allow_perf_collection auto_start shared_proc_pool_util_auth redundant_err_path_reporting sync_curr_profile)
+    @_variables['variables_int']    = %w(lpar_id allow_perf_collection auto_start shared_proc_pool_util_auth redundant_err_path_reporting sync_curr_profile
+			time_ref lpar_avail_priority remote_restart_capable suspend_capable simplified_remote_restart_capable vtpm_enabled msp powervm_mgmt_capable)
     @_variables['variables_string'] = %w(name lpar_env state resource_config os_version logical_serial_num default_profile curr_profile
-      work_group_id power_ctrl_lpar_ids boot_mode lpar_keylock  rmc_state rmc_ipaddr )
+      work_group_id power_ctrl_lpar_ids boot_mode lpar_keylock  rmc_state rmc_ipaddr
+			desired_lpar_proc_compat_mode curr_lpar_proc_compat_mode affinity_group_id remote_restart_status )
 
     @_variables['memory_int']    = %w(lpar_id curr_min_mem curr_mem curr_max_mem pend_min_mem pend_mem pend_max_mem run_min_mem run_mem curr_min_num_huge_pages
       curr_num_huge_pages curr_max_num_huge_pages pend_min_num_huge_pages pend_num_huge_pages pend_max_num_huge_pages run_num_huge_pages)

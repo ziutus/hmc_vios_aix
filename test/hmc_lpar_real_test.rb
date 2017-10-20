@@ -41,7 +41,7 @@ class TestHMCLpar < Test::Unit::TestCase
 		assert_equal(0,        lpar.sync_curr_profile)
 	end
 
-		def test_lpar_lssyscfg_decode_part
+  def test_lpar_lssyscfg_decode_part
     lpar = Lpar_real.new('9131-52A-6535CCG', 15, 'aix53_15')
     string = 'name=aix53_15,lpar_id=15'
 
@@ -50,9 +50,55 @@ class TestHMCLpar < Test::Unit::TestCase
     assert_equal('aix53_15', lpar.name)
     assert_equal(15,       lpar.lpar_id)
 
-    end
+  end
 
-    def test_memory_decode
+
+  #test data taken from: https://sort.veritas.com/public/documents/sfha/6.1/aix/productguides/html/sfhas_virtualization/ch08s05.htm
+  def test_lpar_decode_aix71
+    string='name=lpar05,lpar_id=15,lpar_env=aixlinux,state=Running,resource_config=1,os_version=AIX 7.1 7100-00-00-0000,logical_serial_num=06C3A0PF,default_profile=lpar05,curr_profile=lpar05,work_group_id=none,shared_proc_pool_util_auth=0,allow_perf_collection=0,power_ctrl_lpar_ids=none,boot_mode=norm,lpar_keylock=norm,auto_start=0,redundant_err_path_reporting=0,rmc_state=inactive,rmc_ipaddr=10.207.111.93,time_ref=0,lpar_avail_priority=127,desired_lpar_proc_compat_mode=default,curr_lpar_proc_compat_mode=POWER7,suspend_capable=0,remote_restart_capable=0,affinity_group_id=none'
+
+    lpar = Lpar_real.new('test', 15, 'lpar05')
+    lpar.lssyscfgDecode(string)
+
+    assert_equal('lpar05', lpar.name)
+    assert_equal(15, lpar.lpar_id)
+    assert_equal('aixlinux', lpar.lpar_env)
+    assert_equal('Running', lpar.state)
+    assert_equal('1', lpar.resource_config)
+    assert_equal('AIX 7.1 7100-00-00-0000', lpar.os_version)
+    assert_equal('06C3A0PF', lpar.logical_serial_num)
+    assert_equal('lpar05', lpar.default_profile)
+    assert_equal('lpar05', lpar.curr_profile)
+    assert_equal('none', lpar.work_group_id)
+    assert_equal(0, lpar.shared_proc_pool_util_auth)
+    assert_equal(0, lpar.allow_perf_collection)
+    assert_equal('none', lpar.power_ctrl_lpar_ids)
+    assert_equal('norm', lpar.boot_mode)
+    assert_equal('norm', lpar.lpar_keylock)
+    assert_equal(0, lpar.auto_start)
+    assert_equal(0, lpar.redundant_err_path_reporting)
+    assert_equal('inactive', lpar.rmc_state)
+    assert_equal('10.207.111.93', lpar.rmc_ipaddr)
+    assert_equal(0, lpar.time_ref)
+    assert_equal(127, lpar.lpar_avail_priority)
+    assert_equal('default', lpar.desired_lpar_proc_compat_mode)
+    assert_equal('POWER7', lpar.curr_lpar_proc_compat_mode)
+    assert_equal(0, lpar.suspend_capable)
+    assert_equal(0, lpar.remote_restart_capable)
+    assert_equal('none', lpar.affinity_group_id)
+
+  end
+
+  #Test data taken from: ftp://ftp.software.ibm.com/systems/power/community/aix/PowerVM_webinars/49_SimplifiedRemoteRestart.pdf
+  # slide: 6
+  def test_vtpm_power8
+    string = 'name=vm61,lpar_id=7,lpar_env=aixlinux,state=Running,resource_config=1,os_version=AIX 7.1 7100-03-05-1524,logical_serial_num=215296V7,default_profile=default_profile,curr_profile=default_profile,work_group_id=none,shared_proc_pool_util_auth=1,allow_perf_collection=1,power_ctrl_lpar_ids=none,boot_mode=norm,lpar_keylock=norm,auto_start=0,redundant_err_path_reporting=0,rmc_state=active,rmc_ipaddr=9.137.62.61,time_ref=0,lpar_avail_priority=127,desired_lpar_proc_compat_mode=POWER8,curr_lpar_proc_compat_mode=POWER8,suspend_capable=0,remote_restart_capable=0,simplified_remote_restart_capable=1,remote_restart_status=Remote Restartable,sync_curr_profile=0,affinity_group_id=none,vtpm_enabled=0'
+    lpar = Lpar_real.new('test', 7, 'vm61')
+    lpar.lssyscfgDecode(string)
+
+  end
+
+  def test_memory_decode
 			string = 'lpar_name=aix53_15,lpar_id=15,curr_min_mem=1,curr_mem=2,curr_max_mem=3,pend_min_mem=4,pend_mem=5,pend_max_mem=6,run_min_mem=7,run_mem=8,curr_min_num_huge_pages=9,curr_num_huge_pages=10,curr_max_num_huge_pages=11,pend_min_num_huge_pages=12,pend_num_huge_pages=13,pend_max_num_huge_pages=14,run_num_huge_pages=15,mem_mode=ded,curr_hpt_ratio=1:64'
 		
 			lpar = Lpar_real.new('9131-52A-6535CCG', 15, 'aix53_15')
@@ -138,8 +184,7 @@ class TestHMCLpar < Test::Unit::TestCase
 		assert_equal(0,			lpar.run_uncap_weight)
 	
 	end
-	
-	
+
 	def test_virtualio_slot
 		string = 'lpar_name=aix53_15,lpar_id=15,curr_max_virtual_slots=8,pend_max_virtual_slots=9,next_avail_virtual_slot=2'
 		
