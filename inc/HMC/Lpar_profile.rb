@@ -87,6 +87,13 @@ class Lpar_profile
 
   attr_accessor :sni_device_ids
 
+  #taken from: https://www.ibm.com/support/knowledgecenter/en/POWER8/p8edm/lssyscfg.html (see description of -F parameter)
+  attr_reader :sriov_eth_logical_ports_raw
+  attr_reader :sriov_eth_logical_ports
+  attr_reader :vnic_adapters_raw
+  attr_reader :vnic_adapters
+
+
    # own attributes
   attr_accessor :_compatibility
   attr_reader   :_parametr_order
@@ -122,7 +129,9 @@ class Lpar_profile
                               'shared_proc_pool_name', 'sni_device_ids']
 
 
-    @_variables['string_raw'] = %w( hca_adapters vtpm_adapters virtual_vasi_adapters virtual_eth_vsi_profiles sriov_eth_logical_ports vnic_adapters)
+    @_variables['string_raw'] = %w( hca_adapters vtpm_adapters virtual_vasi_adapters virtual_eth_vsi_profiles sriov_eth_logical_ports vnic_adapters
+         sriov_eth_logical_ports
+)
 
     @_variables['string_virtual_raw'] = %w(virtual_serial_adapters virtual_scsi_adapters virtual_eth_adapters virtual_fc_adapters)
 
@@ -243,7 +252,16 @@ class Lpar_profile
     end
   end
 
- # the result of command it the same as: lssyscfg -r prof -m $FRAME
+  def vnic_adapters_to_s
+    #TODO: it should have separate class of each adapter and function to analyze it (not used now on my Power5, found in manual on IBM site)
+    unless @vnic_adapters_raw.nil?
+      'none'
+    end
+
+  end
+
+
+  # the result of command it the same as: lssyscfg -r prof -m $FRAME
   def to_s(params='all', exclude_cols='none')
 
     result_array = []
