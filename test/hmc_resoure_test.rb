@@ -30,5 +30,26 @@ class TestHMCResource < Test::Unit::TestCase
 		assert_equal('9131-52A*6535CCG', resource.frame)
 	end
 
+	#test data taken from: https://www-304.ibm.com/webapp/set2/.../hmc_best_practices.pdf
+	def test_cec
+		string = 'cec:root/ibmhscS1_0|9406-520*10007CA|IBMHSC_ComputerSystem'
+		resource = Resource.new(string)
+
+		assert_equal('IBMHSC_ComputerSystem', resource.type_long )
+		assert_equal('cec',             resource.type )
+		assert_equal('9406-520*10007CA', resource.frame)
+	end
+
+	#source: own power5 frame
+	def test_frame
+		string = 'frame:root/ibmhscS1_0|9131-52A*6535CCG|IBMHSC_Frame'
+		resource = Resource.new(string)
+
+		assert_equal('IBMHSC_Frame', resource.type_long )
+		assert_equal('frame',             resource.type )
+		assert_equal('9131-52A*6535CCG', resource.frame)
+	end
+
+
 end			
 		
