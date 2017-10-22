@@ -28,6 +28,7 @@ class TestHMCSystem < Test::Unit::TestCase
     assert_equal('9131-52A-6535CCG', system.name)
     assert_equal('9131-52A', system.type_model)
     assert_equal('6535CCG', system.serial_num)
+    assert_equal('9131-52A*6535CCG', system.type_model_serial)
     assert_equal('192.168.200.39', system.ipaddr)
     assert_equal('Operating', system.state)
     assert_equal('None', system.detailed_state)
@@ -111,6 +112,20 @@ class TestHMCSystem < Test::Unit::TestCase
 
   end
 
+  def test_type_model_serial
+    # test data source: own power5 frame
+    #hscroot@hmc:~> lssyscfg -r sys -F "name,type_model,serial_num,state"
+    #192.168.200.39,9131-52A,6535CCG,No Connection
+
+    system = Sys.new()
+    system.parse_f('192.168.200.39,9131-52A,6535CCG,No Connection', 'name,type_model,serial_num,state')
+
+    assert_equal('192.168.200.39', system.name)
+    assert_equal('9131-52A*6535CCG', system.type_model_serial)
+    assert_equal('9131-52A', system.type_model)
+    assert_equal('6535CCG', system.serial_num)
+    assert_equal('No Connection', system.state)
+  end
 
 
 end
