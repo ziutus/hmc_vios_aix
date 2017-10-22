@@ -130,8 +130,8 @@ class Sys
 
   def parse_f string, format
 
-    keys = format.split(',')
     values = string.split(',')
+    keys = format.split(',')
 
     keys.each_index {|id|
 
@@ -175,6 +175,13 @@ class Sys
 
   alias_method :parse, :decodeString
 
+  def type_model_serial
+    raise 'unknown type_model' if self.type_model.nil?
+    raise 'unknown serial' if self.serial_num.nil?
+
+    self.type_model.to_s + '*' + self.serial_num
+  end
+
 	def statusCheck_cmd
 		"lssyscfg -m #{@name} -r sys -F state"
 	end
@@ -192,7 +199,8 @@ class Sys
 	def startTime
 		return 120 
 	end
-	
+
+
 	def stop_cmd
 		"chsysstate -m #{@name} -r sys -o off"
 	end
