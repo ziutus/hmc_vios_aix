@@ -42,12 +42,29 @@ class ResourceRoles
  		false
 	end
 
+  def lpar_has_roles(model_type_serial, lpar_id)
+      result = Array.new
+      @roles.each_value { |role|
+        result.push(role.name) if role.has_lpar?(model_type_serial, lpar_id)
+      }
+      result.sort
+  end
+
 	def role_exist?(role_name)
     @roles.include?(role_name)
   end
 
   def role_delete(role_name)
     @roles.delete(role_name)
+  end
+
+  def roles_has_all_partitions(model_type_serial)
+    result = Array.new
+    @roles.each_value { |role|
+      result.push(role.name) if role.has_all_partitions?(model_type_serial)
+    }
+    result.sort
+
   end
 
   def role_delete_cmd(role_name)

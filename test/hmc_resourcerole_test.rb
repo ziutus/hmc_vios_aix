@@ -29,9 +29,13 @@ class TestHMCResourceRole < Test::Unit::TestCase
 		myResourceRole.decode(string)
 		
 		myResourceRole.has_lpar?('9131-52A*6535CCG', 'ALL_PARTITIONS')
-		
-		assert_equal(myResourceRole.name, 'LparAdmin')
-		assert_equal(myResourceRole.has_lpar?('9131-52A*6535CCG', 1), true)
+
+    assert_equal(true,  myResourceRole.has_all_lpars?('9131-52A*6535CCG'))
+    assert_equal(false, myResourceRole.has_all_lpars?('9131-52A*6535CCE'))
+
+
+		assert_equal('LparAdmin', myResourceRole.name)
+		assert_equal(true,        myResourceRole.has_lpar?('9131-52A*6535CCG', 1))
 		
 	end
 
@@ -44,7 +48,27 @@ class TestHMCResourceRole < Test::Unit::TestCase
 		assert_equal(myResourceRole.has_lpar?('9131-52A*6535CCG', 1), true)
 		assert_equal(myResourceRole.has_lpar?('9131-52A*6535CCG', 4), false)
 		
-	end
+  end
+
+  def test_empty_resources
+    string = 'name=LparAdmin,resources='
+
+    myResourceRole = ResourceRole.new(string)
+    assert_equal(myResourceRole.name, 'LparAdmin')
+
+  end
+
+  def test_constructor_with_string_one_resource
+    string = 'name=LparAdmin,resources=lpar:root/ibmhscS1_0|1*9131-52A*6535CCG|IBMHSC_Partition'
+
+    myResourceRole = ResourceRole.new(string)
+
+    assert_equal(myResourceRole.name, 'LparAdmin')
+    assert_equal(myResourceRole.has_lpar?('9131-52A*6535CCG', 1), true)
+    assert_equal(myResourceRole.has_lpar?('9131-52A*6535CCG', 4), false)
+
+  end
+
 
 end			
 		

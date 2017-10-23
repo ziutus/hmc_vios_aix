@@ -30,6 +30,34 @@ name=LparAdmin,"resources=lpar:root/ibmhscS1_0|1*9131-52A*6535CCG|IBMHSC_Partiti
 
 	end
 
+  def test_lpar_has_roles
+
+    string = 'name=L2support,"resources=lpar:root/ibmhscS1_0|ALL_PARTITIONS*9131-52A*6535CCG|IBMHSC_Partition"
+name=LparAdmin,"resources=lpar:root/ibmhscS1_0|1*9131-52A*6535CCG|IBMHSC_Partition,lpar:root/ibmhscS1_0|5*9131-52A*6535CCG|IBMHSC_Partition"'
+
+    roles = ResourceRoles.new(string)
+
+    result = roles.lpar_has_roles('9131-52A*6535CCG', 5)
+    assert_equal('L2support', result[0])
+    assert_equal('LparAdmin', result[1])
+    assert_equal(2, result.count)
+
+  end
+
+  def test_lpar_has_all_partitions
+
+    string = 'name=L2support,"resources=lpar:root/ibmhscS1_0|ALL_PARTITIONS*9131-52A*6535CCG|IBMHSC_Partition"
+name=LparAdmin,"resources=lpar:root/ibmhscS1_0|1*9131-52A*6535CCG|IBMHSC_Partition,lpar:root/ibmhscS1_0|5*9131-52A*6535CCG|IBMHSC_Partition"'
+
+    roles = ResourceRoles.new(string)
+
+    result = roles.roles_has_all_partitions('9131-52A*6535CCG')
+    assert_equal('L2support', result[0])
+    assert_equal(1, result.count)
+
+  end
+
+
   def test_delete
 
     string = 'name=L2support,"resources=lpar:root/ibmhscS1_0|ALL_PARTITIONS*9131-52A*6535CCG|IBMHSC_Partition"
@@ -40,6 +68,12 @@ name=LparAdmin,"resources=lpar:root/ibmhscS1_0|1*9131-52A*6535CCG|IBMHSC_Partiti
     assert_equal(false, roles.role_exist?('L3support'))
     assert_equal(true,  roles.role_exist?('L2support'))
     assert_equal(true , roles.role_exist?('LparAdmin'))
+
+    result = roles.lpar_has_roles('9131-52A*6535CCG', 5)
+    assert_equal('L2support', result[0])
+    assert_equal('LparAdmin', result[1])
+    assert_equal(2, result.count)
+
 
     roles.role_delete('L2support')
 

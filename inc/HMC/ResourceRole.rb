@@ -24,22 +24,41 @@ class ResourceRole
 
     raise 'new line character in string' if string.include?("\n")
 
-		if match = /^name=([\w]+),"resources=(.*?)"$/.match(string)
+		if match = /^name=([\w\-\_]+),"resources=(.*?)"$/.match(string)
 
 			@name=match[1]
 			match[2].split(',').each { |resource|
 				@resources.push(Resource.new(resource))
 			}
+    elsif match = /^name=([\w\-\_]+),resources=$/.match(string)
+
+      @name=match[1]
+    elsif match = /^name=([\w\-\_]+),resources=(.*?)$/.match(string)
+
+        @name=match[1]
+        match[2].split(',').each { |resource|
+          @resources.push(Resource.new(resource))
+        }
 		else
 			puts string 
-			puts regexp
 			puts "regexp couldn't decode string"
 			raise 
 		end
 		
 
 	end
-	
+
+  def has_all_partitions?(type_model_serial)
+    @resources.each { |resource|
+      if resource.type == 'lpar'
+        if resource.frame == type_model_serial and resource.lpar == 'ALL_PARTITIONS'
+          return true
+        end
+      end
+    }
+    false
+  end
+
 	def has_lpar?(type_model_serial, lpar_id)
 		
 		@resources.each { |resource|
