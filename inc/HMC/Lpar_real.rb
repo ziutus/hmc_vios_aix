@@ -9,7 +9,6 @@ class Lpar_real
 
 	attr_reader :sys
   attr_reader :dataString
-  attr_reader	:name
 	attr_reader :name
   attr_reader :lpar_id
   attr_reader :lpar_env
