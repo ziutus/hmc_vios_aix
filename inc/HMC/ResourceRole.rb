@@ -57,4 +57,10 @@ class ResourceRole
 		false
 	end
 
+  def has_all_lpars?(type_model_serial)
+    @resources.each { |resource|
+      return true if resource.type == 'lpar' if resource.frame == type_model_serial and resource.lpar == 'ALL_PARTITIONS'
+    }
+    false
+  end
 end
