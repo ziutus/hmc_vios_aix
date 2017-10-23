@@ -29,14 +29,17 @@ class ResourceRoles
 	
 	end
 	
-	def has_lpar?(role_name, model_type_serial, lpar_id)
-	
-			if @roles.include?(role_name)
-         if @roles[role_name].has_lpar?(model_type_serial, lpar_id)
-           return true
-         end
+	def has_lpar?(role_names, model_type_serial, lpar_id)
+
+
+    role_names.split(',').each { |role_name|
+      if @roles.include?(role_name)
+        if @roles[role_name].has_lpar?(model_type_serial, lpar_id)
+          return true
+        end
       end
-		false
+    }
+ 		false
 	end
 
 	def role_exist?(role_name)
@@ -48,7 +51,7 @@ class ResourceRoles
   end
 
   def role_delete_cmd(role_name)
-
+    "rmaccfg -t resourcerole -n #{role_name}"
   end
 
   def role_create_cmd(role_name)
