@@ -25,6 +25,9 @@ name=LparAdmin,"resources=lpar:root/ibmhscS1_0|1*9131-52A*6535CCG|IBMHSC_Partiti
     assert_equal(false, roles.has_lpar?('L2support',    '9131-52A*0000000', '2'))
     assert_equal(true,  roles.has_lpar?('L2support',    '9131-52A*6535CCG', '4'))
 
+    assert_equal(true,   roles.has_lpar?('LparAdmin,LparAdmin2',     '9131-52A*6535CCG', '1'))
+    assert_equal(false,  roles.has_lpar?('LparAdmin2,LparAdmin3',    '9131-52A*6535CCG', '1'))
+
 	end
 
   def test_delete
@@ -51,14 +54,14 @@ name=LparAdmin,"resources=lpar:root/ibmhscS1_0|1*9131-52A*6535CCG|IBMHSC_Partiti
   end
 
   def test_create_cmd
-    assert_equal("mkaccfg -t resourcerole -i 'name=TestTest,resources='",  ResourceRoles.new.role_create_cmd('TestTest'))
+    assert_equal('mkaccfg -t resourcerole -i "name=TestTest,resources="',  ResourceRoles.new.role_create_cmd('TestTest'))
   end
 
   def test_delete_cmd
-    assert_equal('rmaccfg -t resourcerole -n TestTest', ResourceRoles.new.role_delete_cmd('TesTest'))
+    assert_equal('rmaccfg -t resourcerole -n TestTest', ResourceRoles.new.role_delete_cmd('TestTest'))
   end
 
-  def test_access_cmd
+  def test_access_add_remove_cmd
 
     roles = ResourceRoles.new()
     assert_equal('chaccft -t resourcerole -i "name=TestRole,resources+=lpar:root/ibmhsc01_0|1*1*9131-52A*6535CCG|IBMHSC_Partition"', roles.lpar_add_to_role_cmd(   'TestRole', '1*9131-52A*6535CCG',1 ))
