@@ -24,6 +24,7 @@ function usage {
           -u|--user HMC_USER               - name of HMC_USER on which data should be collected (default: $HMC_USER)
           -r|--report REPORT_NAME          - name of report  for which data will be collected (default: $REPORT)
           -h|--help                        - show this message
+          -d|--base-dir                    - base dir for all reports (default: $DIR_BASE)
     "
 
     exit 2
@@ -38,6 +39,7 @@ do
     -f|--file)   shift; HMC_FILE=$1;   shift;;
     -r|--report) shift; REPORT=$1;     shift;;
     -u|--user)   shift; HMC_USER=$1;   shift;;
+    -d|--base-dir) shift; DIR_BASE=$1; shift;;
     -p|--password|--passwd) shift; PASSWORD=$1; shift;;
 
     *) echo "Wrong option $1"; exit 1;
@@ -217,9 +219,9 @@ done
 
 password_remove_file
 
-echo ""
+echo ''
 echo "HMC OK: ${HMC_OK}, HMC no connection: ${HMC_ERRORS}"
-if [ $HMC_OK -gt 0 ]
+if [ ${HMC_OK} -gt 0 ]
 then
     echo "All data have been written to ${DIR_BASE}/${DATE}"
 else
