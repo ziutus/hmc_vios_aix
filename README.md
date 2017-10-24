@@ -105,7 +105,7 @@ Now you can do what you want in your Ruby files, for example:
 * Ignore some profiles if name has have something in name
 
 ``` 
-next if profile.name == /ignore/
+next if profile.name =~ /ignore/
 ```
 * Ignore profile if it is VIOS
 ``` 
