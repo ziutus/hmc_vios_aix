@@ -19,8 +19,21 @@ STDERR Usage of hmc_collect_data.sh
 ```
 
 
-# Code Exemple
-ping_all.rb -s server1,server2
+## Usefull scripts
+### ping_all.rb
+The ping_all.rb script is created to make fast check if many servers are up what is useful during network issues (switch down etc).
+Nice option is to get list of servers from file and then choose only few of them by regexp.
+
+```
+ziutus@server2 bin]$ ./ping_all.rb -h
+This script ping in the same time many servers and provide result in nice way
+    -s, --server SERVER[,SERVER]     SERVER for test ping
+    -f, --filename FILENAME          FILENAME with list of servers to test
+    -e, --regexp REGEXP              regexp to take only some servers from list
+    -h, --help                       Display this screen
+
+```
+
 
 # Motivation
 ## Why this project?
