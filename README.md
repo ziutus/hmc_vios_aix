@@ -1,4 +1,23 @@
 # Synopsis
+##Collecting data 
+###Script hmc_collect_data.sh
+The hmc_collect_data.sh script is connecting to each HMC and taking needed data by calling command by command (check script).
+In base directory (default: /var/opt/unix4you/) is created directory with timestamp and than for reach HMC
+is created subdirectory. It make life easier when you write Ruby reports (you just make one loop 
+for each HMC in directory on some day and time).
+```
+$ ./hmc_collect_data.sh -h
+STDERR Usage of hmc_collect_data.sh
+        hmc_collect_data.sh [-h|--help] [-H|--hmcs HMC1[,HMC2[,HMC3...]]] [-f|--file FILE_LIST ] [-r|--report REPORT_TYPE] [-u|--user HMC_USER ]
+
+          -H|--hmcs HMC1[,HMC2[,HMC3...]]] - names of HMCs from which data should be collected
+          -f|--file FILENAME               - filename with list of HMCs from which data should be collected
+          -u|--user HMC_USER               - name of HMC_USER on which data should be collected (default: hscroot)
+          -r|--report REPORT_NAME          - name of report  for which data will be collected (default: ALL)
+          -h|--help                        - show this message
+          -d|--base-dir                    - base dir for all reports (default: /var/opt/unix4you/data/hmc)
+```
+
 
 # Code Exemple
 ping_all.rb -s server1,server2
