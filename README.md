@@ -6,9 +6,9 @@ This repository hold scripts which I wrote or rewrite from different projects / 
 ## Why OOP (Object-oriented programming) for SA (System Administrators)?
 OOP is used in this project as I want to reuse code each time, where it is possible, 
 it is not big difference in code when you want to use
-output from "lsmap -npiv" to check if all virtual adapters are logged, you want to compare with older output (for example between reboots during
+output from "lsmap -npiv" to check if all virtual adapters are logged oryou want to compare with older output (for example between reboots during
 upgrade of system) or need commands to restore settings (after rebuild of system).
-OOP allow also refactoring (https://en.wikipedia.org/wiki/Code_refactoring), you can rebuild big part of code and 
+OOP allow also refactoring: you can rebuild big part of code and 
 with TDD you are always sure that it works. So maintenance of code is much easier and faster.
 
 ## Why  Test Driven Developing (TDD)?
@@ -18,12 +18,13 @@ want (as you are starting from writing tests ;). Other reason is simple, good te
 to use classes and functions and what is expected to get as result. This documentation is always updated ;).
 
 ## Why Ruby?
-I believe first scripts you were writing in bash/ksh but when project was growing you afraid to change anything as your changes could destroy 
-others scripts. So you are ended with big number of small scripts which maintenance took longer and longer. Then you started to write it in Perl 
-and Object Oriented programming (OOP). Perl was always on AIX machines so you can could scripts on any of your systems. Problem is that OOP in Perl 
-is difficult: no internal variables, no isolation etc, so it is time to change base language. 
+I believe first scripts you were writing in bash/ksh but when project was growing you started to afraid to modify anything as 
+your changes could destroy others scripts. So you ended with big number of small scripts which maintenance took longer and longer. 
+Then you started to write it in Perl and Object Oriented programming (OOP). Perl was always on AIX machines so you could
+ run scripts on any of your systems. Problem is that OOP in Perl 
+is difficult: no internal variables, no isolation etc, so it is time to change base language ;). 
 
-Why Ruby and not Python or something different? Ruby is used in Chef :). Some part of code can be used in Chef.
+Why I choose Ruby and not Python or something different? Ruby is used in Chef :). Some part of code can be used in Chef.
 
 
 ## Why AIX 5.3 not current one like 7.1 or 7.2?
