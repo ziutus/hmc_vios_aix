@@ -22,16 +22,16 @@ class Resource
 
 	def decode(string)
 		
-		if match = %r{lpar:root[\/]+ibmhscS1_0\|(\d+|ALL_PARTITIONS)\*(\d{4}\-\w{3}\*\w{7})\|IBMHSC_Part[\w+]}.match(string)
+		if match = %r{lpar:root[\/]+ibmhscS1_0\|(\d+|ALL_PARTITIONS)\*(\w{4}\-\w{3}\*\w{7})\|IBMHSC_Part[\w+]}.match(string)
 				@type_long  =  'IBMHSC_Partition'
 				@type		= 'lpar'
 				@lpar 		= match[1]
 				@frame 		= match[2]
-    elsif match = %r{cec:root[\/]+ibmhscS1_0\|(\d{4}\-\w{3}\*\w{7})\|IBMHSC_ComputerSystem}.match(string)
+    elsif match = %r{cec:root[\/]+ibmhscS1_0\|(\w{4}\-\w{3}\*\w{7})\|IBMHSC_ComputerSystem}.match(string)
           @type_long  =  'IBMHSC_ComputerSystem'
           @type		= 'cec'
           @frame 		= match[1]
-    elsif match = %r{frame:root[\/]+ibmhscS1_0\|(\d{4}\-\w{3}\*\w{7})\|IBMHSC_Frame}.match(string)
+    elsif match = %r{frame:root[\/]+ibmhscS1_0\|(\w{4}\-\w{3}\*\w{7})\|IBMHSC_Frame}.match(string)
           @type_long  =  'IBMHSC_Frame'
           @type		= 'frame'
           @frame 		= match[1]
