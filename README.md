@@ -1,6 +1,6 @@
 # Synopsis
-##Collecting data 
-###Script hmc_collect_data.sh
+## Collecting data 
+### Script hmc_collect_data.sh
 The hmc_collect_data.sh script is connecting to each HMC and taking needed data by calling command by command (check script).
 In base directory (default: /var/opt/unix4you/) is created directory with timestamp and than for reach HMC
 is created subdirectory. It make life easier when you write Ruby reports (you just make one loop 
