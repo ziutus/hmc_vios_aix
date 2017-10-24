@@ -8,7 +8,6 @@ DATE=$(date +"%Y%m%d_%H%M")
 DIR_BASE='/var/opt/unix4you/data/hmc'
 PASSWORD=''
 
-#HMCS=$(cat conifg/hmcs.txt)
 HMC=''
 HMC_USER='hscroot'
 REPORT='ALL'
@@ -68,7 +67,7 @@ fi
 HMC_OK=0
 HMC_ERRORS=0
 
-#password_write_to_file_if_empty
+password_write_to_file_if_empty
 
 
 if [ -x /opt/tectia/bin/sshg3 ]
@@ -216,7 +215,7 @@ do
     ((HMC_OK=$HMC_OK+1))
 done	
 
-#password_remove_file
+password_remove_file
 
 echo ""
 echo "HMC OK: ${HMC_OK}, HMC no connection: ${HMC_ERRORS}"
