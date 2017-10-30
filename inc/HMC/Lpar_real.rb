@@ -169,9 +169,8 @@ class Lpar_real
 #		@adaptersVirtual = []
 		@adaptersReal = []
 		
-		@virtual_eth_adapters = []
-		@virtual_scsi_adapters = []
-
+		@virtual_eth_adapters    = []
+		@virtual_scsi_adapters   = []
 		@virtual_serial_adapters = []
 
     @_variables = Hash.new
@@ -221,7 +220,7 @@ class Lpar_real
 	end	
 	
 	def memoryRestoreToProfile_cmd
-		""
+		''
 	end
 	
 	def slotRemove_cmd slotID
@@ -308,56 +307,55 @@ class Lpar_real
 
 	def decodeVirtualioEth string 
 	
-		regExp1 = /lpar_name=([\w\_\-]+),lpar_id=(\d+),slot_num=(\d+),state=(0|1),is_required=(0|1),is_trunk=(0),ieee_virtual_eth=(\d+),port_vlan_id=(\d+),addl_vlan_ids=([\w\,]+|),mac_addr=(\w+|)/
-		regExp2 = /lpar_name=([\w\_\-]+),lpar_id=(\d+),slot_num=(\d+),state=(0|1),is_required=(0|1),is_trunk=(1),trunk_priority=(\d+),ieee_virtual_eth=(0|1),port_vlan_id=(\d+),addl_vlan_ids=([\w\,]+|),mac_addr=(\w+|)/
+		reg_exp_1 = /lpar_name=([\w\_\-]+),lpar_id=(\d+),slot_num=(\d+),state=(0|1),is_required=(0|1),is_trunk=(0),ieee_virtual_eth=(\d+),port_vlan_id=(\d+),addl_vlan_ids=([\w\,]+|),mac_addr=(\w+|)/
+		reg_exp_2 = /lpar_name=([\w\_\-]+),lpar_id=(\d+),slot_num=(\d+),state=(0|1),is_required=(0|1),is_trunk=(1),trunk_priority=(\d+),ieee_virtual_eth=(0|1),port_vlan_id=(\d+),addl_vlan_ids=([\w\,]+|),mac_addr=(\w+|)/
 
     string.split(/\n/).each { |line|
 
-        match  = regExp1.match(line)
-        match2 = regExp2.match(line)
+        match  = reg_exp_1.match(line)
+        match2 = reg_exp_2.match(line)
 
         if match
-			
-				next unless match[2].to_i == @lpar_id.to_i
+  				next unless match[2].to_i == @lpar_id.to_i
 				
-				 adapter = VirtualEthAdapter.new
-				
-				 adapter.virtualSlotNumber = match[3].to_i
-				 adapter.isIEEE			  = match[4].to_i
-				 adapter.portVlanID 		  = match[5].to_i
-				 adapter.additionalVlanIDs = match[6]
-				 adapter.isTrunk           = match[7].to_i 
-				 adapter.isRequired		  = match[8].to_i
-				
-				 adapter.macAddress		  = match[9]
+          adapter = VirtualEthAdapter.new
 
-				#@adaptersVirtual << adapter 
-				adaptersVirtual[adapter.virtualSlotNumber] = adapter 
+          adapter.virtualSlotNumber = match[3].to_i
+          adapter.isIEEE			  = match[4].to_i
+          adapter.portVlanID 		  = match[5].to_i
+          adapter.additionalVlanIDs = match[6]
+          adapter.isTrunk           = match[7].to_i
+          adapter.isRequired		  = match[8].to_i
+
+          adapter.macAddress		  = match[9]
+
+          #@adaptersVirtual << adapter
+          adaptersVirtual[adapter.virtualSlotNumber] = adapter
 			
 			elsif match2
 			
-				next unless match2[2].to_i == @lpar_id.to_i
-				
-				 adapter = VirtualEthAdapter.new()
-				 
-				 adapter.virtualSlotNumber = match2[3].to_i
-				 adapter.isRequired		   = match2[5].to_i
-				 adapter.isTrunk           = match2[6].to_i 				 
-				 adapter.trunkPriority     = match2[7].to_i 
-				 adapter.isIEEE			  = match2[8].to_i
-				 adapter.portVlanID 		  = match2[9].to_i
-				 adapter.additionalVlanIDs = match2[10]
-				 adapter.macAddress		  = match2[11]
+        next unless match2[2].to_i == @lpar_id.to_i
 
-#				@adaptersVirtual << adapter 				 
-				adaptersVirtual[adapter.virtualSlotNumber] = adapter 
+         adapter = VirtualEthAdapter.new()
+
+         adapter.virtualSlotNumber = match2[3].to_i
+         adapter.isRequired		   = match2[5].to_i
+         adapter.isTrunk           = match2[6].to_i
+         adapter.trunkPriority     = match2[7].to_i
+         adapter.isIEEE			  = match2[8].to_i
+         adapter.portVlanID 		  = match2[9].to_i
+         adapter.additionalVlanIDs = match2[10]
+         adapter.macAddress		  = match2[11]
+
+        #				@adaptersVirtual << adapter
+        adaptersVirtual[adapter.virtualSlotNumber] = adapter
 			
 			else 
-				#puts string
-				puts match 
-				puts match2 
-				puts "RegExp couldn't decode string >#{line}<"
-				raise 		
+          #puts string
+          puts match
+          puts match2
+          puts "RegExp couldn't decode string >#{line}<"
+          raise
 			
 			end
 		}
@@ -384,8 +382,8 @@ class Lpar_real
 		end 
 	end
 
-	def virtual_adapter_exist? adapterID
-		@adaptersVirtual.key?(adapterID)
+	def virtual_adapter_exist? adapter_id
+		@adaptersVirtual.key?(adapter_id)
 	end
 
 	
