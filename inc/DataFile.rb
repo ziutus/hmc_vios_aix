@@ -6,7 +6,7 @@ class DataFile
 
 	def CheckCommands
 
-		file = File.new(@fileName, "r")
+		file = File.new(@fileName, 'r')
 		while (line = file.gets)
 
 			regexp=Regexp.new("###command:(.*)###")
