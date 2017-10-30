@@ -16,7 +16,9 @@ module Lsattr
 
       i=0
       while i < headers.count
-        result[headers[i].to_s] = values[i].to_s
+        tmp = Hash.new
+        tmp['value'] = values[i].to_s
+        result[headers[i].to_s] = tmp
         i+=1
       end
 

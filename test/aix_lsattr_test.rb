@@ -18,15 +18,15 @@ yes:1024:yes:no:37:36:yes:12000:no'
 
     array = lsattr_O(string)
 
-    assert_equal('yes',   array['mode'])
-    assert_equal('1024',  array['block_size'])
-    assert_equal('yes',   array['extfm'])
-    assert_equal('no',    array['ret'])
-    assert_equal('37',    array['density_set_1'])
-    assert_equal('36',    array['density_set_2'])
-    assert_equal('yes',   array['compress'])
-    assert_equal('12000', array['size_in_mb'])
-    assert_equal('no',    array['ret_error'])
+    assert_equal('yes',   array['mode']['value'])
+    assert_equal('1024',  array['block_size']['value'])
+    assert_equal('yes',   array['extfm']['value'])
+    assert_equal('no',    array['ret']['value'])
+    assert_equal('37',    array['density_set_1']['value'])
+    assert_equal('36',    array['density_set_2']['value'])
+    assert_equal('yes',   array['compress']['value'])
+    assert_equal('12000', array['size_in_mb']['value'])
+    assert_equal('no',    array['ret_error']['value'])
 
   end
 
