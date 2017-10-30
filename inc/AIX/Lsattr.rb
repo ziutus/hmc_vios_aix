@@ -23,4 +23,25 @@ module Lsattr
     result
   end
 
+  def lsattr(string)
+
+    result = Hash.new
+
+    string.split("\n").each do |line|
+        if match = %r{(\w+)\s+(\w+)\s+(.*)\s+(True|False)}.match(line)
+          tmp = Hash.new
+          tmp['attribute']     = match[1].to_s
+          tmp['value']         = match[2].to_s
+          tmp['description']   = match[3].to_s
+          tmp['user_settable'] = match[4].to_s
+
+          result[match[1]] = tmp
+        else
+          pp line
+          raise 'regexp can not decode string'
+        end
+    end
+
+    result
+  end
 end
