@@ -28,7 +28,9 @@ class MyExec
 		exec_local = @exec_mode
 		exec_local = 'on' if exec_mode == 'on'
 		result_string = ''
-	
+
+		STDOUT.sync = true
+
 		Net::SSH.start(@ssh_server, @ssh_user, :password => @ssh_password) do |ssh|
 			time1 = Time.new
 			puts  time1.strftime("%Y-%m-%d %H:%M:%S") + " calling: #{command}"
