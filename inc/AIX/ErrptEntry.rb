@@ -2,7 +2,15 @@ require "pp"
 
 class ErrptEntry
 
-	attr_reader   :data_string_raw, :label, :identifier, :datetime, :datetime_long, :type, :class, :description, :resource_name
+	attr_reader :data_string_raw
+	attr_reader :label
+	attr_reader :identifier
+	attr_reader :datetime
+	attr_reader :datetime_long
+	attr_reader :type
+	attr_reader :class
+	attr_reader :description
+	attr_reader :resource_name
 	
 #	attr_accessor :break_size
 	
@@ -39,7 +47,7 @@ Failure\sCauses(.*)\s+
 Detail\sData(.*)\s+
 SENSE\sDATA(.*)}mx
 
-		regexp = %r{(\w{8})\s+(\d{10})\s+(T|P)\s+(S|H|O|U)\s+(\w+)\s+(.*)}
+		regexp = %r{(\w{8})\s+(\d{10})\s+(T|P|I)\s+(S|H|O|U)\s+(\w+)\s+(.*)}
 
 		match      = regexp.match(string)
 		match_long = regexp_long.match(string)
