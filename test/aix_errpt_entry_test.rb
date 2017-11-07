@@ -122,6 +122,6 @@ SENSE DATA
 		assert_equal('DISK_ERR4', entry.label)
 		assert_equal('49A83216', entry.identifier)
 		assert_equal('Thu Sep 30 15:29:45 CST 2013', entry.datetime_long)
-		     
+#		assert_equal('hdisk0', entry.resource_name)
 	end
 end
