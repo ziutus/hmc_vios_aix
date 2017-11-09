@@ -5,13 +5,17 @@ class HashToConsol
 
   def initialize
     @rows = Array.new
-    @row_size = Array.new
-    @row_max  = Array.new
+    @col_size = Array.new
+    @col_size_max  = Array.new
+  end
+
+  def col_size_set(row_id, size)
+    @col_size_max[row_id] = size
   end
 
   def add_row(row)
       row.each_index {|index |
-        @row_size[index] = row[index].size if @row_size[index].to_i < row[index].size
+        @col_size[index] = row[index].size if @col_size[index].to_i < row[index].size
       }
       @rows.push(row)
 
@@ -24,7 +28,12 @@ class HashToConsol
 
     @rows.each {|row |
       row.each_index {|col_id|
-          size = @row_size[col_id]
+
+          unless @col_size_max[col_id].nil?
+            size = @col_size_max[col_id]
+          else
+            size = @col_size[col_id]
+          end
           result += sprintf("%#{size}.#{size}s;", row[col_id])
         }
 
