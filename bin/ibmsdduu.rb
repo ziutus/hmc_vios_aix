@@ -11,6 +11,20 @@ include HashFromCsv
 config_file = 'config.txt'
 datacenter_file = '/tmp/datacenter_info.csv'
 
+myName = $0
+if ARGV.include?('-h') or ARGV.include?('--help') or ARGV.include?('-help')
+  puts "Usage of script: #{myName}"
+  puts "#{myName} [-h|--help] PMR_ID  FILE1 [FILE2...]"
+  puts "#{myName} [-h|--help] PMH_ID  FILE1 [FILE2...]"
+  puts "#{myName} [-h|--help] RCMS_ID FILE1 [FILE2...]"
+  puts ""
+  puts "If you known only PMH (from HMC entry) you will be asked about datacenter info and data will be read form #{datacenter_file}."
+  puts "if datacenter is not find, it will ask you about branch ID and country code."
+  puts "\n"
+  exit 1
+end
+
+
 raise "The config file: #{config_file} doesn't exit" unless File.exist?(config_file)
 
 id = ARGV.shift
