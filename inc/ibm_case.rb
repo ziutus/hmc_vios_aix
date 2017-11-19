@@ -48,16 +48,19 @@ class IbmCase
 
     if match = %r{^(\w{3})(\w{7})$}.match(@id) #website ID format
       @country_code = match[1]
-      @rcms = match[2]
-      @type = 'rcms'
+      @rcms         = match[2]
+      @type         = 'rcms'
     elsif match2 = %r{^(\w{7})\.(\w{3})$}.match(@id)
-      @rcms = match2[1]
+      @rcms         = match2[1]
       @country_code = match2[2]
       @type = 'rcms'
     elsif match = %r{^(\w{5})\.(\w{3})\.(\w{3})$}.match(@id)
-      @phm       =  match[1]
-      @branch_id = match[2]
+      @phm          = match[1]
+      @branch_id    = match[2]
       @country_code = match[3]
+      @type = 'pmr'
+    elsif match = %r{^(\w{5})$}.match(@id)
+      @phm  = match[1]
       @type = 'pmr'
     else
       pp @id

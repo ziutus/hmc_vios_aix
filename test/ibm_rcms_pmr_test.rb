@@ -30,4 +30,14 @@ class IBM_rcms_pmr_Test < Test::Unit::TestCase
     assert_equal('pmr', rcms.type)
   end
 
+  def test4
+    rcms = IbmCase.new('12345')
+    rcms.branch_id = '567'
+    rcms.country_code = '123'
+
+    assert_equal('12345.567.123', rcms.id_nice)
+    assert_equal('pmr', rcms.type)
+  end
+
+
 end
