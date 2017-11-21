@@ -13,7 +13,7 @@ class Lssvcevents
 
   def parse(string, hmc_name)
 
-    return true if   '^No results were found.'.match(string)
+    return true if   /^No results were found./.match(string)
 
     string.split("\n").each { |line|
       @events.push(Lssvcenevents_entry.new(line, hmc_name))
