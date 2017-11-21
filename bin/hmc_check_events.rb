@@ -7,6 +7,7 @@ require 'optparse'
 $LOAD_PATH << File.dirname(__FILE__)+'/../inc'
 require 'HMC/lssvcevents'
 
+app_dir = File.dirname(__FILE__)+'/..'
 directory = "../test/dupa"
 date = nil
 format = 'csv'
@@ -44,7 +45,7 @@ unless format == 'csv' or format == 'html'
 end
 
 events = Lssvcevents.new()
-renderer = ERB.new(File.read("../erb/hmc_check_events_#{format}.erb"))
+renderer = ERB.new(File.read("#{app_dir}/erb/hmc_check_events_#{format}.erb"))
 
 Dir.chdir("#{directory}/#{date}/")
  Dir.glob('*').select { |hmc_dir|
