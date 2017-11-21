@@ -11,13 +11,14 @@ app_dir = File.dirname(__FILE__)+'/..'
 directory = "../test/dupa"
 date = nil
 format = 'csv'
-
+report_type = 'all'
 
 OptionParser.new do |opts|
 
   opts.on('-d', '--directory NAME',  "base directory with all data, default: '#{directory}'") { |v| directory = v }
   opts.on('-D', '--date DATE',  'date and time of collected data')         { |v| date = v }
   opts.on( '--format FORMAT',  'format of report, can be "hmtl" or "csv"') { |v| format = v }
+  opts.on( '--type REPORT_TYPE',  'Type of report, can be "all" or "callhome"') { |v| report_type = v }
 
   opts.on("-h", "--help", "Prints this help") do
     puts opts
@@ -48,7 +49,7 @@ events = Lssvcevents.new()
 renderer = ERB.new(File.read("#{app_dir}/erb/hmc_check_events_#{format}.erb"))
 
 Dir.chdir("#{directory}/#{date}/")
- Dir.glob('*').select { |hmc_dir|
+ Dir.glob('*').sort.select { |hmc_dir|
     Dir[hmc_dir + '/lssvcevents_hardware.txt' ].each { |filename|
         next unless File.exist?(filename)
         data_string = File.read(filename)
@@ -56,9 +57,20 @@ Dir.chdir("#{directory}/#{date}/")
     }
  }
 
-#events.events.each_with_index {|event, id|
-#     events.events.delete_at(id) unless event.callhome_intended == 'true'
-#}
+events2 = Array.new()
+events.events.each_index { |index|
+
+  if report_type == 'all'
+    events2.push(events.events[index])
+  elsif report_type == 'callhome'
+    if events.events[index].callhome_intended == 'true'
+      events2.push(events.events[index])
+    end
+  else
+    puts "wrong type of report #{report_type}"
+    exit 6
+  end
+}
 
 puts renderer.result()
 
