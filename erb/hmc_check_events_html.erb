@@ -1,0 +1,23 @@
+
+<h3>HMC issues</h3>
+
+<p>Data are taken from output of 'lssvcevents -t hardware --filter "status=open"'</p>
+<table>
+<tr>
+  <th>HMC</th><th>event time</th><th>problem number</th><th>PHM</th><th>sys name</th><th>text</th>
+</tr>
+
+<% events.events.each do |entry| %>
+  <tr>
+    <td><%= entry.hmc_name %></td>
+    <td><%= entry.last_time %></td>
+    <td><%= entry.problem_num %></td>
+    <td><%= entry.pmh_num %></td>
+    <td><%= entry.sys_name %></td>
+    <td><%= entry.text %></td>
+
+
+  </tr>
+<% end %>
+
+</table>
