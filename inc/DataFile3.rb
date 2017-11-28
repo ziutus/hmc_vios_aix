@@ -1,4 +1,4 @@
-class DataFile2
+class DataFile3
 
 	def initialize(fileName)
 		@fileName  = fileName 
@@ -6,7 +6,7 @@ class DataFile2
 
 	def CheckCommands
 
-		file = File.new(@fileName, 'r')
+		file = File.new(@fileName, "r")
 		while (line = file.gets)
 
 			regexp=Regexp.new("###command:(.*)###")

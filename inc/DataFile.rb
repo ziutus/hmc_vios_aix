@@ -1,61 +1,27 @@
 class DataFile
 
-	def initialize(fileName)
-		@fileName  = fileName 
-	end
+  def initialize(fileName)
+    @fileName  = fileName
+  end
 
-	def CheckCommands
+  def find(command, separator ='| |')
+    data_string = '';
 
-		file = File.new(@fileName, 'r')
-		while (line = file.gets)
+    File.open(@fileName).each { |line|
+      tmp = line.split(separator)
+      data_string += tmp[1] if tmp[0] =~ /^\s*#{command}\s*(?:2>&1\s*|)$/
+    }
+    data_string
+  end
 
-			regexp=Regexp.new("###command:(.*)###")
-		
-		end
-		file.close	
-	
-	end
+  def Write(command, value)
+    File.open(@fileName, 'a') { |file|
 
-	def Write command, value
-		File.open(@fileName, 'a') { |file| 
-			file.write("###command:#{command}###\n")
-			file.write(value) 
-		}
-		#file.close
-	end 
+      value.split("\n").each { |line|
+          file.write(command + '| |' + line + "\n" )
+      }
+    }
+  end
 
-	def Read command 
-		dataString = ""; 
-		regexpCommand=Regexp.new(Regexp.escape(command))
-		regexp=Regexp.new("###command")
-		insiteCommand=0
-		
-		file = File.new(@fileName, "r")
-		while (line = file.gets)
-#			puts line 
-			matchCommand = regexpCommand.match(line)
-			match = regexp.match(line)
-			
-			if match and matchCommand
-#				puts "found!!!"
-#				puts match
-				insiteCommand=1
-				next 
-			elsif match 
-#				puts "new command: #{line}"
-				insiteCommand=0
-			end	
-			
-			if insiteCommand == 1
-				line.gsub!("\r", '')
-				dataString << line 
-			end
-			
-		end
-		file.close	
 
-		dataString 		
-	end
-	
-
-end	
+end
