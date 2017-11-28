@@ -11,7 +11,7 @@ class TestAixFcstat < Test::Unit::TestCase
     # example output from fcstat command is taken from IBM website:
     # https://www.ibm.com/support/knowledgecenter/en/ssw_aix_61/com.ibm.aix.cmds2/fcstat.htm
     # some data were changed to next numbers to be sure that regexp is working correctly
-    string = DATA.read;
+    string = File.read('data/fcstat.txt')
 
     fcstat = Fcstat.new(string)
     data = fcstat.get_stats()
