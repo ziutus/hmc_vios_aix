@@ -75,5 +75,15 @@ class TestString < Test::Unit::TestCase
     assert_equal('"virtual_fc_adapters=""504/client/2/vio_server1/8/c050760431670010,c050760431670011/1"",""604/client/3/vio_server2/5/c050760431670012,c050760431670013/1"""', make_string('virtual_fc_adapters', '""504/client/2/vio_server1/8/c050760431670010,c050760431670011/1"",""604/client/3/vio_server2/5/c050760431670012,c050760431670013/1""') )
 
   end
-  
+
+  def test_crazy
+
+    hash = HmcString.parse('a=b,c=d=e,f=g')
+
+    assert_equal('b',   hash['a'], 'crazy test - a')
+    assert_equal('d=e', hash['c'], 'crazy test - c')
+    assert_equal('g',   hash['f'], 'crazy test - f')
+
+  end
+
 end
