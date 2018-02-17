@@ -21,75 +21,95 @@ class Lpar_netboot
 	
 	def initialize
 		
-		@lpar_speed  = "auto"
-		@lpar_duplex = "auto"
+		@lpar_speed  = 'auto'
+		@lpar_duplex = 'auto'
+
+
+		@all = ''			# -A
+		@ipv6 = '' 		# -a
+		@image_boot = '' 	# -B Image_filename
+		@lpar_ip = '' 		# -C Client
+		@ping_test = ''	# -D
+		@lpar_duplex = '' # -d duplex
+		@virtual_terminal_close = '' # -f
+		@lpar_gateway= '' # -G gateway
+		@nim_ip= ''		# -S server
+		@lpar_speed = ''  # -s  speed
+		@spanning_tree= '' # -T
+		@verbose= ''		# -v
+
+		@lpar_name = nil
+		@lpar_profile = nil
+		@machine = nil
+
+
 	end 
 
 
 	def cmd
 	
 		# mandatory parameters
-		raise "not defined machine" 		unless @machine
-		raise "not defined lpar profile" 	unless @lpar_profile
-		raise "not defined lpar name"		unless @lpar_name 
+		raise 'not defined machine' 		 unless @machine
+		raise 'not defined lpar profile' unless @lpar_profile
+		raise 'not defined lpar name'		 unless @lpar_name
 	
 		### Validation of parameters 
 	    #
-		duplex_allowed = [ "half", "full", "auto" ]
-		raise "not allowed value for -D duplex settings: #{@lpar_duplex} " unless duplex_allowed.include?(@lpar_duplex) 
+		duplex_allowed = %w[ half full auto ]
+		raise "not allowed value for -D duplex settings: #{@lpar_duplex}" unless duplex_allowed.include?(@lpar_duplex)
 	
-		spanning_tree_allowed = [ "on", "off"]
+		spanning_tree_allowed = %w[ on off ]
 		raise "not allowed value for -T option (spanning tree): #{@spanning_tree}" unless spanning_tree_allowed.include?(@spanning_tree)
 	
 		### building command string 
-		string  = "lpar_netboot"
+		string  = 'lpar_netboot'
 	
 		# Returns all adapters of the particular type that are specified with the -t flag.
-		string += " -A" if @all == "on"
+		string += ' -A' if @all == 'on'
 
 		#Specifies the IP address of the partition to start the network.
-		string += " -C " + @lpar_ip.to_s 
+		string += ' -C ' + @lpar_ip.to_s
 
 		#Specifies the duplex setting of the partition that is specified with the -C flag. 
 		#The valid values for the -d flag are full, half, and auto.
-		string += " -d " + @lpar_duplex.to_s
+		string += ' -d ' + @lpar_duplex.to_s
 		
 		
 		#Performs a ping test to identify and use the adapter that can successfully 
 		#ping the server that is specified with the -S flag.
-		string += " -D" if @ping_test == "on" 
+		string += ' -D' if @ping_test == 'on'
 
 		#Force closes a virtual terminal session for the partition.
-		string += " -f" if @virtual_terminal_close == "on"
+		string += ' -f' if @virtual_terminal_close == 'on'
 
 		#Specifies the gateway IP address of the partition that is specified with the -C flag.
-		string += " -G " + @lpar_gateway.to_s 
+		string += ' -G ' + @lpar_gateway.to_s
 		
 		#Specifies the speed setting of the partition that is specified with the -C flag.
-		string += " -s " + @lpar_speed.to_s
+		string += ' -s ' + @lpar_speed.to_s
 
 		#Specifies the IP address of the partition, from which to retrieve the network boot image during network boot.	
-		string += " -S " + @nim_ip.to_s 
+		string += ' -S ' + @nim_ip.to_s
 		
 		
 		#Specifies the type of adapter for displaying the MAC address or physical location code discovery, 
 		#or for network boot. The only valid value for the -t flag is ent for Ethernet.
-		string += " -t ent"
+		string += ' -t ent'
 		
 		#Enables or disables the display of the firmware-spanning tree. The valid values for the -d flag are on and off.
-		if @spanning_tree == "on"		
-			string += " -T on"
+		if @spanning_tree == 'on'
+			string += ' -T on'
 		else 
-			string += " -T off"
+			string += ' -T off'
 		end 	
 
 		#Enables or disables the display of the firmware-spanning tree. The valid values for the -d flag are on and off.
-		string += " -v" if @verbose == "on" 
+		string += ' -v' if @verbose == 'on'
 
 		# last parameters
-		string += " " + @lpar_name.to_s + " " + @lpar_profile.to_s + " " + @machine.to_s	
+		string += ' ' + @lpar_name.to_s + ' ' + @lpar_profile.to_s + ' ' + @machine.to_s
 		
-		return string 
+		string
 	end
 
 end
