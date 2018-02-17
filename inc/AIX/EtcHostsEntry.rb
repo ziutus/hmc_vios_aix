@@ -1,9 +1,18 @@
 
-require "pp"
+require 'pp'
 
 class EtcHostsEntry
 
-	attr_reader :ip, :ip_size, :aliases, :aliases_orig, :name, :valid, :errors, :errors_list, :corrected 
+	attr_reader :ip
+	attr_reader :ip_size
+  attr_reader :aliases
+  attr_reader :aliases_orig
+  attr_reader :name
+  attr_reader :valid
+  attr_reader :errors
+  attr_reader :errors_list
+  attr_reader :corrected
+
 	attr_accessor :break_size
 	
 	def initialize( ip, name, aliases)
@@ -18,18 +27,18 @@ class EtcHostsEntry
 		
 		@corrected = false
 		
-		self.validate()	
+		self.validate
 	end 
 
 	def validate
 
-		aliases_tmp =  @aliases_orig.split(" ")
+		aliases_tmp =  @aliases_orig.split(' ')
 
 		aliases_tmp.sort!
 		aliases_tmp.uniq!
 		aliases_tmp.delete(@name)
 		
-		@aliases = aliases_tmp.join(" ") 
+		@aliases = aliases_tmp.join(' ')
 
 		@corrected = true if  (@aliases != @aliases_orig) 
 		
@@ -39,14 +48,14 @@ class EtcHostsEntry
 		result_s = @ip 
 		
 		for i in 1..break_size
-			result_s << " "
+			result_s << ' '
 		end 
 
 		result_s << @name
-		result_s << " "
+		result_s << ' '
 		result_s << @aliases
 		
-		return result_s 
+		result_s
 	end
 
 end
