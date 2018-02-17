@@ -14,7 +14,7 @@ class EtcHosts
 	attr_accessor :DataString 
 	attr_accessor :ip_size_max #max size of IP address, it is for bettter print table in file 
 	
-	def initialize string=""
+	def initialize string=''
 
 		@DataString = string
 		
