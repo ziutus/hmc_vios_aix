@@ -78,9 +78,9 @@ class Odmget_SRCsubsys
 \s+grpname\s*=\s*"(\w*)"}x
 
 
-    match = regexp.match(string)
 
-    if match
+
+    if match = regexp.match(string)
       @subsysname = match[1]
       @synonym    = match[2]
       @cmdargs    = match[3]
