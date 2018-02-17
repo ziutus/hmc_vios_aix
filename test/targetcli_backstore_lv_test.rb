@@ -1,11 +1,6 @@
 $LOAD_PATH << File.dirname(__FILE__)+"./inc"
 $LOAD_PATH << File.dirname(__FILE__)
 
-test_unit_version=`gem list test-unit`.to_s.scan(/test-unit \((\d\.\d\.\d)/).join
-autorunner_file="#{Gem.dir}/gems/test-unit-#{test_unit_version}/lib/test/unit/autorunner.rb"
-require autorunner_file if File.exist?(autorunner_file)
-
-
 require 'Targetcli/Backstore'
 require 'Targetcli/Backstore_block'
 require 'Targetcli/Backstore_block_lv'
@@ -16,7 +11,7 @@ class TestTargetcli < Test::Unit::TestCase
 
 	def test1 
 	
-		testcli = Backstore_block_lv.new()
+		testcli = Backstore_block_lv.new
 
 		string='No such path /backstores/block/aix1_1_lv2'
 		assert_equal("no device", testcli.lsDecode(string))
