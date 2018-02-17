@@ -47,12 +47,7 @@ Failure\sCauses(.*)\s+
 Detail\sData(.*)\s+
 SENSE\sDATA(.*)}mx
 
-		regexp = %r{(\w{8})\s+(\d{10})\s+(T|P|I)\s+(S|H|O|U)\s+(\w+)\s+(.*)}
-
-		match      = regexp.match(string)
-		match_long = regexp_long.match(string)
-
-		if match 
+		if match      = %r{(\w{8})\s+(\d{10})\s+(T|P|I)\s+(S|H|O|U)\s+(\w+)\s+(.*)}.match(string)
 
 			@identifier 	= match[1]
 			@datetime		= match[2]	
@@ -61,7 +56,7 @@ SENSE\sDATA(.*)}mx
 			@resource_name	= match[5]		
 			@description	= match[6]		
 		
-		elsif match_long
+		elsif match_long = regexp_long.match(string)
 		
 			@label 			= match_long[1]	
 			@identifier 	= match_long[2]
