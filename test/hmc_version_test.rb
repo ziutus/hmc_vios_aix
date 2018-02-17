@@ -17,11 +17,11 @@ HMC Build level 20141006.3
 
     myHmc = Version.new(string)
 
-    assert_equal("8",         myHmc.version)
-    assert_equal("8.2.0",     myHmc.release, )
-    assert_equal("0",         myHmc.servicePack)
-    assert_equal( "20141006.3", myHmc.hmcBuildLevel)
-    assert_equal("V8R8.2.0",  myHmc.base_version)
+    assert_equal('8',          myHmc.version)
+    assert_equal('8.2.0',      myHmc.release)
+    assert_equal('0',          myHmc.servicePack)
+    assert_equal('20141006.3', myHmc.hmcBuildLevel)
+    assert_equal('V8R8.2.0',   myHmc.base_version)
 
   end
 
@@ -37,12 +37,12 @@ MH01454: Required fix for HMC V8R8.2.0 (11-05-2014)
 
     myHmc = Version.new(string)
 
-    assert_equal("8",        myHmc.version)
-    assert_equal("8.2.0",    myHmc.release)
-    assert_equal("0",        myHmc.servicePack)
-    assert_equal("20141104.1", myHmc.hmcBuildLevel)
-    assert_equal(true, myHmc.hasFix?("MH01454"))
-    assert_equal("V8R8.2.0", myHmc.base_version)
+    assert_equal('8',          myHmc.version)
+    assert_equal('8.2.0',      myHmc.release)
+    assert_equal('0',          myHmc.servicePack)
+    assert_equal('20141104.1', myHmc.hmcBuildLevel)
+    assert_equal(true,         myHmc.hasFix?('MH01454'))
+    assert_equal('V8R8.2.0',   myHmc.base_version)
 
   end
 end
