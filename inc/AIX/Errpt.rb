@@ -2,18 +2,18 @@ require "pp"
 
 require "AIX/ErrptEntry"
 
-class ErrptEntry
+class Errpt
 
-	attr_reader   :data_string_raw, :label, :identifier, :timestamp_long
-	
-#	attr_accessor :break_size
-	
+	attr_reader :data_string_raw
+  attr_reader :errors
+
+
 	def initialize(string)
 
 		@data_string_raw=''
+    @errors = Array.new
 
 		if string.length > 0
-		  @data_string_raw = string
 		  self.parse(string)
 		end
 
@@ -21,22 +21,25 @@ class ErrptEntry
 
 	def parse(string)
 
-		regexp_long = %r{LABEL:\s+([\w\_]+)\s$}
-	
-		match = regexp_long.match(string)
+    @data_string_raw = string
 
-		if match
-			@device         = match[1]	
-	
-	
-	    else
-		  puts "can't analyze string, regexp is not working"
-		  puts string
-		  puts regexp
-		  puts match
-		  puts "regexp couldn't decode string #{string}"
-		  raise
+		if match = %r{LABEL:\s+([\w\_]+)\s$}.match(string)
+			# it should be parse in different way
+      raise 'this script can not now parse errpt -a output'
+    else
+      string.split("\n").each { |line|
+        @errors.push(ErrptEntry.new(line))
+      }
 		end
+  end
 
-	end
+  def summary
+    @errors.each { |errpt|
+      if errpt.description == 'BACK-UP PATH STATUS CHANGE'
+
+      end
+
+    }
+  end
+
 end
