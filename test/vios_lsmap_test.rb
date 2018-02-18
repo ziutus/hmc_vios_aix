@@ -43,5 +43,3 @@ class TestVioslsmap_long < Test::Unit::TestCase
 
   end
 end
-	
-
