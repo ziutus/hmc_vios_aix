@@ -12,7 +12,7 @@ class ResourceRole
 	#name=L2support,"resources=cec:root/ibmhscS1_0|9131-52A*6535CCG|IBMHSC_ComputerSystem,lpar:root/ibmhscS1_0|ALL_PARTITIONS*9131-52A*6535CCG|IBMHSC_Partition"
 	def initialize(string='')
 
-		@resources = Array.new()
+		@resources = Array.new
 		
 		if string.length > 0
 			self.decode string 
