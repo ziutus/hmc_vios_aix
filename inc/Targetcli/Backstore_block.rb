@@ -5,7 +5,7 @@ class Backstore_block < Backstore
 	def initialize 
 		super 
 		
-		@type = "block"
+		@type = 'block'
 	end	
 	
 	

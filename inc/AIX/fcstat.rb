@@ -4,7 +4,7 @@ class Fcstat
 
   def initialize(string)
 
-    @data = Hash.new()
+    @data = Hash.new
     @data_string_raw=''
 
     if string.length > 0
@@ -78,6 +78,7 @@ FC\sSCSI\sTraffic\sStatistics\s
 \s+Output\sBytes:\s+(\d+)\s*
 }x
 
+
     match = regexp.match(string)
 
     if match
@@ -120,10 +121,7 @@ FC\sSCSI\sTraffic\sStatistics\s
     else
       puts "can't analyze string, regexp is not working"
       puts string
-      puts regexp
-      puts match
-      puts "regexp couldn't decode string #{string}"
-      raise
+      raise 'fcstat - regexp is not working'
     end
   end
 

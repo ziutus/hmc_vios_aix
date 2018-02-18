@@ -1,62 +1,151 @@
+require 'pp'
+require 'HMC/VirtualEthAdapter'
+require 'HMC/HmcString'
+
+include HmcString
+
+
 class Lpar_real
 
-	attr_reader :sys, :dataString, :name
-	attr_reader :name, :lpar_id, :lpar_env
-	attr_reader :state, :resource_config, :os_version, :logical_serial_num, :default_profile, :curr_profile, :work_group_id, :shared_proc_pool_util_auth, :allow_perf_collection 
-	attr_reader :power_ctrl_lpar_ids, :boot_mode, :lpar_keylock, :auto_start, :redundant_err_path_reporting, :rmc_state, :rmc_ipaddr, :sync_curr_profile 
+	attr_reader :sys
+  attr_reader :dataString
+	attr_reader :name
+  attr_reader :lpar_id
+  attr_reader :lpar_env
+	attr_reader :state
+  attr_reader :resource_config
+  attr_reader :os_version
+  attr_reader :logical_serial_num
+  attr_reader :default_profile
+  attr_reader :curr_profile
+  attr_reader :work_group_id
+  attr_reader :shared_proc_pool_util_auth
+  attr_reader :allow_perf_collection
+	attr_reader :power_ctrl_lpar_ids
+  attr_reader :boot_mode
+  attr_reader :lpar_keylock
+  attr_reader :auto_start
+  attr_reader :redundant_err_path_reporting
+  attr_reader :rmc_state
+  attr_reader :rmc_ipaddr
+  attr_reader :sync_curr_profile
+
+	#power7
+  attr_reader :time_ref
+  attr_reader :lpar_avail_priority
+  attr_reader :remote_restart_capable
+  attr_reader :suspend_capable
+  attr_reader :desired_lpar_proc_compat_mode
+  attr_reader :curr_lpar_proc_compat_mode
+  attr_reader :affinity_group_id
+
+  #stolen from https://github.com/vfoucault/powervmtools
+  #and from https://www.ibm.com/support/knowledgecenter/en/POWER8/p8edm/mksyscfg.html
+  #vtpm_enabled - virtual Trusted Platform Module (enabled or disabled)
+  #power8
+  attr_reader :vtpm_enabled
+  attr_reader :simplified_remote_restart_capable
+  attr_reader :remote_restart_status
+
+  #taken from doc for power8: https://www.ibm.com/support/knowledgecenter/en/POWER8/p8edm/mksyscfg.html
+  attr_reader :msp #mover service partition
+  attr_reader :powervm_mgmt_capable #Linux only: allow this partition to provide PowerVM management functions
 
 	#from memory string (lshwres -r mem --level lpar -m $MS) 				
-	attr_reader	:curr_min_mem, :curr_mem, :curr_max_mem, :pend_min_mem, :pend_mem, :pend_max_mem, :run_min_mem, :run_mem, :curr_min_num_huge_pages, :curr_num_huge_pages
-	attr_reader	:curr_max_num_huge_pages, :pend_min_num_huge_pages, :pend_num_huge_pages, :pend_max_num_huge_pages, :run_num_huge_pages, :mem_mode, :curr_hpt_ratio	
+	attr_reader	:curr_min_mem
+  attr_reader :curr_mem
+  attr_reader :curr_max_mem
+  attr_reader :pend_min_mem
+  attr_reader :pend_mem
+  attr_reader :pend_max_mem
+  attr_reader :run_min_mem
+  attr_reader :run_mem
+  attr_reader :curr_min_num_huge_pages
+  attr_reader :curr_num_huge_pages
+	attr_reader	:curr_max_num_huge_pages
+  attr_reader :pend_min_num_huge_pages
+  attr_reader :pend_num_huge_pages
+  attr_reader :pend_max_num_huge_pages
+  attr_reader :run_num_huge_pages
+  attr_reader :mem_mode
+  attr_reader :curr_hpt_ratio
 	
 	#
-	attr_reader :curr_proc_mode, :curr_min_procs, :curr_procs, :curr_max_procs, :curr_sharing_mode 
-	attr_reader	:pend_proc_mode, :pend_min_procs, :pend_procs, :pend_max_procs, :pend_sharing_mode
+	attr_reader :curr_proc_mode
+  attr_reader :curr_min_procs
+  attr_reader :curr_procs
+  attr_reader :curr_max_procs
+  attr_reader :curr_sharing_mode
+	attr_reader	:pend_proc_mode
+  attr_reader :pend_min_procs
+  attr_reader :pend_procs
+  attr_reader :pend_max_procs
+  attr_reader :pend_sharing_mode
 	attr_reader :run_procs
 	
 	#
-	attr_reader :curr_min_proc_units, :curr_proc_units, :curr_max_proc_units, :curr_uncap_weight, :curr_shared_proc_pool_id
-	attr_reader :pend_min_proc_units, :pend_proc_units, :pend_max_proc_units, :pend_uncap_weight, :pend_shared_proc_pool_id
-	attr_reader :run_proc_units, :run_procs, :run_uncap_weight
+	attr_reader :curr_min_proc_units
+  attr_reader :curr_proc_units
+  attr_reader :curr_max_proc_units
+  attr_reader :curr_uncap_weight
+  attr_reader :curr_shared_proc_pool_id
+	attr_reader :pend_min_proc_units
+  attr_reader :pend_proc_units
+  attr_reader :pend_max_proc_units
+  attr_reader :pend_uncap_weight
+  attr_reader :pend_shared_proc_pool_id
+	attr_reader :run_proc_units
+  attr_reader :run_procs
+  attr_reader :run_uncap_weight
 	
 	#from slots: lshwres -r virtualio --level lpar --rsubtype slot -m $MS
-	attr_reader	:curr_max_virtual_slots, :pend_max_virtual_slots, :next_avail_virtual_slot
+	attr_reader	:curr_max_virtual_slots
+  attr_reader :pend_max_virtual_slots
+  attr_reader :next_avail_virtual_slot
 	
-	attr_reader :adaptersVirtual, :adaptersReal
+	attr_reader :adaptersVirtual
+  attr_reader :adaptersReal
 	
 	attr_reader :virtual_scsi_adapters
 	
 	# https://www.ibm.com/support/knowledgecenter/HW4P4/p8edm/rsthwres.html
-	
+
+  @lpar_name
+
+	@lpar_env
+
+  # string from command ''
+  @lpar_id
+  @allow_perf_collection
+  @auto_start
+  @shared_proc_pool_util_auth
+  @redundant_err_path_reporting
+  @sync_curr_profile
+
+  @name
+  @lpar_env
+  @state
+  @resource_config
+  @os_version
+  @logical_serial_num
+  @default_profile
+  @curr_profile
+  @work_group_id
+  @power_ctrl_lpar_ids
+  @boot_mode
+  @lpar_keylock
+  @rmc_state
+  @rmc_ipaddr
+
+
 	def initialize sys,lpar_id,name 
 	
 		@name = name
 		@sys = sys
 		@lpar_id= lpar_id.to_i
-		@dataString = ""
-		
+		@dataString = ''
 
-		@lpar_env=""
-		@state=""
-		@resource_config=""
-		@os_version=""
-		@logical_serial_num=""
-		@default_profile=""
-		@curr_profile=""
-		@work_group_id=""
-		@shared_proc_pool_util_auth=""
-		@allow_perf_collection=""
-		@power_ctrl_lpar_ids=""
-		@boot_mode=""
-		@lpar_keylock=""
-		@auto_start=""
-		@redundant_err_path_reporting=""
-		@rmc_state=""
-		@rmc_ipaddr=""
-		@sync_curr_profile=""
-		
-		
-		#from memory string 
+		#from memory string
 		@curr_min_mem=0		
 		@curr_min_mem=0
 		@curr_mem=0
@@ -80,19 +169,33 @@ class Lpar_real
 #		@adaptersVirtual = []
 		@adaptersReal = []
 		
-		@virtual_eth_adapters = []
-#		@virtual_scsi_adapters = Hash.new()
-		@virtual_scsi_adapters = []
-
+		@virtual_eth_adapters    = []
+		@virtual_scsi_adapters   = []
 		@virtual_serial_adapters = []
-		
+
+    @_variables = Hash.new
+    @_variables['variables_int']    = %w(lpar_id allow_perf_collection auto_start shared_proc_pool_util_auth redundant_err_path_reporting sync_curr_profile
+			time_ref lpar_avail_priority remote_restart_capable suspend_capable simplified_remote_restart_capable vtpm_enabled msp powervm_mgmt_capable)
+    @_variables['variables_string'] = %w(name lpar_env state resource_config os_version logical_serial_num default_profile curr_profile
+      work_group_id power_ctrl_lpar_ids boot_mode lpar_keylock  rmc_state rmc_ipaddr
+			desired_lpar_proc_compat_mode curr_lpar_proc_compat_mode affinity_group_id remote_restart_status )
+
+    @_variables['memory_int']    = %w(lpar_id curr_min_mem curr_mem curr_max_mem pend_min_mem pend_mem pend_max_mem run_min_mem run_mem curr_min_num_huge_pages
+      curr_num_huge_pages curr_max_num_huge_pages pend_min_num_huge_pages pend_num_huge_pages pend_max_num_huge_pages run_num_huge_pages)
+    @_variables['memory_string'] = %w(mem_mode)
+
+    @_variables['proc_int']    = %w(lpar_id curr_shared_proc_pool_id curr_min_procs curr_procs curr_max_procs curr_uncap_weight pend_shared_proc_pool_id
+      	pend_min_procs pend_procs pend_max_procs run_procs pend_uncap_weight run_uncap_weight)
+    @_variables['proc_string'] = %w(curr_proc_mode curr_sharing_mode pend_proc_mode pend_sharing_mode)
+    @_variables['proc_float']  = %w(curr_min_proc_units pend_min_proc_units pend_proc_units pend_max_proc_units run_proc_units curr_proc_units curr_max_proc_units)
+
 	end
 
-	def start profile
+	def start_cmd profile
 		"chsysstate -m #{@sys} -r lpar -n #{@name} -o on -f #{profile}"
 	end
 	
-	def stop
+	def stop_cmd
 		"chsysstate -m #{@sys} -r lpar -n #{@name} -o shutdown"
 	end	
 
@@ -100,176 +203,88 @@ class Lpar_real
 		"lssyscfg -m #{@sys} -r lpar -F state  --filter='#{@name}'"
 	end 
 	
-	def memoryAdd howMuch
+	def memoryAdd_cmd howMuch
 		"chhwres -m #{@sys} -p #{@name} -r mem -o a  -q #{howMuch.to_s}"
 	end
 
-	def memoryRemove howMuch
+	def memoryRemove_cmd howMuch
 		"chhwres -m #{@sys} -p #{@name} -r mem -o r  -q #{howMuch.to_s}"
 	end
 
-	def procUnitsAdd howMuch
+	def procUnitsAdd_cmd howMuch
 		"chhwres -m #{@sys} -p #{@name} -r proc -o a --procunits #{howMuch.to_s}"
 	end	
 
-	def procUnitsRemove howMuch
+	def procUnitsRemove_cmd howMuch
 		"chhwres -m #{@sys} -p #{@name} -r proc -o r --procunits #{howMuch.to_s}"
 	end	
 	
-	def memoryRestoreToProfile
-		""
+	def memoryRestoreToProfile_cmd
+		''
 	end
 	
-	def slotRemove slotID
+	def slotRemove_cmd slotID
 		"chhwres -r virtualio -m #{@sys} -o  r -p #{@name} -s #{slotID}"
 	end
 	
-	def lparRemove
+	def lparRemove_cmd
 		"rmsyscfg -m #{@sys} -r lpar -n #{@name}"
 	end
 	
 	def lssyscfgDecode string
-		
-		parameters = string.split(",")
-		
-		parameters.each { |x| 
-			key, value = x.split("=")
-		
-			value = "" if value==nil
-	
-			case key 
 
-				when "name" 				then				@name=value
-				when "lpar_id" 				then				@lpar_id=value
-				when "lpar_env" 			then				@lpar_env=value
-				when "state" 				then				@state=value
-				when "resource_config" 		then				@resource_config=value
-				when "os_version" 			then				@os_version=value
-				when "logical_serial_num" 	then				@logical_serial_num=value
-				when "default_profile" 		then				@default_profile=value
-				when "curr_profile" 		then				@curr_profile=value
-				when "work_group_id" 		then				@work_group_id=value
-				when "shared_proc_pool_util_auth" then			@shared_proc_pool_util_auth=value
-				when "allow_perf_collection" then				@allow_perf_collection=value
-				when "power_ctrl_lpar_ids" 	then				@power_ctrl_lpar_ids=value
-				when "boot_mode" 			then				@boot_mode=value
-				when "lpar_keylock" 		then				@lpar_keylock=value
-				when "auto_start" 			then				@auto_start=value
-				when "redundant_err_path_reporting" then		@redundant_err_path_reporting=value
-				when "rmc_state" 			then				@rmc_state=value
-				when "rmc_ipaddr" 			then				@rmc_ipaddr=value
-				when "sync_curr_profile" 	then				@sync_curr_profile=value			
-				else
-					abort "Unknown key #{key} with value #{value}, exiting... \n"
-			end
-		}			
+    HmcString.parse(string).each {|name, value|
+
+      if @_variables['variables_int'].include?(name)
+        instance_variable_set("@#{name}", value.to_i)
+      elsif @_variables['variables_string'].include?(name)
+        instance_variable_set("@#{name}", value.to_s)
+      else
+        print "unknown name: #{name} with value #{value}"
+        raise
+      end
+
+		}
 	end
 	
-	def decode string 
-	
-		regExpMem = /lpar_name=([\w\_\-]),lpar_id=(\d+),curr_min_mem=(\d+),curr_mem=(\d+),curr_max_mem=(\d+),pend_min_mem=(\d+),pend_mem=(\d+),pend_max_mem=(\d+),run_min_mem=(\d+),run_mem=(\d+),curr_min_num_huge_pages=(\d+),curr_num_huge_pages=(\d+),curr_max_num_huge_pages=(\d+),pend_min_num_huge_pages=(\d+),pend_num_huge_pages=(\d+),pend_max_num_huge_pages=(\d+),run_num_huge_pages=(\d+),mem_mode=(ded),curr_hpt_ratio=(\d+\:\d+)/
-	
-	end
-	
-	def decodeMem string 
+	def decodeMem string
 
-		regExpMem = /lpar_name=([\w\_\-]+),lpar_id=(\d+),curr_min_mem=(\d+),curr_mem=(\d+),curr_max_mem=(\d+),pend_min_mem=(\d+),pend_mem=(\d+),pend_max_mem=(\d+),run_min_mem=(\d+),run_mem=(\d+),curr_min_num_huge_pages=(\d+),curr_num_huge_pages=(\d+),curr_max_num_huge_pages=(\d+),pend_min_num_huge_pages=(\d+),pend_num_huge_pages=(\d+),pend_max_num_huge_pages=(\d+),run_num_huge_pages=(\d+),mem_mode=(ded),curr_hpt_ratio=(\d+\:\d+)/
-		match = regExpMem.match(string)
-		
-		unless match 
-			puts string 
-			puts regExpMem
-			puts match 
-			puts "RegExp couldn't decode string #{string}"
-			raise 
-		end
-		
-		@curr_min_mem		= match[3].to_i		
-		@curr_mem			= match[4].to_i
-		@curr_max_mem		= match[5].to_i
-		@pend_min_mem		= match[6].to_i
-		@pend_mem			= match[7].to_i
-		@pend_max_mem		= match[8].to_i
-		@run_min_mem		= match[9].to_i
-		@run_mem			= match[10].to_i
-		@curr_min_num_huge_pages	= match[11].to_i
-		@curr_num_huge_pages = match[12].to_i
-		@curr_max_num_huge_pages = match[13].to_i
-		@pend_min_num_huge_pages = match[14].to_i
-		@pend_num_huge_pages     = match[15].to_i
-		@pend_max_num_huge_pages = match[16].to_i
-		@run_num_huge_pages		 = match[17].to_i
-		@mem_mode				= match[18]
-		@curr_hpt_ratio			= match[19]
-		
+    HmcString.parse(string).each {|name, value|
+
+      if @_variables['memory_int'].include?(name)
+        instance_variable_set("@#{name}", value.to_i)
+      elsif @_variables['memory_string'].include?(name)
+        instance_variable_set("@#{name}", value.to_s)
+      elsif name == 'curr_hpt_ratio'
+        @curr_hpt_ratio = value.to_s
+      elsif name == 'lpar_name'
+        @lpar_name = value
+      else
+        print "unknown name: #{name} with value #{value}"
+        raise
+      end
+    }
+
 	end
 	
 	def decodeProc string 
 
-		regExpProcDedicated = /lpar_name=([\w\_\-]+),lpar_id=(\d+),curr_proc_mode=(ded),curr_min_procs=(\d+),curr_procs=(\d+),curr_max_procs=(\d+),curr_sharing_mode=(share_idle_procs|uncap),pend_proc_mode=(ded),pend_min_procs=(\d+),pend_procs=(\d+),pend_max_procs=(\d+),pend_sharing_mode=(share_idle_procs),run_procs=(\d+)/
-		regExpProcShared    = /lpar_name=([\w\_\-]+),lpar_id=(\d+),curr_shared_proc_pool_id=(\d+),curr_proc_mode=(shared),curr_min_proc_units=(\d+\.\d+),curr_proc_units=(\d+\.\d+),curr_max_proc_units=(\d+\.\d+),curr_min_procs=(\d+),curr_procs=(\d+),curr_max_procs=(\d+),curr_sharing_mode=(share_idle_procs|uncap),curr_uncap_weight=(\d+),pend_shared_proc_pool_id=(\d+),pend_proc_mode=(shared),pend_min_proc_units=(\d+\.\d+),pend_proc_units=(\d+\.\d+),pend_max_proc_units=(\d+\.\d+),pend_min_procs=(\d+),pend_procs=(\d+),pend_max_procs=(\d+),pend_sharing_mode=(uncap),pend_uncap_weight=(\d+),run_proc_units=(\d+\.\d+),run_procs=(\d+),run_uncap_weight=(\d+)/
-		
-	
-		match  = regExpProcDedicated.match(string)
-		match2 = regExpProcShared.match(string)
-		
-		
+    HmcString.parse(string).each {|name, value|
 
-		if match
-		
-			# dedicated CPU
-			@curr_proc_mode			= match[3]
-			@curr_min_procs			= match[4].to_i
-			@curr_procs				= match[5].to_i
-			@curr_max_procs			= match[6].to_i
-			@curr_sharing_mode		= match[7]
-			@pend_proc_mode			= match[8]
-			@pend_min_procs			= match[9].to_i
-			@pend_procs				= match[10].to_i
-			@pend_max_procs			= match[11].to_i
-			@pend_sharing_mode		= match[12]
-			@run_procs				= match[13].to_i
+      if @_variables['proc_int'].include?(name)
+        instance_variable_set("@#{name}", value.to_i)
+      elsif @_variables['proc_float'].include?(name)
+        instance_variable_set("@#{name}", value.to_f)
+      elsif @_variables['proc_string'].include?(name)
+        instance_variable_set("@#{name}", value.to_s)
+      elsif name == 'lpar_name'
+        @lpar_name = value
+      else
+        print "unknown name: #{name} with value #{value}"
+        raise
+      end
+    }
 
-		elsif match2 		
-			#shared CPU	
-
-			# #		lpar_name					= match[1]
-			# #		lpar_id						= match[2].to_i
-				
-			@curr_shared_proc_pool_id	= match2[3].to_i
-			@curr_proc_mode				= match2[4]
-			@curr_min_proc_units			= match2[5]
-			@curr_proc_units				= match2[6]
-			@curr_max_proc_units			= match2[7]
-			@curr_min_procs				= match2[8].to_i
-			@curr_procs					= match2[9].to_i
-			@curr_max_procs				= match2[10].to_i
-			@curr_sharing_mode			= match2[11]
-			@curr_uncap_weight			= match2[12].to_i
-			@pend_shared_proc_pool_id	= match2[13].to_i
-			@pend_proc_mode				= match2[14]
-			@pend_min_proc_units			= match2[15]
-			@pend_proc_units				= match2[16]
-			@pend_max_proc_units			= match2[17]
-			@pend_min_procs				= match2[18].to_i
-			@pend_procs					= match2[19].to_i
-			@pend_max_procs				= match2[20].to_i
-			@pend_sharing_mode			= match2[21]
-			@pend_uncap_weight			= match2[22].to_i
-			@run_proc_units				= match2[23]
-			@run_procs					= match2[24].to_i
-			@run_uncap_weight			= match2[25].to_i	
-			
-			
-		else
-		
-			puts string
-			puts match 
-			puts match2 
-			puts "RegExp couldn't decode string #{string}"
-			raise 
-		end
-		
 	end
 	
 	def decodeVirtualioSlot string 
@@ -292,57 +307,55 @@ class Lpar_real
 
 	def decodeVirtualioEth string 
 	
-		regExp1 = /lpar_name=([\w\_\-]+),lpar_id=(\d+),slot_num=(\d+),state=(0|1),is_required=(0|1),is_trunk=(0),ieee_virtual_eth=(\d+),port_vlan_id=(\d+),addl_vlan_ids=([\w\,]+|),mac_addr=(\w+|)/
-		regExp2 = /lpar_name=([\w\_\-]+),lpar_id=(\d+),slot_num=(\d+),state=(0|1),is_required=(0|1),is_trunk=(1),trunk_priority=(\d+),ieee_virtual_eth=(0|1),port_vlan_id=(\d+),addl_vlan_ids=([\w\,]+|),mac_addr=(\w+|)/
-		lines = string.split(/\n/)
+		reg_exp_1 = /lpar_name=([\w\_\-]+),lpar_id=(\d+),slot_num=(\d+),state=(0|1),is_required=(0|1),is_trunk=(0),ieee_virtual_eth=(\d+),port_vlan_id=(\d+),addl_vlan_ids=([\w\,]+|),mac_addr=(\w+|)/
+		reg_exp_2 = /lpar_name=([\w\_\-]+),lpar_id=(\d+),slot_num=(\d+),state=(0|1),is_required=(0|1),is_trunk=(1),trunk_priority=(\d+),ieee_virtual_eth=(0|1),port_vlan_id=(\d+),addl_vlan_ids=([\w\,]+|),mac_addr=(\w+|)/
 
-		lines.each { |line|  
+    string.split(/\n/).each { |line|
 
-			match  = regExp1.match(line)
-			match2 = regExp2.match(line)
+        match  = reg_exp_1.match(line)
+        match2 = reg_exp_2.match(line)
 
-			if match 
-			
-				next unless match[2].to_i == @lpar_id.to_i
+        if match
+  				next unless match[2].to_i == @lpar_id.to_i
 				
-				 adapter = VirtualEthAdapter.new()
-				
-				 adapter.virtualSlotNumber = match[3].to_i
-				 adapter.isIEEE			  = match[4].to_i
-				 adapter.portVlanID 		  = match[5].to_i
-				 adapter.additionalVlanIDs = match[6]
-				 adapter.isTrunk           = match[7].to_i 
-				 adapter.isRequired		  = match[8].to_i
-				
-				 adapter.macAddress		  = match[9]
+          adapter = VirtualEthAdapter.new
 
-				#@adaptersVirtual << adapter 
-				adaptersVirtual[adapter.virtualSlotNumber] = adapter 
+          adapter.virtualSlotNumber = match[3].to_i
+          adapter.isIEEE			  = match[4].to_i
+          adapter.portVlanID 		  = match[5].to_i
+          adapter.additionalVlanIDs = match[6]
+          adapter.isTrunk           = match[7].to_i
+          adapter.isRequired		  = match[8].to_i
+
+          adapter.macAddress		  = match[9]
+
+          #@adaptersVirtual << adapter
+          adaptersVirtual[adapter.virtualSlotNumber] = adapter
 			
 			elsif match2
 			
-				next unless match2[2].to_i == @lpar_id.to_i
-				
-				 adapter = VirtualEthAdapter.new()
-				 
-				 adapter.virtualSlotNumber = match2[3].to_i
-				 adapter.isRequired		   = match2[5].to_i
-				 adapter.isTrunk           = match2[6].to_i 				 
-				 adapter.trunkPriority     = match2[7].to_i 
-				 adapter.isIEEE			  = match2[8].to_i
-				 adapter.portVlanID 		  = match2[9].to_i
-				 adapter.additionalVlanIDs = match2[10]
-				 adapter.macAddress		  = match2[11]
+        next unless match2[2].to_i == @lpar_id.to_i
 
-#				@adaptersVirtual << adapter 				 
-				adaptersVirtual[adapter.virtualSlotNumber] = adapter 
+         adapter = VirtualEthAdapter.new()
+
+         adapter.virtualSlotNumber = match2[3].to_i
+         adapter.isRequired		   = match2[5].to_i
+         adapter.isTrunk           = match2[6].to_i
+         adapter.trunkPriority     = match2[7].to_i
+         adapter.isIEEE			  = match2[8].to_i
+         adapter.portVlanID 		  = match2[9].to_i
+         adapter.additionalVlanIDs = match2[10]
+         adapter.macAddress		  = match2[11]
+
+        #				@adaptersVirtual << adapter
+        adaptersVirtual[adapter.virtualSlotNumber] = adapter
 			
 			else 
-				#puts string
-				puts match 
-				puts match2 
-				puts "RegExp couldn't decode string >#{line}<"
-				raise 		
+          #puts string
+          puts match
+          puts match2
+          puts "RegExp couldn't decode string >#{line}<"
+          raise
 			
 			end
 		}
@@ -369,9 +382,8 @@ class Lpar_real
 		end 
 	end
 
-	def virtual_adapter_exit? adapterID  
-		
-		@adaptersVirtual.key?(adapterID)
+	def virtual_adapter_exist? adapter_id
+		@adaptersVirtual.key?(adapter_id)
 	end
 
 	

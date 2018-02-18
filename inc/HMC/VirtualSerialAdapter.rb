@@ -1,16 +1,27 @@
 class VirtualSerialAdapter
 
-	attr_accessor :virtualSlotNmuber, :clientOrServer, :supportsHMC, :remoteLparID 
-	attr_accessor :remoteLparName, :remoteSlotNumber, :isRequired 
+	attr_accessor :virtualSlotNmuber
+	attr_accessor :clientOrServer
+	attr_accessor :supportsHMC
+	attr_accessor :remoteLparID
+	attr_accessor :remoteLparName
+	attr_accessor :remoteSlotNumber
+	attr_accessor :isRequired
 
-	def initialize 
+	def initialize string='' 
 		@virtualSlotNmuber
 		@clientOrServer
 		@supportsHMC
 		@remoteLparID
 		@remoteLparName
 		@remoteSlotNumber
-		@isRequired 
+		@isRequired
+
+
+		if string.length > 0
+		  @data_string_raw = string
+		  self.parse(string)
+		end		
 	end
 
 	def decode string
@@ -19,7 +30,7 @@ class VirtualSerialAdapter
 		
 		match = regExp.match(string)
 	
-		abort "RegExp couldn't decode string #{string}" unless match
+		abort "Class VirtualSerialAdapter: RegExp couldn't decode string #{string}" unless match
 		
 		@virtualSlotNmuber	= match[1].to_i		
 		@clientOrServer		= match[2]
@@ -30,12 +41,17 @@ class VirtualSerialAdapter
 		@isRequired			= match[7].to_i
 	
 	end
+
+	alias :parse :decode
 	
 	
 	#virtual-slot-number/client-or-server/[supports-HMC]/[remote-lpar-ID]/[remote-lpar-name]/[remote-slot-number]/is-required
 	def to_s
 		"#{@virtualSlotNmuber}/#{@clientOrServer}/#{@supportsHMC}/#{@remoteLparID}/#{@remoteLparName}/#{@remoteSlotNumber}/#{@isRequired}"
 	end
-	
+
+  def ==(another_adapter)
+    self.to_s == another_adapter.to_s
+  end
 
 end

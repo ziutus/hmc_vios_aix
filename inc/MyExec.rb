@@ -1,40 +1,44 @@
+require 'net/ssh'
+
 class MyExec
-	def initialize(method, execMode="off")
+	def initialize(method, exec_mode='off')
 		@method  = method 
-		@execMode= execMode
+		@exec_mode= exec_mode
 	end
 	
-	def showVariables
+	def show_variables
 		puts "Method: #{@method}"
 		
-		puts "Ssh"
-		puts "Server: #{@sshServer}"
-		puts "User: #{@sshUser}"
-		puts "Password: #{@sshPassword}"
-		puts "ExecMode: #{@execMode}"
+		puts 'Ssh'
+		puts "Server: #{@ssh_server}"
+		puts "User: #{@ssh_user}"
+		puts "Password: #{@ssh_password}"
+		puts "ExecMode: #{@exec_mode}"
 		
 	end
 	
-	def setSsh(server, user, password)
-		@sshServer=server
-		@sshUser=user
-		@sshPassword=password
+	def set_ssh(server, user, password)
+		@ssh_server   =server
+		@ssh_user     =user
+		@ssh_password =password
 	end	
 	
-	def Exec(command, execMode="off")
+	def execute(command, exec_mode='off')
 		
-		execLocal = @execMode
-		execLocal = "on" if execMode == "on"
-		resultString = ""
-	
-		Net::SSH.start(@sshServer, @sshUser, :password => @sshPassword) do |ssh|
+		exec_local = @exec_mode
+		exec_local = 'on' if exec_mode == 'on'
+		result_string = ''
+
+		STDOUT.sync = true
+
+		Net::SSH.start(@ssh_server, @ssh_user, :password => @ssh_password) do |ssh|
 			time1 = Time.new
 			puts  time1.strftime("%Y-%m-%d %H:%M:%S") + " calling: #{command}"
-			puts  time1.strftime("%Y-%m-%d %H:%M:%S") + " exec mode: " + execLocal
-			resultString = ssh.exec!(command) if ( execLocal == "on")
+			puts  time1.strftime("%Y-%m-%d %H:%M:%S") + ' exec mode: ' + exec_local
+			result_string = ssh.exec!(command) if ( exec_local == 'on')
 			time2 = Time.new
-			puts  time2.strftime("%Y-%m-%d %H:%M:%S") + " executed"
-			return resultString 			
+			puts  time2.strftime("%Y-%m-%d %H:%M:%S") + ' executed'
+			return result_string
 		end
 	end 
 	

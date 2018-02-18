@@ -1,0 +1,35 @@
+<style><!--
+
+table {
+  font-size: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  border-collapse: collapse;
+  width: 1100px;
+}
+
+th {
+  background: #CCC;
+}
+--></style>
+<% hmc_name_old = nil
+  background = '#CCC'
+%>
+<h3>HMC issues</h3>
+
+<p>Data are taken from output of 'lssvcevents -t hardware --filter "status=open"'</p>
+<table>
+<tr><th>HMC</th><th>event time</th><th>problem number</th><th>PHM</th><th>sys name</th><th>text</th></tr>
+<% events2.each do |entry| %>
+  <% if entry.hmc_name != hmc_name_old
+       background == '#CCC' ? background = '#FFF' : background = '#CCC'
+     end %>
+  <tr style="background: <%= background %>;">
+    <td><%= entry.hmc_name %></td>
+    <td><%= entry.last_time %></td>
+    <td><%= entry.problem_num %></td>
+    <td><%= entry.pmh_num %></td>
+    <td><%= entry.sys_name %></td>
+    <td><%= entry.text %></td>
+  </tr><% hmc_name_old = entry.hmc_name %><% end %>
+</table>

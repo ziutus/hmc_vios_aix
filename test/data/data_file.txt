@@ -1,0 +1,6 @@
+command 1 2>&1 | |command_1_result_line_1
+command 1 2>&1 | |command_1_result_line_2
+command 4 2>&1 | |command_4_result_line_1
+command 2 2>&1 | |command_2_result_line_1
+command 2 2>&1 | |command_2_result_line_2
+command 3 2>&1 | |command_3_result_line_1
