@@ -8,10 +8,11 @@ $LOAD_PATH << File.dirname(__FILE__)+'/../inc'
 require 'HMC/lssvcevents'
 
 app_dir = File.dirname(__FILE__)+'/..'
-directory = "../test/dupa"
+directory = '../data'
 date = nil
 format = 'csv'
 report_type = 'all'
+verbose = 0
 
 OptionParser.new do |opts|
 
@@ -19,6 +20,7 @@ OptionParser.new do |opts|
   opts.on('-D', '--date DATE',  'date and time of collected data')         { |v| date = v }
   opts.on( '--format FORMAT',  'format of report, can be "hmtl" or "csv"') { |v| format = v }
   opts.on( '--type REPORT_TYPE',  'Type of report, can be "all" or "callhome"') { |v| report_type = v }
+  opts.on( '--verbose LEVEL', Integer,  'Level of verbose of script') { |v| verbose = v }
 
   opts.on("-h", "--help", "Prints this help") do
     puts opts
@@ -45,26 +47,34 @@ unless format == 'csv' or format == 'html'
   puts "Unknown format #{format}, you can use only 'html' or 'csv'."
 end
 
-events = Lssvcevents.new()
+events = Lssvcevents.new
 renderer = ERB.new(File.read("#{app_dir}/erb/hmc_check_events_#{format}.erb"))
 
 Dir.chdir("#{directory}/#{date}/")
- Dir.glob('*').sort.select { |hmc_dir|
+Dir.glob('*').sort.select { |hmc_dir|
+    puts ">Checking HMC #{hmc_dir}<" if verbose > 0
     Dir[hmc_dir + '/lssvcevents_hardware.txt' ].each { |filename|
-        next unless File.exist?(filename)
+         unless File.exist?(filename)
+           puts ">File #{filename} doesn't exist"
+           next
+         end
+
         data_string = File.read(filename)
         events.parse(data_string, hmc_dir )
     }
- }
+}
 
-events2 = Array.new()
+events2 = Array.new
 events.events.each_index { |index|
 
   if report_type == 'all'
     events2.push(events.events[index])
   elsif report_type == 'callhome'
     if events.events[index].callhome_intended == 'true'
+      puts "Adding to events2 the #{events.events[index].problem_num} as 'call home' setup for 'true' " if verbose > 0
       events2.push(events.events[index])
+    else
+      puts "Ignoring event #{events.events[index].problem_num} as 'call home' setup for 'false' " if verbose > 0
     end
   else
     puts "wrong type of report #{report_type}"
@@ -72,6 +82,8 @@ events.events.each_index { |index|
   end
 }
 
-puts renderer.result()
+
+
+puts renderer.result
 
 exit 0
