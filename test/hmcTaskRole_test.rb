@@ -6,20 +6,6 @@ require 'HMC/TaskRole'
 
 class MyHmcTaskRoles < Test::Unit::TestCase
 
-  # Called before every test method runs. Can be used
-  # to set up fixture information.
-  def setup
-    # Do nothing
-  end
-
-  # Called after every test method runs. Can be used to tear
-  # down fixture information.
-
-  def teardown
-    # Do nothing
-  end
-
-  # Fake test
   def test_TaskRolehmcservicerep
 
     string = 'name=hmcservicerep,parent=Predefined,"resources=""frame:CheckPSN+DeactivateFrameIO+FrameInitialize+LaunchFrameAsm+ListFrameProperty+ManageFrameServEvents+ManagePSN+RefreshFrame,cec:ActivateSystemProfile+BackupProfileData+CECPowerOff+CECPowerOn+CaptureSystemTemplate+CollectCECVPDInfo+DeployPartitionTemplate+DeviceMaintenance+LSProfileSpace+LaunchAsm+ListCECProperty+ListCoDInformation+ListNPortLogin+ListPCIeTopology+ListRioTopology+ListSSP+ListSystemProfileProperty+ListUtilizationData+ListVETInfo+ManageCECServEvents+ManageDumps+ManageSPP+ManageSysProfile+ManageUtilizationData+RebuildCEC+UpdateLIC+ValidateSystemProfile+ViewDumps+ViewPowerManagement+ViewSPP,lpar:ActivateLPAR+CapturePartitionTemplate+ChangeNPortLogin+CloseVTerm+Connect5250VTerm+DlparOperation+ListLPARProperty+ListProfileProperty+ManageLPARServEvents+ManageProfile+Open5250VTerm+OpenVTerm+RebootLPAR+ShutdownLPAR+VirtualIOServerCommand,HMCConsole:5250Task+BackupHMCData+ChangeHMCConfiguration+ChangeLocale+ChangeUserPasswords+CollectVPDInfo+CustServiceSettings+FormatMedia+GetUpgradeFiles+GroupingApp+ListConnections+ListHMCConfiguration+ListSNMPServiceSettings+ListServiceableEvents+ListStorageMedia+ManageConsoleDumps+ManageSNMPServiceSettings+ManageServEvents+RepairServEvent+RestoreUpgradeData+SaveUpgradeData+ShutdownHMC+TemplateLibrary+TipOfTheDay+UpdateHMC+UserSettings+ViewConsoleEvents+ViewHMCFileSystems"""';
