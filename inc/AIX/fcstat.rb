@@ -1,6 +1,8 @@
 class Fcstat
 
-  attr_accessor :data_string_raw, :device, :data
+  attr_accessor :data_string_raw
+  attr_accessor :device
+  attr_accessor :data
 
   def initialize(string)
 
@@ -13,7 +15,7 @@ class Fcstat
     end
   end
 
-  def get_stats()
+  def get_stats
     @data
   end
 
@@ -78,10 +80,7 @@ FC\sSCSI\sTraffic\sStatistics\s
 \s+Output\sBytes:\s+(\d+)\s*
 }x
 
-
-    match = regexp.match(string)
-
-    if match
+    if match = regexp.match(string)
       @device         = match[1]
 
       @data['device']             = match[1]
