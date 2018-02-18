@@ -1,3 +1,5 @@
+#TODO: rename of class (should show real function, not information that cert validation is done by output from curl)
+
 class Curl
 
   attr_reader :serverCertificate
