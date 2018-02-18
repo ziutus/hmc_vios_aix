@@ -3,23 +3,13 @@ $LOAD_PATH << File.dirname(__FILE__)+'/../inc'
 require 'test/unit'
 require 'pp'
 require 'HMC/TaskRoles'
+require 'HMC/HmcString'
+
+include HmcString
 
 class MyHmcTaskRoles < Test::Unit::TestCase
 
-  # Called before every test method runs. Can be used
-  # to set up fixture information.
-  def setup
-    # Do nothing
-  end
 
-  # Called after every test method runs. Can be used to tear
-  # down fixture information.
-
-  def teardown
-    # Do nothing
-  end
-
-  # Fake test
   def test_TaskRoles
 
     string = 'name=hmcservicerep,parent=Predefined,"resources=""frame:CheckPSN+DeactivateFrameIO+FrameInitialize+LaunchFrameAsm+ListFrameProperty+ManageFrameServEvents+ManagePSN+RefreshFrame,cec:ActivateSystemProfile+BackupProfileData+CECPowerOff+CECPowerOn+CaptureSystemTemplate+CollectCECVPDInfo+DeployPartitionTemplate+DeviceMaintenance+LSProfileSpace+LaunchAsm+ListCECProperty+ListCoDInformation+ListNPortLogin+ListPCIeTopology+ListRioTopology+ListSSP+ListSystemProfileProperty+ListUtilizationData+ListVETInfo+ManageCECServEvents+ManageDumps+ManageSPP+ManageSysProfile+ManageUtilizationData+RebuildCEC+UpdateLIC+ValidateSystemProfile+ViewDumps+ViewPowerManagement+ViewSPP,lpar:ActivateLPAR+CapturePartitionTemplate+ChangeNPortLogin+CloseVTerm+Connect5250VTerm+DlparOperation+ListLPARProperty+ListProfileProperty+ManageLPARServEvents+ManageProfile+Open5250VTerm+OpenVTerm+RebootLPAR+ShutdownLPAR+VirtualIOServerCommand,HMCConsole:5250Task+BackupHMCData+ChangeHMCConfiguration+ChangeLocale+ChangeUserPasswords+CollectVPDInfo+CustServiceSettings+FormatMedia+GetUpgradeFiles+GroupingApp+ListConnections+ListHMCConfiguration+ListSNMPServiceSettings+ListServiceableEvents+ListStorageMedia+ManageConsoleDumps+ManageSNMPServiceSettings+ManageServEvents+RepairServEvent+RestoreUpgradeData+SaveUpgradeData+ShutdownHMC+TemplateLibrary+TipOfTheDay+UpdateHMC+UserSettings+ViewConsoleEvents+ViewHMCFileSystems"""
@@ -31,8 +21,8 @@ name=hmcsuperadmin,parent=Predefined,"resources=""frame:ChangeFramePassword+Chan
 
     hmcTaskRoles = HmcString.parse(string)
 
-    assert_equal('L2support', myHash['name'], 'name - L2support')
-    assert_equal('L2supportRole', myHash['nameLong'], 'nameLong - L2supportRole')
+#    assert_equal('L2support', myHash['name'], 'name - L2support')
+#    assert_equal('L2supportRole', myHash['nameLong'], 'nameLong - L2supportRole')
 
 
   end
