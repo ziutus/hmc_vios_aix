@@ -103,7 +103,7 @@ class Lssysconn_entry
 
     else
       pp string
-      raise "wrong string to parse"
+      raise 'wrong string to parse'
     end
 
   end
