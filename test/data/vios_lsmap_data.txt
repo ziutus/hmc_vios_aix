@@ -1,0 +1,116 @@
+SVSA Physloc Client Partition ID
+--------------- -------------------------------------------- ------------------
+vhost0 U9131.52A.10E47DG-V3-C31 0x00000000
+
+NO VIRTUAL TARGET DEVICE FOUND
+
+ SVSA                 Physloc				Client Partition ID
+-------------        --------------------------------- -----------------------------
+vhost2       	      U9111.520.10004BA-V1-C2           0x00000004
+
+VTD                   vtscsi0
+Status                Available
+LUN                   0x8100000000000000
+Backing device        vtd0-1
+Physloc
+
+VTD                   vtscsi1
+LUN                   0x8200000000000000
+Backing device        vtd0-2
+Physloc
+
+VTD                   vtscsi2
+Status                Available
+LUN                   0x8300000000000000
+Backing device        hdisk2
+Physloc               U787A.001.0397658-P1-T16-L5-L0
+Mirrored              false
+
+SVSA Physloc Client Partition ID
+--------------- -------------------------------------------- ------------------
+vhost3 U9131.52A.10E47DG-V3-C34 0x0000001c
+
+VTD NO VIRTUAL TARGET DEVICE FOUND
+
+SVSA Physloc Client Partition ID
+--------------- -------------------------------------------- ------------------
+vhost4 U9117.MMB.999BCP-V2-C8 0x00000004
+VTD d7f1_lpar1
+Status Available
+LUN 0x8100000000000000
+Backing device hdisk25
+Physloc U78C0.001.DBJ1531-P2-C5-T1-W50060F80164D0B26-L17000000000000
+VTD d7f1n1_lpar1
+Status Available
+LUN 0x8200000000000000
+Backing device hdisk26
+Physloc U78C0.001.DBJ1531-P2-C5-T1-W50060F80164D0B26-L18000000000000
+VTD r7f1_lpar1
+Status Available
+LUN 0x8300000000000000
+Backing device hdisk24
+Physloc U78C0.001.DBJ1531-P2-C5-T1-W50060E80164DFB26-L16000000000000
+VTD r7u1_lpar1
+Status Available
+LUN 0x8400000000000000
+Backing device hdisk27
+Physloc U78C0.001.DBJ1531-P2-C5-T1-W50060E80164DFB26-L19000000000000
+
+
+SVSA Physloc Client Partition ID
+--------------- -------------------------------------------- ------------------
+vhost0 U9131.52A.10E47DG-V3-C31 0x00000000
+
+NO VIRTUAL TARGET DEVICE FOUND
+
+ SVSA                 Physloc				Client Partition ID
+-------------        --------------------------------- -----------------------------
+vhost2       	      U9111.520.10004BA-V1-C2           0x00000004
+
+VTD                   vtscsi0
+Status                Available
+LUN                   0x8100000000000000
+Backing device        vtd0-1
+Physloc
+
+VTD                   vtscsi1
+LUN                   0x8200000000000000
+Backing device        vtd0-2
+Physloc
+
+VTD                   vtscsi2
+Status                Available
+LUN                   0x8300000000000000
+Backing device        hdisk2
+Physloc               U787A.001.0397658-P1-T16-L5-L0
+Mirrored              false
+
+SVSA Physloc Client Partition ID
+--------------- -------------------------------------------- ------------------
+vhost3 U9131.52A.10E47DG-V3-C34 0x0000001c
+
+VTD NO VIRTUAL TARGET DEVICE FOUND
+
+SVSA Physloc Client Partition ID
+--------------- -------------------------------------------- ------------------
+vhost4 U9117.MMB.999BCP-V2-C8 0x00000004
+VTD d7f1_lpar1
+Status Available
+LUN 0x8100000000000000
+Backing device hdisk25
+Physloc U78C0.001.DBJ1531-P2-C5-T1-W50060F80164D0B26-L17000000000000
+VTD d7f1n1_lpar1
+Status Available
+LUN 0x8200000000000000
+Backing device hdisk26
+Physloc U78C0.001.DBJ1531-P2-C5-T1-W50060F80164D0B26-L18000000000000
+VTD r7f1_lpar1
+Status Available
+LUN 0x8300000000000000
+Backing device hdisk24
+Physloc U78C0.001.DBJ1531-P2-C5-T1-W50060E80164DFB26-L16000000000000
+VTD r7u1_lpar1
+Status Available
+LUN 0x8400000000000000
+Backing device hdisk27
+Physloc U78C0.001.DBJ1531-P2-C5-T1-W50060E80164DFB26-L19000000000000

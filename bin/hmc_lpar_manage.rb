@@ -124,15 +124,11 @@ execute.set_ssh(options[:hmc], options[:username], options[:password])
 
 puts "HMC: #{options[:hmc]}"
 
-if lpar_name.size > 0
-#	puts "lpar1:"+lparName.size.to_s
-
-  case action
-    when 'on'
-      action='lparOn'
-    when 'off'
-      action='lparOff'
-  end
+case action
+  when 'on'
+    action='lparOn'
+  when 'off'
+    action='lparOff'
 end
 
 

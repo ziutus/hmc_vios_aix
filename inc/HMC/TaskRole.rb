@@ -13,7 +13,7 @@ class TaskRole
   attr_reader :resources_cec
   attr_reader :resources_HMCConsole
 
-  def initialize string
+  def initialize(string)
 
     if string.length > 0
       self.parse(string)
@@ -41,14 +41,14 @@ class TaskRole
       regexp = /frame:(.*),cec:(.*),HMCConsole:(.*)/
       match = regexp.match(string)
       if (match)
-        puts( "frame to:" + match[1])
+        #puts( "frame to:" + match[1])
         resources_frame = match[1].split("+")
-        puts( "cec   to:" + match[2])
-        puts( "HMCco to:" + match[3])
+        #puts( "cec   to:" + match[2])
+        #puts( "HMCco to:" + match[3])
 
-        pp resources_frame
+        #pp resources_frame
       else
-        puts("can't find regexp")
+        raise "can't find regexp"
       end
 
   end
