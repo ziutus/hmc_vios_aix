@@ -1,7 +1,7 @@
 class TargetcliBase
 
 	def initialize 
-		@command="/usr/bin/targetcli"
+		@command='/usr/bin/targetcli'
 	end
 	
 end	
