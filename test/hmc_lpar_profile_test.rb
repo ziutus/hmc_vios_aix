@@ -384,34 +384,6 @@ class TestHMCLparProfile < Test::Unit::TestCase
 
   end
 
-  # data source: own Power5
-  def test_compare_profiles_1
-
-      profile_string1 = 'name=normal,lpar_name=nim1,lpar_id=5,lpar_env=aixlinux,all_resources=0,min_mem=2048,desired_mem=6144,max_mem=10240,"virtual_scsi_adapters=2/client/2/vios1/2/1,3/client/3/vios2/2/1"'
-      profile_string2 = 'name=minimal,lpar_name=nim1,lpar_id=5,lpar_env=aixlinux,all_resources=0,min_mem=1024,desired_mem=2048,max_mem=3096,"virtual_scsi_adapters=5/client/2/vios2/2/1,2/client/3/vios1/2/1"'
-
-      profile1 = Lpar_profile.new
-      profile1.lssyscfgProfDecode(profile_string1)
-
-      profile2 = Lpar_profile.new
-      profile2.lssyscfgProfDecode(profile_string2)
-
-			diff   = profile1.diff_show(profile2, 'all', 'name')
-			diff
-
-      assert_equal(2048, Integer(diff['min_mem']['normal']))
-			assert_equal(1024, Integer(diff['min_mem']['minimal']))
-
-      assert_equal(6144, Integer(diff['desired_mem']['normal']))
-      assert_equal(2048, Integer(diff['desired_mem']['minimal']))
-
-      assert_equal(10240, Integer(diff['max_mem']['normal']))
-      assert_equal(3096, Integer(diff['max_mem']['minimal']))
-
-      assert_equal('2/client/2/vios1/2/1,3/client/3/vios2/2/1', diff['virtual_scsi_adapters']['normal'])
-      assert_equal('5/client/2/vios2/2/1,2/client/3/vios1/2/1', diff['virtual_scsi_adapters']['minimal'])
-
-  end
 
   #source of data, own Power5 frame
   # noinspection RubyResolve
@@ -470,6 +442,54 @@ class TestHMCLparProfile < Test::Unit::TestCase
     assert_equal('0',    profile.redundant_err_path_reporting)
 
   end
+
+  # source of data (a bit modified): https://sort.veritas.com/public/documents/sfha/6.1/aix/productguides/html/sfhas_virtualization/ch08s05.htm
+	def test_profile_diff
+      string1 = 'name=normal,lpar_name=lpar05,lpar_id=15,lpar_env=aixlinux,all_resources=0,min_mem=512,desired_mem=2048,max_mem=4096,min_num_huge_pages=null,desired_num_huge_pages=null,max_num_huge_pages=null,mem_mode=ded,mem_expansion=0.0,hpt_ratio=1:64,proc_mode=ded,min_procs=1,desired_procs=1,max_procs=1,sharing_mode=share_idle_procs,affinity_group_id=none,io_slots=none,lpar_io_pool_ids=none,max_virtual_slots=1000,"virtual_serial_adapters=0/server/1/any//any/1,1/server/1/any//any/1","virtual_scsi_adapters=304/client/2/vio_server1/4/1,404/client/3/vio_server2/6/1","virtual_eth_adapters=10/0/1//0/0/ETHERNET0//all/none,11/0/97//0/0/ETHERNET0//all/none,12/0/98//0/0/ETHERNET0//all/none",vtpm_adapters=none,"virtual_fc_adapters=""504/client/2/vio_server1/8/c050760431670010,c050760431670011/0"",""604/client/3/vio_server2/5/c050760431670012,c050760431670013/0""",hca_adapters=none,boot_mode=norm,conn_monitoring=1,auto_start=0,power_ctrl_lpar_ids=none,work_group_id=none,redundant_err_path_reporting=null,bsr_arrays=0,lhea_logical_ports=none,lhea_capabilities=none,lpar_proc_compat_mode=default,electronic_err_reporting=null'
+      string2 = 'name=backup,lpar_name=lpar05,lpar_id=15,lpar_env=aixlinux,all_resources=0,min_mem=1024,desired_mem=2048,max_mem=4096,min_num_huge_pages=null,desired_num_huge_pages=null,max_num_huge_pages=null,mem_mode=ded,mem_expansion=0.0,hpt_ratio=1:64,proc_mode=ded,min_procs=1,desired_procs=1,max_procs=1,sharing_mode=share_idle_procs,affinity_group_id=none,io_slots=none,lpar_io_pool_ids=none,max_virtual_slots=1000,"virtual_serial_adapters=0/server/1/any//any/1,1/server/1/any//any/1","virtual_scsi_adapters=304/client/2/vio_server1/4/1,404/client/3/vio_server2/6/1","virtual_eth_adapters=10/0/1//0/0/ETHERNET0//all/none,11/0/97//0/0/ETHERNET0//all/none,12/0/98//0/0/ETHERNET0//all/none",vtpm_adapters=none,"virtual_fc_adapters=""504/client/2/vio_server1/8/c050760431670008,c050760431670009/1"",""604/client/4/vio_server2/5/c050760431670012,c050760431670013/1""",hca_adapters=none,boot_mode=norm,conn_monitoring=1,auto_start=0,power_ctrl_lpar_ids=none,work_group_id=none,redundant_err_path_reporting=null,bsr_arrays=0,lhea_logical_ports=none,lhea_capabilities=none,lpar_proc_compat_mode=default,electronic_err_reporting=null'
+
+      profile1 = Lpar_profile.new()
+      profile1.lssyscfgProfDecode(string1)
+
+      profile2 = Lpar_profile.new()
+      profile2.lssyscfgProfDecode(string2)
+
+      assert_equal(string1, profile1.to_s)
+      assert_equal(string2, profile2.to_s)
+
+      diff = profile1.diff_show(profile2, 'all',  'name')
+
+      diff
+		end
+
+  # data source: own Power5
+  # def test_compare_profiles_1
+  #
+  #   profile_string1 = 'name=normal,lpar_name=nim1,lpar_id=5,lpar_env=aixlinux,all_resources=0,min_mem=2048,desired_mem=6144,max_mem=10240,"virtual_scsi_adapters=2/client/2/vios1/2/1,3/client/3/vios2/2/1"'
+  #   profile_string2 = 'name=minimal,lpar_name=nim1,lpar_id=5,lpar_env=aixlinux,all_resources=0,min_mem=1024,desired_mem=2048,max_mem=3096,"virtual_scsi_adapters=5/client/2/vios2/2/1,2/client/3/vios1/2/1"'
+  #
+  #   profile1 = Lpar_profile.new
+  #   profile1.lssyscfgProfDecode(profile_string1)
+  #
+  #   profile2 = Lpar_profile.new
+  #   profile2.lssyscfgProfDecode(profile_string2)
+  #
+  #   diff   = profile1.diff_show(profile2, 'all', 'name')
+  #   diff
+  #
+  #   assert_equal(2048, Integer(diff['min_mem']['normal']))
+  #   assert_equal(1024, Integer(diff['min_mem']['minimal']))
+  #
+  #   assert_equal(6144, Integer(diff['desired_mem']['normal']))
+  #   assert_equal(2048, Integer(diff['desired_mem']['minimal']))
+  #
+  #   assert_equal(10240, Integer(diff['max_mem']['normal']))
+  #   assert_equal(3096, Integer(diff['max_mem']['minimal']))
+  #
+  #   assert_equal('2/client/2/vios1/2/1,3/client/3/vios2/2/1', diff['virtual_scsi_adapters']['normal'])
+  #   assert_equal('5/client/2/vios2/2/1,2/client/3/vios1/2/1', diff['virtual_scsi_adapters']['minimal'])
+  #
+  # end
 
 
 end

@@ -6,8 +6,8 @@ require 'test/unit'
 require 'pp'
 
 class TestVirtualFCAdapter < Test::Unit::TestCase
- 
-	#example data: http://www-01.ibm.com/support/docview.wss?uid=nas8N1011009
+
+  #example data: http://www-01.ibm.com/support/docview.wss?uid=nas8N1011009
 	def test_base
 		adapter = VirtualFCAdapter.new
 		
@@ -68,5 +68,64 @@ class TestVirtualFCAdapter < Test::Unit::TestCase
 #    assert_equal('c0507602f9ac000b', adapter.wwpn2)
   end
 
+
+  ###
+  #    Test for compare function
+  ###
+
+  # data source (a bit modified):     #https://www.ibm.com/developerworks/community/forums/html/threadTopic?id=77777777-0000-0000-0000-000014412555
+  def test_compare_ClientorServer
+    adapter1 = VirtualFCAdapter.new('21/client/10/bt11/21//1')
+    adapter2 = VirtualFCAdapter.new('21/server/10/bt11/21//1')
+
+    diff = adapter1.diff(adapter2, "normal1", "normal2")
+
+    assert_equal(1, diff.size)
+    assert_equal("in profile normal1 clientOrServer is setup to client but in profile normal2 to server ", diff[0])
+  end
+
+  # data source (a bit modified):     #https://www.ibm.com/developerworks/community/forums/html/threadTopic?id=77777777-0000-0000-0000-000014412555
+  def test_compare_RemoteLparID
+    adapter1 = VirtualFCAdapter.new('21/server/10/bt11/21//1')
+    adapter2 = VirtualFCAdapter.new('21/server/11/bt11/21//1')
+
+    diff = adapter1.diff(adapter2, "normal1", "normal2")
+
+    assert_equal(1, diff.size)
+    assert_equal("in profile normal1 remoteLparID is setup to 10 but in profile normal2 to 11 ", diff[0])
+  end
+
+  # data source (a bit modified):     #https://www.ibm.com/developerworks/community/forums/html/threadTopic?id=77777777-0000-0000-0000-000014412555
+  def test_compare_RemoteLparName
+    adapter1 = VirtualFCAdapter.new('21/server/11/bt11/21//1')
+    adapter2 = VirtualFCAdapter.new('21/server/11/bt12/21//1')
+
+    diff = adapter1.diff(adapter2, "normal1", "normal2")
+
+    assert_equal(1, diff.size)
+    assert_equal("in profile normal1 remoteLparName is setup to bt11 but in profile normal2 to bt12 ", diff[0])
+  end
+
+  # data source (a bit modified):     #https://www.ibm.com/developerworks/community/forums/html/threadTopic?id=77777777-0000-0000-0000-000014412555
+  def test_compare_RemoteSlotNumber
+    adapter1 = VirtualFCAdapter.new('21/server/11/bt11/21//1')
+    adapter2 = VirtualFCAdapter.new('21/server/11/bt11/22//1')
+
+    diff = adapter1.diff(adapter2, "normal1", "normal2")
+
+    assert_equal(1, diff.size)
+    assert_equal("in profile normal1 RemoteSlotNumber is setup to 21 but in profile normal2 to 22 ", diff[0])
+  end
+
+  # data source:     #https://www.ibm.com/developerworks/community/forums/html/threadTopic?id=77777777-0000-0000-0000-000014412555
+  def test_compare_isRequired
+    adapter1 = VirtualFCAdapter.new('21/server/10/bt11/21//0')
+    adapter2 = VirtualFCAdapter.new('21/server/10/bt11/21//1')
+
+    diff = adapter1.diff(adapter2, "normal1", "normal2")
+
+    assert_equal(1, diff.size)
+    assert_equal("in profile normal1 isRequired is setup to 0 but in profile normal2 to 1 ", diff[0])
+  end
 
 end

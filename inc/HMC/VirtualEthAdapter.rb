@@ -137,5 +137,82 @@ class VirtualEthAdapter
 		self.to_s == another_adapter.to_s
 	end
 
+	def diff(other_adapter, profile1, profile2)
+
+		diff = Hash.new
+
+		if @isIEEE != other_adapter.isIEEE
+			diff_entry = Hash.new
+			diff_entry[profile1] = "isIEEE is setup to #{@isIEEE}"
+			diff_entry[profile2] = "isIEEE is setup to #{other_adapter.isIEEE}"
+			diff['isIEEE'] = diff_entry
+		end
+
+    if @portVlanID != other_adapter.portVlanID
+      diff_entry = Hash.new
+      diff_entry[profile1] = "portVlanID is setup to #{@portVlanID}"
+      diff_entry[profile2] = "portVlanID is setup to #{other_adapter.portVlanID}"
+      diff['portVlanID'] = diff_entry
+    end
+
+    if @additionalVlanIDs != other_adapter.additionalVlanIDs
+      diff_entry = Hash.new
+      diff_entry[profile1] = "additionalVlanIDs is setup to #{@additionalVlanIDs}"
+      diff_entry[profile2] = "additionalVlanIDs is setup to #{other_adapter.additionalVlanIDs}"
+      diff['additionalVlanIDs'] = diff_entry
+    end
+
+    if @trunkPriority != other_adapter.trunkPriority
+      diff_entry = Hash.new
+      diff_entry[profile1] = "trunkPriority is setup to #{@trunkPriority}"
+      diff_entry[profile2] = "trunkPriority is setup to #{other_adapter.trunkPriority}"
+      diff['trunkPriority'] = diff_entry
+    end
+
+    if @isTrunk != other_adapter.isTrunk
+      diff_entry = Hash.new
+      diff_entry[profile1] = "isTrunk is setup to #{@isTrunk}"
+      diff_entry[profile2] = "isTrunk is setup to #{other_adapter.isTrunk}"
+      diff['trunkPriority'] = diff_entry
+    end
+
+    if @isRequired != other_adapter.isRequired
+      diff_entry = Hash.new
+      diff_entry[profile1] = "isRequired is setup to #{@isRequired}"
+      diff_entry[profile2] = "isRequired is setup to #{other_adapter.isRequired}"
+      diff["isRequired"] = diff_entry
+    end
+
+    if @virtualSwitch != other_adapter.virtualSwitch
+      diff_entry = Hash.new
+      diff_entry[profile1] = "virtualSwitch is setup to #{@virtualSwitch}"
+      diff_entry[profile2] = "virtualSwitch is setup to #{other_adapter.virtualSwitch}"
+      diff["virtualSwitch"] = diff_entry
+    end
+
+    if @macAddress != other_adapter.macAddress
+      diff_entry = Hash.new
+      diff_entry[profile1] = "macAddress is setup to #{@macAddress}"
+      diff_entry[profile2] = "macAddress is setup to #{other_adapter.macAddress}"
+      diff["macAddress"] = diff_entry
+    end
+
+    if @allowedOsMacAddresses != other_adapter.allowedOsMacAddresses
+      diff_entry = Hash.new
+      diff_entry[profile1] = "allowedOsMacAddresses is setup to #{@allowedOsMacAddresses}"
+      diff_entry[profile2] = "allowedOsMacAddresses is setup to #{other_adapter.allowedOsMacAddresses}"
+      diff["macAddress"] = diff_entry
+    end
+
+    if @qosPiority != other_adapter.qosPiority
+      diff_entry = Hash.new
+      diff_entry[profile1] = "qosPiority is setup to #{@qosPiority}"
+      diff_entry[profile2] = "qosPiority is setup to #{other_adapter.qosPiority}"
+      diff["qosPiority"] = diff_entry
+    end
+
+		diff
+	end
+
 
 end
