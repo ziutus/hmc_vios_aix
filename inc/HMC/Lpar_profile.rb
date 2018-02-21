@@ -411,16 +411,16 @@ class Lpar_profile
     compare = columns_to_compare.split(',')
 
     @_variables.keys.each { |type|
-
-      if type == 'string_virtual_raw'
-        diffs.merge!(self.virtual_slots.diff(another_profile.virtual_slots))
-        next
-      end
-
       @_variables[type].each { |name|
 
         next if ignore.include?(name)
         next if columns_to_compare != 'all' and ! compare.include?(name)
+
+        if type == 'string_virtual_raw'
+          diffs.merge!(self.virtual_slots.diff(another_profile.virtual_slots, type))
+          next
+        end
+
 
         val_self    = self.instance_variable_get("@#{name}")
         val_profile = another_profile.instance_variable_get("@#{name}")
