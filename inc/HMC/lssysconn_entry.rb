@@ -74,6 +74,7 @@ class Lssysconn_entry
     sp = 'primary|secondary|unavailable'
     ip = '\d+\.\d+\.\d+\.\d+'
     tmsn = '\w{4}\-\w{3}\*\w{7,8}|unavailable'
+    sp_phys_loc='[\w\.\-]+|unavailable'
 
 
     #resource_type=sys,type_model_serial_num=9117-570*100729E,sp=unavailable,ipaddr=10.0.0.247,alt_ipaddr=unavailable,state=No Connection,connection_error_code=Connecting 0000-0000-00000000
@@ -88,10 +89,7 @@ class Lssysconn_entry
 
       @type, @model, @serial_num = type_model_serial_num_to_array(@type_model_serial_num)
 
-                  #resource_type=sys, type_model_serial_num=unavailable,sp=unavailable,sp_phys_loc=unavailable,ipaddr=128.200.91.5,alt_ipaddr=unavailable,state=No Connection,connection_error_code=Connecting 0000-0000-00000000
-      #resource_type=sys,  type_model_serial_num=unavailable,                         sp=unavailable,                    sp_phys_loc=unavailable,  ipaddr=128.200.91.5,         alt_ipaddr=unavailable,  state=No Connection,                        connection_error_code=Connecting 0000-0000-00000000
-                  #resource_type=sys,  type_model_serial_num=9131-52A*6535CCG,                    sp=unavailable,                    sp_phys_loc=unavailable,  ipaddr=192.168.200.39,       alt_ipaddr=unavailable,  state=No Connection,                        connection_error_code=Connecting  0000-0000-00000000
-    elsif match = /resource_type=(sys),type_model_serial_num=(#{tmsn}),sp=(#{sp}),sp_phys_loc=(unavailable),ipaddr=(#{ip}),alt_ipaddr=(unavailable),state=(#{states}),connection_error_code=(#{errors})/i.match(string)
+    elsif match = /resource_type=(sys),type_model_serial_num=(#{tmsn}),sp=(#{sp}),sp_phys_loc=(#{sp_phys_loc}),ipaddr=(#{ip}),alt_ipaddr=(unavailable),state=(#{states}),connection_error_code=(#{errors})/i.match(string)
       @resource_type = match[1]
       @type_model_serial_num = match[2]
       @sp = match[3]
@@ -103,7 +101,7 @@ class Lssysconn_entry
 
       @type, @model, @serial_num = type_model_serial_num_to_array(@type_model_serial_num)
 
-    elsif match = /resource_type=(sys),type_model_serial_num=(#{tmsn}),sp=(#{sp}),sp_phys_loc=(unavailable),ipaddr=(#{ip}),alt_ipaddr=(unavailable),state=(#{states})/i.match(string)
+    elsif match = /resource_type=(sys),type_model_serial_num=(#{tmsn}),sp=(#{sp}),sp_phys_loc=(#{sp_phys_loc}),ipaddr=(#{ip}),alt_ipaddr=(unavailable),state=(#{states})/i.match(string)
       @resource_type = match[1]
       @type_model_serial_num = match[2]
       @sp = match[3]

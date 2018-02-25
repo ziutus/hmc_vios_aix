@@ -215,5 +215,20 @@ class HmcLssysconnTest < Test::Unit::TestCase
     assert_equal('Version mismatch 0404-0007-00000001', entry.connection_error_code)
   end
 
+  # https://www.ibm.com/developerworks/community/forums/atom/download/hmc%20lssysconn%20output.docx?nodeId=170cf43e-2872-41d9-a90a-254f8339afd0
+  #
+  def test_sp_phys_loc
+    string ='resource_type=sys,type_model_serial_num=8286-42A*218CA0V,sp=primary,sp_phys_loc=U78C9.001.WZS05NY-P1,ipaddr=10.128.0.23,alt_ipaddr=unavailable,state=Connected'
+    entry = Lssysconn_entry.new(string)
+
+    assert_equal('sys', entry.resource_type)
+    assert_equal('8286-42A*218CA0V', entry.type_model_serial_num)
+    assert_equal('primary', entry.sp)
+    assert_equal('U78C9.001.WZS05NY-P1', entry.sp_phys_loc)
+    assert_equal('10.128.0.23', entry.ipaddr)
+    assert_equal('unavailable', entry.alt_ipaddr)
+    assert_equal('Connected', entry.state)
+  end
+
 
 end
