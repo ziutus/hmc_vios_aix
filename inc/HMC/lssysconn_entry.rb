@@ -159,7 +159,7 @@ class Lssysconn_entry
     end
   end
 
-  def hmc_expected_add(sring)
+  def hmc_expected_add(string)
     string.split(',').each { |hmc|
       @hmc_expected.push(hmc)
     }
