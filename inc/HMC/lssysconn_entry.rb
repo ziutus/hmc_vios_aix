@@ -23,6 +23,8 @@ class Lssysconn_entry
   attr_accessor :hmc_real
   attr_accessor :hmc_expected
 
+  attr_accessor :name
+  attr_accessor :owner
 
   def initialize(string = nil)
 
@@ -37,8 +39,30 @@ class Lssysconn_entry
     @hmc_real = nil
     @hmc_expected = Array.new()
 
-    @_states = [ 'pending authentication - password updates required', 'No Connection', 'Failed Authentication', 'Connecting', 'Connected', 'Version Mismatch' ]
-    @_errors = [ 'Incorrect password \w{4}-\w{4}-\w{8}', 'Connecting\s+\w{4}-\w{4}-\w{8}', 'Connection not allowed\s+\w{4}-\w{4}-\w{8}', 'Already connected\s+\w{4}-\w{4}-\w{8}', 'Firmware Password locked\s+\w{4}-\w{4}-\w{8}' ]
+    @owner = nil # in case of type 'sys', owner is fame name
+
+    # can be taken from commands:
+    # lssyscfg -r sys   -F name,serial_num
+    # lssyscfg -r frame -F name,serial_num
+    @name = nil
+
+    @_states = [
+        'pending authentication - password updates required',
+        'No Connection',
+        'Failed Authentication',
+        'Connecting',
+        'Connected',
+        'Version Mismatch'
+    ]
+
+    @_errors = [
+        'Incorrect password \w{4}-\w{4}-\w{8}',
+        'Connecting\s+\w{4}-\w{4}-\w{8}',
+        'Connection not allowed\s+\w{4}-\w{4}-\w{8}',
+        'Already connected\s+\w{4}-\w{4}-\w{8}',
+        'Firmware Password locked\s+\w{4}-\w{4}-\w{8}',
+        'Version\smismatch\s+\w{4}-\w{4}-\w{8}'
+    ]
 
     self.parse(string) unless string.nil?
   end
@@ -101,6 +125,29 @@ class Lssysconn_entry
 
       @type, @model, @serial_num = type_model_serial_num_to_array(@type_model_serial_num)
 
+    elsif match = /resource_type=(frame),type_model_serial_num=(#{tmsn}),side=(a|b),ipaddr=(#{ip}),alt_ipaddr=(unavailable),state=(#{states})/i.match(string)
+
+      @resource_type = match[1]
+      @type_model_serial_num = match[2]
+      @side = match[3]
+      @ipaddr = match[4]
+      @alt_ipaddr  = match[5]
+      @state = match[6]
+
+      @type, @model, @serial_num = type_model_serial_num_to_array(@type_model_serial_num)
+
+    elsif match = /resource_type=(frame),type_model_serial_num=(#{tmsn}),side=(unavailable),ipaddr=(#{ip}),alt_ipaddr=(unavailable),state=(#{states}),connection_error_code=(#{errors})/i.match(string)
+
+      @resource_type = match[1]
+      @type_model_serial_num = match[2]
+      @side = match[3]
+      @ipaddr = match[4]
+      @alt_ipaddr  = match[5]
+      @state = match[6]
+      @connection_error_code = match[7]
+
+      @type, @model, @serial_num = type_model_serial_num_to_array(@type_model_serial_num)
+
     else
       pp string
       raise 'wrong string to parse'
@@ -113,4 +160,11 @@ class Lssysconn_entry
         return [match[1], match[2], match[3]]
     end
   end
+
+  def hmc_expected_add(sring)
+    string.split(',').each { |hmc|
+      @hmc_expected.push(hmc)
+    }
+  end
 end
+
