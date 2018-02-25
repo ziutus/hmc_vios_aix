@@ -459,37 +459,82 @@ class TestHMCLparProfile < Test::Unit::TestCase
 
       diff = profile1.diff_show(profile2, 'all',  'name')
 
-      diff
-		end
+      assert_equal(512,  diff['min_mem']['normal'])
+      assert_equal(1024, diff['min_mem']['backup'])
+
+      assert_equal('wwpn1 is setup to c050760431670010', diff['VirtualSlot 504 wwpn1']['normal'])
+      assert_equal('wwpn1 is setup to c050760431670008', diff['VirtualSlot 504 wwpn1']['backup'])
+
+      assert_equal('wwpn2 is setup to c050760431670011', diff['VirtualSlot 504 wwpn2']['normal'])
+      assert_equal('wwpn2 is setup to c050760431670009', diff['VirtualSlot 504 wwpn2']['backup'])
+
+      assert_equal('isRequired is setup to 0', diff['VirtualSlot 504 isRequired']['normal'])
+      assert_equal('isRequired is setup to 1', diff['VirtualSlot 504 isRequired']['backup'])
+
+      assert_equal('remoteLparID is setup to 3', diff['VirtualSlot 604 remoteLparID']['normal'])
+      assert_equal('remoteLparID is setup to 4', diff['VirtualSlot 604 remoteLparID']['backup'])
+
+      assert_equal('isRequired is setup to 0', diff['VirtualSlot 604 isRequired']['normal'])
+      assert_equal('isRequired is setup to 1', diff['VirtualSlot 604 isRequired']['backup'])
+
+  end
 
   # data source: own Power5
-  # def test_compare_profiles_1
-  #
-  #   profile_string1 = 'name=normal,lpar_name=nim1,lpar_id=5,lpar_env=aixlinux,all_resources=0,min_mem=2048,desired_mem=6144,max_mem=10240,"virtual_scsi_adapters=2/client/2/vios1/2/1,3/client/3/vios2/2/1"'
-  #   profile_string2 = 'name=minimal,lpar_name=nim1,lpar_id=5,lpar_env=aixlinux,all_resources=0,min_mem=1024,desired_mem=2048,max_mem=3096,"virtual_scsi_adapters=5/client/2/vios2/2/1,2/client/3/vios1/2/1"'
-  #
-  #   profile1 = Lpar_profile.new
-  #   profile1.lssyscfgProfDecode(profile_string1)
-  #
-  #   profile2 = Lpar_profile.new
-  #   profile2.lssyscfgProfDecode(profile_string2)
-  #
-  #   diff   = profile1.diff_show(profile2, 'all', 'name')
-  #   diff
-  #
-  #   assert_equal(2048, Integer(diff['min_mem']['normal']))
-  #   assert_equal(1024, Integer(diff['min_mem']['minimal']))
-  #
-  #   assert_equal(6144, Integer(diff['desired_mem']['normal']))
-  #   assert_equal(2048, Integer(diff['desired_mem']['minimal']))
-  #
-  #   assert_equal(10240, Integer(diff['max_mem']['normal']))
-  #   assert_equal(3096, Integer(diff['max_mem']['minimal']))
-  #
-  #   assert_equal('2/client/2/vios1/2/1,3/client/3/vios2/2/1', diff['virtual_scsi_adapters']['normal'])
-  #   assert_equal('5/client/2/vios2/2/1,2/client/3/vios1/2/1', diff['virtual_scsi_adapters']['minimal'])
-  #
-  # end
+  def test_compare_profiles_1
+
+    profile_string1 = 'name=normal,lpar_name=nim1,lpar_id=5,lpar_env=aixlinux,all_resources=0,min_mem=2048,desired_mem=6144,max_mem=10240,"virtual_scsi_adapters=2/client/2/vios1/2/1,3/client/3/vios2/2/1"'
+    profile_string2 = 'name=minimal,lpar_name=nim1,lpar_id=5,lpar_env=aixlinux,all_resources=0,min_mem=1024,desired_mem=2048,max_mem=3096,"virtual_scsi_adapters=5/client/2/vios2/2/1,2/client/3/vios1/2/1"'
+
+    profile1 = Lpar_profile.new
+    profile1.lssyscfgProfDecode(profile_string1)
+
+    profile2 = Lpar_profile.new
+    profile2.lssyscfgProfDecode(profile_string2)
+
+    diff   = profile1.diff_show(profile2, 'all', 'name')
+
+    assert_equal(6, diff.count)
+
+    assert_equal(2048, Integer(diff['min_mem']['normal']))
+    assert_equal(1024, Integer(diff['min_mem']['minimal']))
+
+    assert_equal(6144, Integer(diff['desired_mem']['normal']))
+    assert_equal(2048, Integer(diff['desired_mem']['minimal']))
+
+    assert_equal(10240, Integer(diff['max_mem']['normal']))
+    assert_equal(3096, Integer(diff['max_mem']['minimal']))
+
+    assert_equal('remoteLparID is setup to 2', diff['VirtualSlot 2 remoteLparID']['normal'])
+    assert_equal('remoteLparID is setup to 3', diff['VirtualSlot 2 remoteLparID']['minimal'])
+
+    assert_equal('A profile use it: VirtualScsiAdapter 3/client/3/vios2/2/1', diff['VirtualSlot 3']['normal'])
+    assert_equal("A profile doesn't use slot",                                diff['VirtualSlot 3']['minimal'])
+
+    assert_equal("A profile doesn't use slot",                                diff['VirtualSlot 5']['normal'])
+    assert_equal('A profile use it: VirtualScsiAdapter 5/client/2/vios2/2/1', diff['VirtualSlot 5']['minimal'])
+  end
+
+  def test_compare_profiles_only_some_params
+
+    profile_string1 = 'name=normal,lpar_name=nim1,lpar_id=5,lpar_env=aixlinux,all_resources=0,min_mem=2048,desired_mem=6144,max_mem=10240,"virtual_scsi_adapters=2/client/2/vios1/2/1,3/client/3/vios2/2/1"'
+    profile_string2 = 'name=normal,lpar_name=nim2,lpar_id=6,lpar_env=aixlinux,all_resources=0,min_mem=1024,desired_mem=2048,max_mem=3096,"virtual_scsi_adapters=5/client/2/vios2/2/1,2/client/3/vios1/2/1"'
+
+    profile1 = Lpar_profile.new
+    profile1.lssyscfgProfDecode(profile_string1)
+
+    profile2 = Lpar_profile.new
+    profile2.lssyscfgProfDecode(profile_string2)
+
+    # diff   = profile1.diff_show(profile2, 'min_mem,desired_mem', 'none', 'lpar_nim1', 'lpar_nim2')
+    #
+    # assert_equal(2, diff.count)
+    # assert_equal(2048, Integer(diff['min_mem']['normal']))
+    # assert_equal(1024, Integer(diff['min_mem']['minimal']))
+    #
+    # assert_equal(6144, Integer(diff['desired_mem']['normal']))
+    # assert_equal(2048, Integer(diff['desired_mem']['minimal']))
+
+  end
 
 
 end

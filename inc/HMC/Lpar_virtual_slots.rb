@@ -226,7 +226,11 @@ class Lpar_virtual_slots
 
           #let's check if slot are the same type (ethernet, fcs etc)
           if self_slot.class.name != other_slot.class.name
-            diff.push("in profile #{self.profile_name} #{i} is type #{self_slot.class.name} but in #{other_lpar_virtual_slots.profile_name} is #{other_slot.class.name}")
+            entry = Hash.new
+            entry[self_profile_name] =  "The slot type is #{self_slot.class.name}"
+            entry[other_profile_name] = "The slot type is #{other_slot.class.name}"
+            diff["VirtualSlot #{i}"] = entry
+
             next
           end
 
@@ -247,6 +251,10 @@ class Lpar_virtual_slots
 
         elsif self.virtual_slots.key?(i) and ! other_lpar_virtual_slots.virtual_slots.key?(i)
 
+          self_slot =  self.virtual_slots[i]
+          self_profile_name = self.profile_name
+          other_profile_name = other_lpar_virtual_slots.profile_name
+
           # let's check type of slots
           if type == 'virtual_serial_adapters'
             next unless self_slot.class.name == 'VirtualSerialAdapter'
@@ -260,10 +268,14 @@ class Lpar_virtual_slots
 
 
           entry = Hash.new
-          entry[self_profile_name] =   "use it: " + self_slot.to_s
-          entry[other_profile_name] = "doesn't use slot"
+          entry[self_profile_name]  = "A profile use it: #{self_slot.class.name} #{self_slot.to_s}"
+          entry[other_profile_name] = "A profile doesn't use slot"
           diff["VirtualSlot #{i}"] = entry
         elsif  ! self.virtual_slots.key?(i) and other_lpar_virtual_slots.virtual_slots.key?(i)
+
+          other_slot = other_lpar_virtual_slots.virtual_slots[i]
+          self_profile_name = self.profile_name
+          other_profile_name = other_lpar_virtual_slots.profile_name
 
           # let's check type of slots
           if type == 'virtual_serial_adapters'
@@ -277,8 +289,9 @@ class Lpar_virtual_slots
           end
 
           entry = Hash.new
-          entry[self_profile_name] =  "doesn't use slot"
-          entry[other_profile_name] = "use it: " + other_slot.to_s
+          entry[self_profile_name]  = "A profile doesn't use slot"
+          entry[other_profile_name] = 'A profile use it: ' + other_slot.class.name + ' ' + other_slot.to_s
+
           diff["VirtualSlot #{i}"] = entry
         end
     end

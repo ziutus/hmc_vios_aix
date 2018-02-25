@@ -421,7 +421,6 @@ class Lpar_profile
           next
         end
 
-
         val_self    = self.instance_variable_get("@#{name}")
         val_profile = another_profile.instance_variable_get("@#{name}")
 
