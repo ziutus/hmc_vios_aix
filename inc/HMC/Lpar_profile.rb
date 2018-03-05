@@ -101,7 +101,7 @@ class Lpar_profile
 
   attr_reader   :virtual_slots
 
-	def initialize(lpar_id='', name='normal')
+	def initialize(lpar_id='', profile_name='normal')
 
     string = ''
 
@@ -114,7 +114,7 @@ class Lpar_profile
 
 
     @lpar_id = lpar_id
-    @name    = name
+    @name    = profile_name
 
     @_variables = Hash.new
     @_variables['variables_int'] = %w(lpar_id min_mem desired_mem max_mem all_resources min_procs desired_procs max_procs max_virtual_slots
@@ -170,6 +170,7 @@ class Lpar_profile
 
 
     @virtual_slots = Lpar_virtual_slots.new
+    @virtual_slots.profile_name=@name
 
     if string.length > 0
       self.parse(string)
@@ -366,6 +367,8 @@ class Lpar_profile
       @_parametr_order.push(name)
     }
 
+    @virtual_slots.profile_name=@name
+
     if self.to_s != string
       puts 'Incoming string:'
       pp string
@@ -414,12 +417,12 @@ class Lpar_profile
         next if columns_to_compare != 'all' and ! compare.include?(name)
 
         if type == 'string_virtual_raw'
-          val_self    = self.virtual_slots.adapters_to_s(name)
-          val_profile = another_profile.virtual_slots.adapters_to_s(name)
-        else
-          val_self    = self.instance_variable_get("@#{name}")
-          val_profile = another_profile.instance_variable_get("@#{name}")
+          diffs.merge!(self.virtual_slots.diff(another_profile.virtual_slots, type))
+          next
         end
+
+        val_self    = self.instance_variable_get("@#{name}")
+        val_profile = another_profile.instance_variable_get("@#{name}")
 
         if val_self != val_profile
           val_self    = 'nil' if val_self.nil?
@@ -431,6 +434,7 @@ class Lpar_profile
 
           diffs[name] =  difference
         end
+
       }
     }
 

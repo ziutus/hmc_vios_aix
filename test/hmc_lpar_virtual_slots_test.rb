@@ -7,18 +7,77 @@ require 'pp'
 
 class Test_Lpar_virtual_slots < Test::Unit::TestCase
 
-  # Called before every test method runs. Can be used
-  # to set up fixture information.
-  def setup
-    # Do nothing
+  def test_compare_virtual_slots_tables_fc_different
+    slots1 = Lpar_virtual_slots.new(30)
+    slots1.profile_name = 'normal_1'
+    slots1.virtual_fc_adapters_raw = '21/server/10/bt11/21//0'
+
+    slots2 = Lpar_virtual_slots.new(31)
+    slots2.profile_name = 'normal_2'
+    slots2.virtual_fc_adapters_raw = '21/server/10/bt11/21//1'
+
+    diff = slots1.diff(slots2, 'virtual_fc_adapters')
+
+    assert_equal(1, diff.size)
   end
 
-  # Called after every test method runs. Can be used to tear
-  # down fixture information.
 
-  def teardown
-    # Do nothing
+  def test_compare_virtual_slots_tables_different_type_of_slots
+    slots1 = Lpar_virtual_slots.new(30)
+    slots1.profile_name = 'normal_1'
+    slots1.virtual_fc_adapters_raw = '21/server/10/bt11/21//0'
+
+    slots2 = Lpar_virtual_slots.new(30)
+    slots2.profile_name = 'normal_2'
+
+    vent1 = VirtualEthAdapter.new('21/0/1//0/0')
+    slots2.virtual_adapter_add(vent1)
+
+    diff = slots1.diff(slots2, 'virtual_eth_adapters')
+
+    assert_equal(1, diff.size)
+    assert_equal('The slot type is VirtualFCAdapter',  diff["VirtualSlot 21"]["normal_1"])
+    assert_equal('The slot type is VirtualEthAdapter', diff["VirtualSlot 21"]["normal_2"])
+
   end
+
+
+  def test_compare_virtual_slots_tables_different_slots
+    slots1 = Lpar_virtual_slots.new(32)
+    slots1.profile_name = 'normal_1'
+    slots1.virtual_fc_adapters_raw = '21/server/10/bt11/21//0'
+
+    slots2 = Lpar_virtual_slots.new(31)
+    slots2.profile_name = 'normal_2'
+    slots2.virtual_fc_adapters_raw = '22/server/10/bt11/22//0'
+
+    diff = slots1.diff(slots2, 'virtual_fc_adapters')
+
+    assert_equal(2, diff.size)
+    assert_equal('A profile use it: VirtualFCAdapter 21/server/10/bt11/21//0', diff["VirtualSlot 21"]["normal_1"])
+    assert_equal("A profile doesn't use slot", diff["VirtualSlot 21"]["normal_2"])
+
+    assert_equal("A profile doesn't use slot", diff["VirtualSlot 22"]["normal_1"])
+    assert_equal('A profile use it: VirtualFCAdapter 22/server/10/bt11/22//0', diff["VirtualSlot 22"]["normal_2"])
+  end
+
+  def test_compare_virtual_slots_tables_fcs
+    slots1 = Lpar_virtual_slots.new(30)
+    slots1.profile_name = 'normal_1'
+    slots1.virtual_fc_adapters_raw = '21/server/10/bt11/21//0'
+
+    slots2 = Lpar_virtual_slots.new(30)
+    slots2.profile_name = 'normal_2'
+    slots2.virtual_fc_adapters_raw = '21/server/10/bt11/21//1'
+
+    diff = slots1.diff(slots2, 'virtual_fc_adapters')
+
+    assert_equal(1, diff.size)
+    assert_equal('isRequired is setup to 0', diff['VirtualSlot 21 isRequired']['normal_1'])
+    assert_equal('isRequired is setup to 1', diff['VirtualSlot 21 isRequired']['normal_2'])
+  end
+
+
 
   def test_virtual_eth_adapter
     slots = Lpar_virtual_slots.new(20)
@@ -108,7 +167,5 @@ class Test_Lpar_virtual_slots < Test::Unit::TestCase
     slots.virtual_fc_adapters_raw = '21/server/10/bt11/21//0'
     assert_equal('21/server/10/bt11/21//0', slots.virtual_fc_adapters_to_s )
   end
-
-
 
 end

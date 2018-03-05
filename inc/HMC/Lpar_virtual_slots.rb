@@ -28,6 +28,8 @@ class Lpar_virtual_slots
   attr_reader :virtual_scsi_adapters_raw
   attr_reader :virtual_eth_adapters_raw
 
+  attr_accessor :profile_name #it is helper for diff functions, much easier to say, which profile has different settings
+
   #TODO: check max virtual slots number
   def initialize(max_virtual_slots = 65000)
     @max_virtual_slots = max_virtual_slots
@@ -49,6 +51,7 @@ class Lpar_virtual_slots
     @virtual_serial_adapters_raw  = nil
     @virtual_eth_adapters_raw     = nil
 
+    @profile_name = nil
   end
 
 
@@ -69,6 +72,8 @@ class Lpar_virtual_slots
 
   def virtual_eth_adapters_add(adapter)
     @virtual_eth_adapters.push(adapter)
+    @virtual_slots[adapter.virtualSlotNumber] = adapter
+
     if @virtual_eth_adapters_raw.nil?
       @virtual_eth_adapters_raw = adapter.to_s
     else
@@ -78,6 +83,8 @@ class Lpar_virtual_slots
 
   def virtual_fc_adapters_add(adapter)
     @virtual_fc_adapters.push(adapter)
+    @virtual_slots[adapter.virtualSlotNumber] = adapter
+
     if @virtual_fc_adapters_raw.nil?
       @virtual_fc_adapters_raw = adapter.to_s + ','
     else
@@ -87,6 +94,8 @@ class Lpar_virtual_slots
 
   def virtual_scsi_adapters_add(adapter)
     @virtual_scsi_adapters.push(adapter)
+    @virtual_slots[adapter.virtualSlotNumber] = adapter
+
     if @virtual_scsi_adapters_raw.nil?
       @virtual_scsi_adapters_raw = adapter.to_s + ','
     else
@@ -96,6 +105,9 @@ class Lpar_virtual_slots
 
   def virtual_serial_adapters_add(adapter)
     @virtual_serial_adapters.push(adapter)
+#TODO: add this part of code
+#    @virtual_slots[adapter.virtualSlotNumber] = adapter
+
     if @virtual_serial_adapters_raw.nil?
       @virtual_serial_adapters_raw = adapter.to_s + ','
     else
@@ -187,5 +199,104 @@ class Lpar_virtual_slots
     self.adapters_to_s('virtual_serial_adapters')
   end
 
+  def diff(other_lpar_virtual_slots, type)
+
+  diff = Hash.new
+    max_virtual_slots = self.max_virtual_slots > other_lpar_virtual_slots.max_virtual_slots ? self.max_virtual_slots : other_lpar_virtual_slots.max_virtual_slots
+
+    1.upto(max_virtual_slots) do |i|
+        if self.virtual_slots.key?(i) and other_lpar_virtual_slots.virtual_slots.key?(i)
+
+          self_slot =  self.virtual_slots[i]
+          other_slot = other_lpar_virtual_slots.virtual_slots[i]
+          self_profile_name = self.profile_name
+          other_profile_name = other_lpar_virtual_slots.profile_name
+
+          # let's check type of slots
+          if type == 'virtual_serial_adapters'
+            next unless self_slot.class.name == 'VirtualSerialAdapter' or other_slot.class.name == 'VirtualSerialAdapter'
+          elsif type == 'VirtualScsiAdapter'
+            next unless self_slot.class.name == 'VirtualScsiAdapter' or other_slot.class.name == 'VirtualScsiAdapter'
+          elsif type == 'virtual_eth_adapters'
+            next unless self_slot.class.name == 'VirtualEthAdapter' or other_slot.class.name == 'VirtualEthAdapter'
+          elsif type == 'virtual_fc_adapters'
+            next unless self_slot.class.name == 'VirtualFCAdapter' or other_slot.class.name == 'VirtualFCAdapter'
+          end
+
+
+          #let's check if slot are the same type (ethernet, fcs etc)
+          if self_slot.class.name != other_slot.class.name
+            entry = Hash.new
+            entry[self_profile_name] =  "The slot type is #{self_slot.class.name}"
+            entry[other_profile_name] = "The slot type is #{other_slot.class.name}"
+            diff["VirtualSlot #{i}"] = entry
+
+            next
+          end
+
+          if self_slot.class.name == 'VirtualFCAdapter' or
+              self_slot.class.name ==  'VirtualEthAdapter' or
+              self_slot.class.name ==  'VirtualScsiAdapter'
+
+
+            diff_entry_slot = self_slot.diff(other_slot, self_profile_name, other_profile_name)
+
+            diff_entry_slot.each do |key, entry|
+               diff["VirtualSlot #{i} #{key}"] = entry
+            end
+          else
+            raise("unsuported type of adapter #{self_slot.class.name} ")
+          end
+
+
+        elsif self.virtual_slots.key?(i) and ! other_lpar_virtual_slots.virtual_slots.key?(i)
+
+          self_slot =  self.virtual_slots[i]
+          self_profile_name = self.profile_name
+          other_profile_name = other_lpar_virtual_slots.profile_name
+
+          # let's check type of slots
+          if type == 'virtual_serial_adapters'
+            next unless self_slot.class.name == 'VirtualSerialAdapter'
+          elsif type == 'VirtualScsiAdapter'
+            next unless self_slot.class.name == 'VirtualScsiAdapter'
+          elsif type == 'virtual_eth_adapters'
+            next unless self_slot.class.name == 'VirtualEthAdapter'
+          elsif type == 'virtual_fc_adapters'
+            next unless self_slot.class.name == 'VirtualFCAdapter'
+          end
+
+
+          entry = Hash.new
+          entry[self_profile_name]  = "A profile use it: #{self_slot.class.name} #{self_slot.to_s}"
+          entry[other_profile_name] = "A profile doesn't use slot"
+          diff["VirtualSlot #{i}"] = entry
+        elsif  ! self.virtual_slots.key?(i) and other_lpar_virtual_slots.virtual_slots.key?(i)
+
+          other_slot = other_lpar_virtual_slots.virtual_slots[i]
+          self_profile_name = self.profile_name
+          other_profile_name = other_lpar_virtual_slots.profile_name
+
+          # let's check type of slots
+          if type == 'virtual_serial_adapters'
+            next unless other_slot.class.name == 'VirtualSerialAdapter'
+          elsif type == 'VirtualScsiAdapter'
+            next unless other_slot.class.name == 'VirtualScsiAdapter'
+          elsif type == 'virtual_eth_adapters'
+            next unless other_slot.class.name == 'VirtualEthAdapter'
+          elsif type == 'virtual_fc_adapters'
+            next unless other_slot.class.name == 'VirtualFCAdapter'
+          end
+
+          entry = Hash.new
+          entry[self_profile_name]  = "A profile doesn't use slot"
+          entry[other_profile_name] = 'A profile use it: ' + other_slot.class.name + ' ' + other_slot.to_s
+
+          diff["VirtualSlot #{i}"] = entry
+        end
+    end
+
+    diff
+  end
 
 end

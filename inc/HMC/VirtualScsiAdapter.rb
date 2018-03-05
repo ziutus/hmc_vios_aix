@@ -95,5 +95,46 @@ class VirtualScsiAdapter
 		self.to_s == another_adapter.to_s
 	end
 
+	def diff(other_adapter, profile1, profile2)
+
+		diff = Hash.new
+
+		if @clientOrServer != other_adapter.clientOrServer
+			diff_entry = Hash.new
+			diff_entry[profile1] = "clientOrServer is setup to #{@clientOrServer}"
+			diff_entry[profile2] = "clientOrServer is setup to #{other_adapter.clientOrServer}"
+			diff["clientOrServer"] = diff_entry
+		end
+
+		if @remoteLparID != other_adapter.remoteLparID
+			diff_entry = Hash.new
+			diff_entry[profile1] = "remoteLparID is setup to #{@remoteLparID}"
+			diff_entry[profile2] = "remoteLparID is setup to #{other_adapter.remoteLparID}"
+			diff["remoteLparID"] = diff_entry
+		end
+
+		if @remoteLparName != other_adapter.remoteLparName
+			diff_entry = Hash.new
+			diff_entry[profile1] = "remoteLparName is setup to #{@remoteLparName}"
+			diff_entry[profile2] = "remoteLparName is setup to #{other_adapter.remoteLparName}"
+			diff["remoteLparName"] = diff_entry
+		end
+
+		if @remoteSlotNumber != other_adapter.remoteSlotNumber
+			diff_entry = Hash.new
+			diff_entry[profile1] = "remoteSlotNumber is setup to #{@remoteSlotNumber}"
+			diff_entry[profile2] = "remoteSlotNumber is setup to #{other_adapter.remoteSlotNumber}"
+			diff["remoteSlotNumber"] = diff_entry
+		end
+
+		if @isRequired != other_adapter.isRequired
+			diff_entry = Hash.new
+			diff_entry[profile1] = "isRequired is setup to #{@isRequired}"
+			diff_entry[profile2] = "isRequired is setup to #{other_adapter.isRequired}"
+			diff["isRequired"] = diff_entry
+		end
+
+		diff
+	end
 
 end

@@ -17,12 +17,12 @@ class TestVirtualEthAdapter < Test::Unit::TestCase
 		adapter.trunkPriority=2
 		adapter.isRequired=1
 		
-		assert_equal('6/0/6//2/1', adapter.to_s() )
+		assert_equal('6/0/6//2/1', adapter.to_s )
 	end
 	
 	def test_decode
 	
-		adapter2 = VirtualEthAdapter.new()
+		adapter2 = VirtualEthAdapter.new
 		adapter2.decode('6/0/6//2/1')
 
 #virtual-slot-number/is-IEEE/port-vlan-ID/[additional-vlan-IDs]/[trunk-priority]/is-required[/[virtual-switch][/[MAC-address]/ 
@@ -64,10 +64,20 @@ class TestVirtualEthAdapter < Test::Unit::TestCase
 
 		def test_validation
 
-		adapter = VirtualEthAdapter.new()
+		adapter = VirtualEthAdapter.new
 	
-		exception = assert_raise(RuntimeError) {adapter.to_s()}
+		exception = assert_raise(RuntimeError) {adapter.to_s}
 		assert_equal('class: VirtualEthAdapter: function: validation, virtualSlotNumber not defined', exception.message)
 	
-	end
+		end
+
+		def test_compare_adapters
+
+#			adapter1 = VirtualEthAdapter.new('10/0/1//0/0/ETHERNET0//all/none')
+#      adapter2 = VirtualEthAdapter.new('10/0/1//0/0/ETHERNET1//all/none')
+
+#      diff = adapter1.diff(adapter2)
+
+		end
+
 end

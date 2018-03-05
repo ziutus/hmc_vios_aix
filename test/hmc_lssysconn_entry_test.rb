@@ -188,5 +188,47 @@ class HmcLssysconnTest < Test::Unit::TestCase
     assert_equal('Already connected 0402-0001-00000025', entry.connection_error_code)
   end
 
+  # source of test: http://www-01.ibm.com/support/docview.wss?uid=nas8N1010700
+  def test_frame_alt_ipaddr
+    string = 'resource_type=frame,type_model_serial_num=9A01-100*0P1P315,side=b,ipaddr=192.168.255.253,alt_ipaddr=unavailable,state=Connected'
+
+    entry = Lssysconn_entry.new(string)
+    assert_equal('frame', entry.resource_type)
+    assert_equal('9A01-100*0P1P315', entry.type_model_serial_num)
+    assert_equal('b', entry.side)
+    assert_equal('192.168.255.253', entry.ipaddr)
+    assert_equal('unavailable', entry.alt_ipaddr)
+    assert_equal('Connected', entry.state)
+  end
+
+  # IBM System p5 Approaches to 24x7 Availability Including AIX 5L - site 379
+  def test_frame_alt_ipaddr_2
+    string = 'resource_type=frame,type_model_serial_num=9119-590*02C489E,side=unavailable,ipaddr=192.168.254.255,alt_ipaddr=unavailable,state=Version Mismatch,connection_error_code=Version mismatch 0404-0007-00000001'
+
+    entry = Lssysconn_entry.new(string)
+    assert_equal('frame', entry.resource_type)
+    assert_equal('9119-590*02C489E', entry.type_model_serial_num)
+    assert_equal('unavailable', entry.side)
+    assert_equal('192.168.254.255', entry.ipaddr)
+    assert_equal('unavailable', entry.alt_ipaddr)
+    assert_equal('Version Mismatch', entry.state)
+    assert_equal('Version mismatch 0404-0007-00000001', entry.connection_error_code)
+  end
+
+  # https://www.ibm.com/developerworks/community/forums/atom/download/hmc%20lssysconn%20output.docx?nodeId=170cf43e-2872-41d9-a90a-254f8339afd0
+  #
+  def test_sp_phys_loc
+    string ='resource_type=sys,type_model_serial_num=8286-42A*218CA0V,sp=primary,sp_phys_loc=U78C9.001.WZS05NY-P1,ipaddr=10.128.0.23,alt_ipaddr=unavailable,state=Connected'
+    entry = Lssysconn_entry.new(string)
+
+    assert_equal('sys', entry.resource_type)
+    assert_equal('8286-42A*218CA0V', entry.type_model_serial_num)
+    assert_equal('primary', entry.sp)
+    assert_equal('U78C9.001.WZS05NY-P1', entry.sp_phys_loc)
+    assert_equal('10.128.0.23', entry.ipaddr)
+    assert_equal('unavailable', entry.alt_ipaddr)
+    assert_equal('Connected', entry.state)
+  end
+
 
 end
