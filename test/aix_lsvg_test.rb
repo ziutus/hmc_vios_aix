@@ -54,7 +54,6 @@ HOT SPARE:          no                       BB POLICY:      relocatable'
 
   end
 
-
   # example data taken from: http://www.kristijan.org/2010/05/calculate-total-usage-in-aix-volume-group/
   def test_decode_1
     string='
@@ -100,8 +99,61 @@ HOT SPARE:          no                       BB POLICY:      relocatable'
     assert_equal('no',    entry.auto_sync)
     assert_equal('relocatable',    entry.bb_policy)
 
+  end
 
+  # example data taken from: https://faruqueahmed.wordpress.com/2015/02/11/increase-paging-space-in-ibm-aix-7-1/
+  def test_decode_critical_vg
+    string ='VOLUME GROUP: rootvg VG IDENTIFIER: 00f9766800004c00000001495fceed84
+VG STATE: active PP SIZE: 128 megabyte(s)
+VG PERMISSION: read/write TOTAL PPs: 759 (97152 megabytes)
+MAX LVs: 256 FREE PPs: 347 (44416 megabytes)
+LVs: 13 USED PPs: 412 (52736 megabytes)
+OPEN LVs: 12 QUORUM: 2 (Enabled)
+TOTAL PVs: 1 VG DESCRIPTORS: 2
+STALE PVs: 0 STALE PPs: 0
+ACTIVE PVs: 1 AUTO ON: yes
+MAX PPs per VG: 32512
+MAX PPs per PV: 1016 MAX PVs: 32
+LTG size (Dynamic): 256 kilobyte(s) AUTO SYNC: no
+HOT SPARE: no BB POLICY: relocatable
+PV RESTRICTION: none INFINITE RETRY: no
+DISK BLOCK SIZE: 512 CRITICAL VG: no'
+
+    entry = Lsvg.new(string)
+    assert_equal('rootvg',    entry.volume_group)
+    assert_equal('00f9766800004c00000001495fceed84',    entry.vg_identifier)
+    assert_equal('active',    entry.vg_state)
+    assert_equal('128 megabyte(s)',    entry.pp_size)
+    assert_equal('read/write',    entry.vg_permission)
+    assert_equal(759,    entry.total_pps)
+    assert_equal(256,    entry.max_lvs)
+    assert_equal(347,    entry.free_pps)
+    assert_equal(13,    entry.lvs)
+    assert_equal(412,    entry.used_pps)
+    assert_equal(12,    entry.open_lvs)
+    assert_equal(2,    entry.quorum)
+    assert_equal(1,    entry.total_pvs)
+    assert_equal(2,    entry.vg_descriptors)
+    assert_equal(0,    entry.stale_pvs)
+    assert_equal(0,    entry.stale_pps)
+    assert_equal(1,    entry.active_pvs)
+    assert_equal('yes',    entry.auto_on)
+    assert_equal(32512,    entry.max_pps_per_vg)
+    assert_equal(1016,    entry.max_pps_per_pv)
+    assert_equal(32,    entry.max_pvs)
+
+    assert_equal('256 kilobyte(s)',    entry.ltg_size_dynamic)
+    assert_equal('no',    entry.auto_sync)
+    assert_equal('no',    entry.hot_spare)
+    assert_equal('relocatable',    entry.bb_policy)
+
+    assert_equal('none',    entry.pv_restriction)
+    assert_equal('no',    entry.infinite_retry)
+
+    assert_equal(512,    entry.disk_block_size)
+    assert_equal('no',    entry.critical_vg)
 
   end
+
 
 end

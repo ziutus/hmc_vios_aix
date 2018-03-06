@@ -29,6 +29,13 @@ class Lsvg
   attr_reader :hot_spare
   attr_reader :bb_policy
 
+  attr_reader :pv_restriction
+  attr_reader :infinite_retry
+
+  attr_reader :disk_block_size
+  attr_reader :critical_vg
+
+
   def initialize(string)
 
     @data_string_raw=''
@@ -61,6 +68,13 @@ class Lsvg
     @hot_spare = nil
     @bb_policy = nil
 
+    @pv_restriction = nil
+    @infinite_retry = nil
+
+    @disk_block_size = nil
+    @critical_vg = nil
+
+
     if string.length > 0
       @data_string_raw = string
       self.parse(string)
@@ -85,7 +99,25 @@ MAX\sPPs\sper\sPV:\s+(\d+)\s+MAX\s+PVs:\s+(\d+)\s+
 LTG\ssize\s\(Dynamic\):\s+(\d+\skilobyte\(s\))\s+AUTO\sSYNC:\s+(yes|no)\s+
 HOT\sSPARE:\s+(yes|no)\s+BB\sPOLICY:\s+(relocatable)\s*}mx
 
-    match_long = regexp_long.match(string)
+    regexp_critical_vg = %r{\s*VOLUME\sGROUP:\s+(\w+)\s+VG\sIDENTIFIER:\s+(\w+)\s+
+VG\sSTATE:\s+(active)\s+PP\sSIZE:\s+(\d+\smegabyte\(s\))\s+
+VG\sPERMISSION:\s+(read\/write)\s+TOTAL\sPPs:\s+(\d+)\s\(\d+\smegabytes\)\s+
+MAX\sLVs:\s+(\d+)\s+FREE\sPPs:\s+(\d+)\s\(\d+\smegabytes\)\s+
+LVs:\s+(\d+)\s+USED\sPPs:\s+(\d+)\s\(\d+\smegabytes\)\s+
+OPEN\sLVs:\s+(\d+)\s+QUORUM:\s+(\d+)\s\((Enabled|Disabled)\)\s+
+TOTAL\sPVs:\s+(\d+)\s+VG\s+DESCRIPTORS:\s+(\d+)\s+
+STALE\sPVs:\s+(\d+)\s+STALE\sPPs:\s+(\d+)\s+
+ACTIVE\sPVs:\s+(\d+)\s+AUTO\sON:\s+(yes|no)\s+
+MAX\sPPs\sper\sVG:\s+(\d+)\s+
+MAX\sPPs\sper\sPV:\s+(\d+)\s+MAX\s+PVs:\s+(\d+)\s+
+LTG\ssize\s\(Dynamic\):\s+(\d+\skilobyte\(s\))\s+AUTO\sSYNC:\s+(yes|no)\s+
+HOT\sSPARE:\s+(yes|no)\s+BB\sPOLICY:\s+(relocatable)\s+
+PV\sRESTRICTION:\s+(none)\s+INFINITE\sRETRY:\s+(no)\s+
+DISK\sBLOCK\sSIZE:\s+(512)\s+CRITICAL\sVG:\s+(no)\s*
+}mx
+
+    match_long        = regexp_long.match(string)
+    match_critical_vg = regexp_critical_vg.match(string)
 
 if match_long
 
@@ -114,6 +146,41 @@ if match_long
       @auto_sync = match_long[23]
       @hot_spare = match_long[24]
       @bb_policy = match_long[25]
+
+elsif match_critical_vg
+
+        @volume_group = match_critical_vg[1]
+        @vg_identifier = match_critical_vg[2]
+        @vg_state 			= match_critical_vg[3]
+        @pp_size  			= match_critical_vg[4]
+        @vg_permission  = match_critical_vg[5]
+        @total_pps      = match_critical_vg[6].to_i
+        @max_lvs        = match_critical_vg[7].to_i
+        @free_pps       = match_critical_vg[8].to_i
+        @lvs       = match_critical_vg[9].to_i
+        @used_pps       = match_critical_vg[10].to_i
+        @open_lvs       = match_critical_vg[11].to_i
+        @quorum       = match_critical_vg[12].to_i
+
+        @total_pvs       = match_critical_vg[14].to_i
+        @vg_descriptors = match_critical_vg[15].to_i
+        @stale_pvs        = match_critical_vg[16].to_i
+        @stale_pps        = match_critical_vg[17].to_i
+        @active_pvs       = match_critical_vg[18].to_i
+        @auto_on       = match_critical_vg[19]
+        @max_pps_per_vg  = match_critical_vg[20].to_i
+        @max_pps_per_pv = match_critical_vg[21].to_i
+        @max_pvs = match_critical_vg[22].to_i
+        @ltg_size_dynamic = match_critical_vg[23]
+        @auto_sync = match_critical_vg[24]
+        @hot_spare = match_critical_vg[25]
+        @bb_policy = match_critical_vg[26]
+
+        @pv_restriction = match_critical_vg[27]
+        @infinite_retry = match_critical_vg[28]
+
+        @disk_block_size = match_critical_vg[29].to_i
+        @critical_vg = match_critical_vg[30]
 
 else
       #puts "can't analyze string, regexp is not working"
