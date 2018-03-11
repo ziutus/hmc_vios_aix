@@ -69,6 +69,16 @@ class TestHMCResourceRole < Test::Unit::TestCase
 
   end
 
+	def test_constructor_with_string_missing_IBMHSC_Partition
+		string = 'name=LparAdmin,resources=lpar:root/ibmhscS1_0|1*9131-52A*6535CCG'
+
+		myResourceRole = ResourceRole.new(string)
+
+		assert_equal(myResourceRole.name, 'LparAdmin')
+		assert_equal(myResourceRole.has_lpar?('9131-52A*6535CCG', 1), true)
+		assert_equal(myResourceRole.has_lpar?('9131-52A*6535CCG', 4), false)
+
+	end
 
 end			
 		

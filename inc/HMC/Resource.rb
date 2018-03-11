@@ -24,7 +24,7 @@ class Resource
 
     type_regexp = '\w{4}\-\w{3}\*\w{7}'
 
-		if match = %r{lpar:root[\/]+ibmhscS1_0\|(\d+|ALL_PARTITIONS)\*(#{type_regexp})\|IBMHSC_Part[\w+]}.match(string)
+		if match = %r{lpar:root[\/]+ibmhscS1_0\|(\d+|ALL_PARTITIONS)\*(#{type_regexp})}.match(string)
 				@type_long  =  'IBMHSC_Partition'
 				@type		= 'lpar'
 				@lpar 		= match[1]
@@ -39,10 +39,7 @@ class Resource
           @frame 		= match[1]
 
     else
-      puts string
-			puts match
-			puts "regexp couldn't decode string #{string}"
-			raise 
+ 			raise Exception, "Regexo couldn't decode string >#{string}<"
 		end
 		
 	end
