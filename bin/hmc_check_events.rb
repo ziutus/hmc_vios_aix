@@ -13,6 +13,7 @@ date = nil
 format = 'csv'
 report_type = 'all'
 verbose = 0
+hmcNotWorking = Array.new
 
 OptionParser.new do |opts|
 
@@ -60,6 +61,11 @@ Dir.glob('*').sort.select { |hmc_dir|
          end
 
         data_string = File.read(filename)
+
+        if data_string =~ /An unknown error occurred while trying to perform this command. Retry the command. If the error persists, contact your software support representative./
+          hmcNotWorking.push(hmc_dir)
+          next
+        end
         events.parse(data_string, hmc_dir )
     }
 }
@@ -85,5 +91,7 @@ events.events.each_index { |index|
 
 
 puts renderer.result
+
+puts 'Found issue with collecting data from below HMCs:' + hmcNotWorking.join(',').to_s
 
 exit 0

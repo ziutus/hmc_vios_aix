@@ -1,5 +1,7 @@
 #! /usr/bin/env ruby
 
+# https://www.ibm.com/support/knowledgecenter/en/POWER8/p8hc3/p8hc3_hmcpreprmc.htm
+
 $LOAD_PATH << File.dirname(__FILE__) + '/../inc'
 
 require 'optparse'
