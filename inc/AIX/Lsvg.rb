@@ -179,7 +179,7 @@ elsif match_critical_vg
         @pv_restriction = match_critical_vg[27]
         @infinite_retry = match_critical_vg[28]
 
-        @disk_block_size = match_critical_vg[29].to_i
+        @disk_block_size = match_critical_vg[29].to_i  
         @critical_vg = match_critical_vg[30]
 
 else
