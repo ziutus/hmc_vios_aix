@@ -1,4 +1,3 @@
-
 HMC;          event time;ID;  PHM;sys name;text<% events2.each do |entry| %>
 <%= entry.hmc_name %>;<%= entry.last_time %>;<%=  entry.problem_num %>;<%= sprintf("%5s",entry.pmh_num) %>;<%= entry.refcode %>;<%= entry.sys_name %>;<%= entry.failing_mtms %>;<%= entry.text %>;<% end %>
 
