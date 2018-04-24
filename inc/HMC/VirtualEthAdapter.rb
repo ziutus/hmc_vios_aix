@@ -134,29 +134,7 @@ class VirtualEthAdapter
 	alias :parse :decode
 
 	def ==(another_adapter)
-
-    if ( @qosPiority == 'none'  and another_adapter.qosPiority == '0' )
-      @qosPiority = '0'
-      if self.to_s == another_adapter.to_s
-        @qosPiority == 'none'
-        return true
-      else
-        @qosPiority == 'none'
-        return false
-      end
-    elsif ( @qosPiority == '0'  and another_adapter.qosPiority == 'none' )
-      @qosPiority = 'none'
-      if self.to_s == another_adapter.to_s
-        @qosPiority = '0'
-        return true
-      else
-        @qosPiority = '0'
-        return false
-      end
-    else
-          self.to_s == another_adapter.to_s
-    end
-
+     self.to_s == another_adapter.to_s
 	end
 
 	def diff(other_adapter, profile1, profile2)
@@ -227,12 +205,10 @@ class VirtualEthAdapter
     end
 
     if @qosPiority != other_adapter.qosPiority
-			unless ( @qosPiority == 'none'  and other_adapter.qosPiority == '0' ) or ( @qosPiority == '0'  and other_adapter.qosPiority == 'none' )
 				diff_entry = Hash.new
 				diff_entry[profile1] = "qosPiority is setup to #{@qosPiority}"
 				diff_entry[profile2] = "qosPiority is setup to #{other_adapter.qosPiority}"
 				diff["qosPiority"] = diff_entry
-      end
     end
 
 		diff

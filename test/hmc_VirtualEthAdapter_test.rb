@@ -75,15 +75,19 @@ class TestVirtualEthAdapter < Test::Unit::TestCase
 
 			adapter1 = VirtualEthAdapter.new('10/0/1//0/0/ETHERNET0//all/none')
       adapter2 = VirtualEthAdapter.new('10/0/1//0/0/ETHERNET0//all/0')
-#			assert_equal(true, adapter1 == adapter2)
+			assert_equal(false, adapter1 == adapter2)
 
 			adapter1 = VirtualEthAdapter.new('10/0/1//0/0/ETHERNET0//all/0')
 			adapter2 = VirtualEthAdapter.new('10/0/1//0/0/ETHERNET0//all/0')
-#			assert_equal(true, adapter1 == adapter2)
+			assert_equal(true, adapter1 == adapter2)
 
 			adapter1 = VirtualEthAdapter.new('10/0/1//0/0/ETHERNET0//all/0')
 			adapter2 = VirtualEthAdapter.new('10/0/1//0/0/ETHERNET0//all/none')
-			assert_equal(true, adapter1 == adapter2)
+			assert_equal(false, adapter1 == adapter2)
+
+      adapter1 = VirtualEthAdapter.new('10/0/1//0/0/ETHERNET0//all/none')
+      adapter2 = VirtualEthAdapter.new('10/0/1//0/0/ETHERNET0//all/none')
+      assert_equal(true, adapter1 == adapter2)
 
 				#     diff = adapter1.diff(adapter2, 'adapter1', 'adapter2')
 
