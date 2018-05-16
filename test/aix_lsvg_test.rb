@@ -9,7 +9,7 @@ require 'pp'
 class TestAixLsvgEntry < Test::Unit::TestCase
 
   # based on from: http://www.kristijan.org/2010/05/calculate-total-usage-in-aix-volume-group/
-  def test_decode_0
+  def test_decode_data_1
     string='
 VOLUME GROUP:       data                     VG IDENTIFIER:  000771a50000d6000000011bd8f66761
 VG STATE:           active                   PP SIZE:        128 megabyte(s)
