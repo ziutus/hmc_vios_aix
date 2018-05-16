@@ -98,26 +98,84 @@ class Sys
 		@name = name
 
     @_variables = Hash.new
-    @_variables['int'] = %w(power_off_policy active_lpar_mobility_capable inactive_lpar_mobility_capable active_lpar_share_idle_procs_capable
-      active_mem_expansion_capable addr_broadcast_perf_policy_capable hardware_active_mem_expansion_capable
-      bsr_capable cod_mem_capable cod_proc_capable dynamic_platform_optimization_capable electronic_err_reporting_capable
-      firmware_power_saver_capable hardware_power_saver_capable hardware_discovery_capable hca_capable
-      huge_page_mem_capable lhea_capable sp_failover_capable  vet_activation_capable mfg_default_config
-      lpar_avail_priority_capable lpar_proc_compat_mode_capable lpar_remote_restart_capable
-      powervm_lpar_remote_restart_capable  lpar_suspend_capable micro_lpar_capable os400_capable
-      redundant_err_path_reporting_capable shared_eth_failover_capable sni_msg_passing_capable
-      virtual_fc_capable virtual_io_server_capable virtual_switch_capable vsn_phase2_capable
-      vsi_on_veth_capable assign_5250_cpw_percent max_lpars max_power_ctrl_lpars active_mem_sharing_capable
-      max_remote_restart_capable_lpars max_suspend_capable_lpars hca_bandwidth_capabilities )
+    @_variables['int'] = %w(
+      addr_broadcast_perf_policy_capable
+      firmware_power_saver_capable
+      hardware_power_saver_capable
+      hca_capable
+      huge_page_mem_capable
+      sp_failover_capable
 
-    @_variables['string'] = %w(name type_model serial_num ipaddr state detailed_state sys_time
-      service_lpar_id service_lpar_name
-      curr_sys_keylock  pend_sys_keylock curr_power_on_side pend_power_on_side curr_power_on_speed
-      pend_power_on_speed curr_power_on_speed_override pend_power_on_speed_override
-      power_on_type power_on_option power_on_lpar_start_policy
-      pend_power_on_option pend_power_on_lpar_start_policy power_on_method power_on_attr
-      sp_boot_attr sp_boot_major_type sp_boot_minor_type sp_version
-      curr_mfg_default_ipl_source pend_mfg_default_ipl_source curr_mfg_default_boot_mode pend_mfg_default_boot_mode
+      sni_msg_passing_capable
+      max_power_ctrl_lpars
+    )
+
+    @_variables['int_unavialble'] = %w( power_off_policy
+      active_lpar_mobility_capable
+      inactive_lpar_mobility_capable
+      active_lpar_share_idle_procs_capable
+      active_mem_expansion_capable
+      hardware_active_mem_expansion_capable
+      active_mem_sharing_capable
+      bsr_capable
+      cod_mem_capable
+      cod_proc_capable
+      dynamic_platform_optimization_capable
+      electronic_err_reporting_capable
+      hardware_discovery_capable
+      lhea_capable
+      lpar_avail_priority_capable
+      lpar_proc_compat_mode_capable
+      lpar_remote_restart_capable
+      powervm_lpar_remote_restart_capable
+      lpar_suspend_capable
+      micro_lpar_capable
+      os400_capable
+      redundant_err_path_reporting_capable
+      shared_eth_failover_capable
+      vet_activation_capable
+      virtual_fc_capable
+      virtual_io_server_capable
+      virtual_switch_capable
+      vsn_phase2_capable
+      vsi_on_veth_capable
+      assign_5250_cpw_percent
+      max_lpars
+      max_remote_restart_capable_lpars
+      max_suspend_capable_lpars
+      hca_bandwidth_capabilities
+      mfg_default_config
+    )
+
+    @_variables['string'] = %w(
+      name type_model
+      serial_num ipaddr
+      state detailed_state
+      sys_time
+      service_lpar_id
+      service_lpar_name
+      curr_sys_keylock
+      pend_sys_keylock
+      curr_power_on_side
+      pend_power_on_side
+      curr_power_on_speed
+      pend_power_on_speed
+      curr_power_on_speed_override
+      pend_power_on_speed_override
+      power_on_type
+      power_on_option
+      power_on_lpar_start_policy
+      pend_power_on_option
+      pend_power_on_lpar_start_policy
+      power_on_method
+      power_on_attr
+      sp_boot_attr
+      sp_boot_major_type
+      sp_boot_minor_type sp_version
+      curr_mfg_default_ipl_source
+      pend_mfg_default_ipl_source
+      curr_mfg_default_boot_mode
+      pend_mfg_default_boot_mode
     )
 
     @lpars = Array.new
@@ -138,7 +196,14 @@ class Sys
         key = keys[id]
         value = values[id]
 
-        if @_variables['string'].include?(key)
+
+        if @_variables['int_unavialble'].include?(key)
+          if value == 'unavailable'  or value == 'null'
+            instance_variable_set("@#{key}", value.to_s)
+          else
+            instance_variable_set("@#{key}", value.to_i)
+          end
+        elsif @_variables['string'].include?(key)
             instance_variable_set("@#{key}", value.to_s)
         elsif @_variables['int'].include?(key)
               instance_variable_set("@#{key}", value.to_i)
@@ -155,11 +220,19 @@ class Sys
 
 	def decodeString string
 
+
+
 		HmcString.parse(string).each {|name, value|
 
 #      puts "#{name}: #{value}"
 
-			if @_variables['int'].include?(name)
+      if @_variables['int_unavialble'].include?(name)
+        if value == 'unavailable' or value == 'null'
+          instance_variable_set("@#{name}", value.to_s)
+        else
+          instance_variable_set("@#{name}", value.to_i)
+        end
+			elsif @_variables['int'].include?(name)
 				instance_variable_set("@#{name}", value.to_i)
 			elsif @_variables['string'].include?(name)
 				instance_variable_set("@#{name}", value.to_s)
