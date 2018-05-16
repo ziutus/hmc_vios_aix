@@ -28,7 +28,7 @@ class FrameIOSlots
 		@array.each { |slot|
 			
 			#if lpar == slot.lpar_name
-				pp  slot.lpar_name.to_s + " " + slot.description
+				##pp  slot.lpar_name.to_s + " " + slot.description
 			#end	
 		}
 	
