@@ -50,7 +50,7 @@ class Lsmap_npiv_entry
 Status:(LOGGED_IN|NOT_LOGGED_IN)\s+
 FC\sname:(fcs\d+|)\s+FC\s+loc\s+code:(\w{5}\.\w{3}\.\w{7}\-P\d+\-C\d+\-T\d+|)\s+
 Ports\slogged\sin:(\d+)\s+
-Flags:(a<LOGGED_IN,STRIP_MERGE>|1<NOT_MAPPED,NOT_CONNECTED>)\s+
+Flags:(a<LOGGED_IN,STRIP_MERGE>|1<NOT_MAPPED,NOT_CONNECTED>|4<NOT_LOGGED>)\s+
 VFC\s+client\s+name:(fcs\d+|)\s+VFC\s+client\s+DRC:(\w{5}\.\w{3}\.\w{7}\-V\d+-C\d+|\w{5}\.\w{3}\.\w{7}\-V\d+-C\d+\-T\d+|)\s*$
 }mx
 

@@ -136,4 +136,35 @@ VFC client name:fcs1            VFC client DRC:U8233.E8B.XXXXXXX-V6-C31-T1'
     assert_equal('U8233.E8B.XXXXXXX-V6-C30-T1', lsmap.data['vfchost0'].vfc_client_drc)
   end
 
+
+  # test data source: https://www.ibm.com/developerworks/community/blogs/cgaix/entry/power_systems_sms_san_zoning_support1?lang=en
+  def test_lpar_down
+
+    string = 'Name          Physloc                            ClntID ClntName       ClntOS
+------------- ---------------------------------- ------ -------------- -------
+vfchost41     U9119.FHA.99D99C1-V2-C199              99
+
+Status:NOT_LOGGED_IN
+FC name:fcs4                    FC loc code:U5803.001.9912345-P2-C5-T1
+Ports logged in:0
+Flags:4<NOT_LOGGED>
+VFC client name:                VFC client DRC:'
+
+    lsmap = Lsmap_npiv.new(string)
+
+    assert_equal('vfchost41',                 lsmap.data['vfchost41'].name)
+    assert_equal('U9119.FHA.99D99C1-V2-C199', lsmap.data['vfchost41'].physloc)
+    assert_equal(99,                          lsmap.data['vfchost41'].clntid)
+    assert_equal('',                          lsmap.data['vfchost41'].clntname)
+    assert_equal('',                          lsmap.data['vfchost41'].clntos)
+    assert_equal('NOT_LOGGED_IN',             lsmap.data['vfchost41'].status)
+    assert_equal('fcs4',                      lsmap.data['vfchost41'].fc_name)
+    assert_equal('U5803.001.9912345-P2-C5-T1',lsmap.data['vfchost41'].fc_loc_code)
+    assert_equal(0,                           lsmap.data['vfchost41'].ports_logged_in)
+    assert_equal('4<NOT_LOGGED>',             lsmap.data['vfchost41'].flags)
+    assert_equal('',                          lsmap.data['vfchost41'].vfc_client_name)
+    assert_equal('',                          lsmap.data['vfchost41'].vfc_client_drc)
+
+  end
+
 end
