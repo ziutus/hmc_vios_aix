@@ -8,7 +8,6 @@ include HmcString
 class Lpar_real
 
 	attr_reader :sys
-  attr_reader :dataString
 	attr_reader :name
   attr_reader :lpar_id
   attr_reader :lpar_env
@@ -110,42 +109,61 @@ class Lpar_real
 	
 	# https://www.ibm.com/support/knowledgecenter/HW4P4/p8edm/rsthwres.html
 
-  @lpar_name
-
-	@lpar_env
-
-  # string from command ''
-  @lpar_id
-  @allow_perf_collection
-  @auto_start
-  @shared_proc_pool_util_auth
-  @redundant_err_path_reporting
-  @sync_curr_profile
-
-  @name
-  @lpar_env
-  @state
-  @resource_config
-  @os_version
-  @logical_serial_num
-  @default_profile
-  @curr_profile
-  @work_group_id
-  @power_ctrl_lpar_ids
-  @boot_mode
-  @lpar_keylock
-  @rmc_state
-  @rmc_ipaddr
 
 
-	def initialize sys,lpar_id,name 
-	
+	def initialize(sys = nil,lpar_id = nil,name = nil)
+
+    @lpar_name = nil
+
+    @lpar_env = nil
+
+    # string from command ''
+    @lpar_id = nil
+    @allow_perf_collection = nil
+    @auto_start = nil
+    @shared_proc_pool_util_auth = nil
+    @redundant_err_path_reporting = nil
+    @sync_curr_profile = nil
+
+    @name     = nil
+    @lpar_env = nil
+    @state    = nil
+    @resource_config = nil
+    @os_version      = nil
+    @logical_serial_num = nil
+    @default_profile = nil
+    @curr_profile = nil
+    @work_group_id = nil
+    @power_ctrl_lpar_ids = nil
+    @boot_mode    = nil
+    @lpar_keylock = nil
+    @rmc_state    = nil
+    @rmc_ipaddr   = nil
+
+
+    @sys = sys
 		@name = name
-		@sys = sys
-		@lpar_id= lpar_id.to_i
-		@dataString = ''
+		@lpar_id= lpar_id.to_i unless lpar_id.nil?
 
-		#from memory string
+
+    #power7
+    @time_ref = nil
+    @lpar_avail_priority  = nil
+    @remote_restart_capable  = nil
+    @suspend_capable  = nil
+    @desired_lpar_proc_compat_mode  = nil
+    @curr_lpar_proc_compat_mode  = nil
+    @affinity_group_id  = nil
+
+    #power8
+    @vtpm_enabled                      = nil
+    @simplified_remote_restart_capable = nil
+    @remote_restart_status             = nil
+    @msp                               = nil
+    @powervm_mgmt_capable              = nil
+
+
+    #from memory string
 		@curr_min_mem=0		
 		@curr_min_mem=0
 		@curr_mem=0
@@ -163,10 +181,36 @@ class Lpar_real
 		@pend_max_num_huge_pages=0
 		@run_num_huge_pages=0
 		@mem_mode=""
-		@curr_hpt_ratio=""		
-		
-		@adaptersVirtual = Hash.new()
-#		@adaptersVirtual = []
+		@curr_hpt_ratio=""
+
+    # from proc string
+    @curr_proc_mode = nil
+    @curr_min_procs = nil
+    @curr_procs = nil
+    @curr_max_procs = nil
+    @curr_sharing_mode = nil
+    @pend_proc_mode = nil
+    @pend_min_procs = nil
+    @pend_procs = nil
+    @pend_max_procs = nil
+    @pend_sharing_mode = nil
+    @run_procs = nil
+
+    @curr_min_proc_units  = nil
+    @curr_proc_units       = nil
+    @curr_max_proc_units   = nil
+    @curr_uncap_weight     = nil
+    @curr_shared_proc_pool_id  = nil
+    @pend_min_proc_units  = nil
+    @pend_proc_units  = nil
+    @pend_max_proc_units  = nil
+    @pend_uncap_weight  = nil
+    @pend_shared_proc_pool_id  = nil
+    @run_proc_units  = nil
+    @run_procs  = nil
+    @run_uncap_weight  = nil
+
+		@adaptersVirtual = Hash.new
 		@adaptersReal = []
 		
 		@virtual_eth_adapters    = []
@@ -191,7 +235,7 @@ class Lpar_real
 
 	end
 
-	def start_cmd profile
+	def start_cmd(profile)
 		"chsysstate -m #{@sys} -r lpar -n #{@name} -o on -f #{profile}"
 	end
 	
@@ -203,19 +247,19 @@ class Lpar_real
 		"lssyscfg -m #{@sys} -r lpar -F state  --filter='#{@name}'"
 	end 
 	
-	def memoryAdd_cmd howMuch
+	def memoryAdd_cmd(howMuch)
 		"chhwres -m #{@sys} -p #{@name} -r mem -o a  -q #{howMuch.to_s}"
 	end
 
-	def memoryRemove_cmd howMuch
+	def memoryRemove_cmd(howMuch)
 		"chhwres -m #{@sys} -p #{@name} -r mem -o r  -q #{howMuch.to_s}"
 	end
 
-	def procUnitsAdd_cmd howMuch
+	def procUnitsAdd_cmd(howMuch)
 		"chhwres -m #{@sys} -p #{@name} -r proc -o a --procunits #{howMuch.to_s}"
 	end	
 
-	def procUnitsRemove_cmd howMuch
+	def procUnitsRemove_cmd(howMuch)
 		"chhwres -m #{@sys} -p #{@name} -r proc -o r --procunits #{howMuch.to_s}"
 	end	
 	
@@ -223,7 +267,7 @@ class Lpar_real
 		''
 	end
 	
-	def slotRemove_cmd slotID
+	def slotRemove_cmd(slotID)
 		"chhwres -r virtualio -m #{@sys} -o  r -p #{@name} -s #{slotID}"
 	end
 	
@@ -231,7 +275,7 @@ class Lpar_real
 		"rmsyscfg -m #{@sys} -r lpar -n #{@name}"
 	end
 	
-	def lssyscfgDecode string
+	def lssyscfgDecode(string)
 
     HmcString.parse(string).each {|name, value|
 
@@ -247,7 +291,7 @@ class Lpar_real
 		}
 	end
 	
-	def decodeMem string
+	def decodeMem(string)
 
     HmcString.parse(string).each {|name, value|
 
@@ -267,7 +311,7 @@ class Lpar_real
 
 	end
 	
-	def decodeProc string 
+	def decodeProc(string)
 
     HmcString.parse(string).each {|name, value|
 
@@ -287,7 +331,7 @@ class Lpar_real
 
 	end
 	
-	def decodeVirtualioSlot string 
+	def decodeVirtualioSlot(string)
 	
 		regExpSlot = /lpar_name=([\w\_\-]+),lpar_id=(\d+),curr_max_virtual_slots=(\d+),pend_max_virtual_slots=(\d+),next_avail_virtual_slot=(\d+)/
 		
@@ -305,7 +349,7 @@ class Lpar_real
 		@next_avail_virtual_slot = match[5].to_i
 	end 
 
-	def decodeVirtualioEth string 
+	def decodeVirtualioEth(string)
 	
 		reg_exp_1 = /lpar_name=([\w\_\-]+),lpar_id=(\d+),slot_num=(\d+),state=(0|1),is_required=(0|1),is_trunk=(0),ieee_virtual_eth=(\d+),port_vlan_id=(\d+),addl_vlan_ids=([\w\,]+|),mac_addr=(\w+|)/
 		reg_exp_2 = /lpar_name=([\w\_\-]+),lpar_id=(\d+),slot_num=(\d+),state=(0|1),is_required=(0|1),is_trunk=(1),trunk_priority=(\d+),ieee_virtual_eth=(0|1),port_vlan_id=(\d+),addl_vlan_ids=([\w\,]+|),mac_addr=(\w+|)/
@@ -336,7 +380,7 @@ class Lpar_real
 			
         next unless match2[2].to_i == @lpar_id.to_i
 
-         adapter = VirtualEthAdapter.new()
+         adapter = VirtualEthAdapter.new
 
          adapter.virtualSlotNumber = match2[3].to_i
          adapter.isRequired		   = match2[5].to_i
@@ -362,14 +406,14 @@ class Lpar_real
 	
 	end 
 
-	def adapter_eth_add adapter
+	def adapter_eth_add(adapter)
 		puts adapter.inspect
 		exit 10
 		#@virtual_eth_adapters[adapter]
 	end
 	
-	def virtual_adapter_remove slotID
-		adaptersVirtual.delete(slotID)
+	def virtual_adapter_remove(slot_id)
+		adaptersVirtual.delete(slot_id)
 	end 
 	
 	def virtual_adapter_first_free 
@@ -382,12 +426,12 @@ class Lpar_real
 		end 
 	end
 
-	def virtual_adapter_exist? adapter_id
+	def virtual_adapter_exist?(adapter_id)
 		@adaptersVirtual.key?(adapter_id)
 	end
 
 	
-	def adapter_scsi_add adapter
+	def adapter_scsi_add(adapter)
 		
 		@virtual_scsi_adapters[adapter.virtualSlotNmuber] = adapter 
 		
