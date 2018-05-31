@@ -87,12 +87,11 @@ class Lpar_profile
 
   # taken from: https://www.ibm.com/support/knowledgecenter/en/POWER8/p8edm/lssyscfg.html
   # (see description of -F parameter)
-  attr_reader :sriov_eth_logical_ports_raw
   attr_reader :sriov_eth_logical_ports
   attr_reader :vnic_adapters_raw
   attr_reader :vnic_adapters
 
-   # own attributes
+  # own attributes
   attr_accessor :_compatibility
   attr_reader   :_parameter_order
   attr_reader   :_default_params
@@ -100,7 +99,6 @@ class Lpar_profile
   attr_reader   :virtual_slots
 
   def initialize(lpar_id = '', profile_name = 'normal')
-
     string = ''
 
     if lpar_id.class.to_s == 'String'
@@ -125,7 +123,6 @@ class Lpar_profile
                                 affinity_group_id lhea_capabilities lpar_proc_compat_mode lhea_capabilities
                                 lpar_proc_compat_mode electronic_err_reporting min_num_huge_pages desired_num_huge_pages
                                 max_num_huge_pages shared_proc_pool_name sni_device_ids ]
-
 
     @_variables['string_raw'] = %w[ hca_adapters vtpm_adapters virtual_vasi_adapters virtual_eth_vsi_profiles
                                     sriov_eth_logical_ports vnic_adapters sriov_eth_logical_ports ]
@@ -171,7 +168,7 @@ class Lpar_profile
     @virtual_slots = Lpar_virtual_slots.new
     @virtual_slots.profile_name=@name
 
-    if string.size > 0
+    unless string.empty?
       parse(string)
     end
 
@@ -180,10 +177,10 @@ class Lpar_profile
   def adapter_add(adapter)
 
     case adapter.class.to_s
-    when 'VirtualEthAdapter'    then self.virtual_slots.virtual_eth_adapters_add(adapter)
-    when 'VirtualScsiAdapter'   then self.virtual_slots.virtual_scsi_adapters_add(adapter)
-    when 'VirtualSerialAdapter' then self.virtual_slots.virtual_serial_adapters_add(adapter)
-    when 'VirtualFCAdapter'     then self.virtual_slots.virtual_fc_adapters_add(adapter)
+    when 'VirtualEthAdapter'    then virtual_slots.virtual_eth_adapters_add(adapter)
+    when 'VirtualScsiAdapter'   then virtual_slots.virtual_scsi_adapters_add(adapter)
+    when 'VirtualSerialAdapter' then virtual_slots.virtual_serial_adapters_add(adapter)
+    when 'VirtualFCAdapter'     then virtual_slots.virtual_fc_adapters_add(adapter)
     else
       pp 'adapter class:' +  adapter.class
       raise 'unknown type of Virtual Adapter'
@@ -257,9 +254,7 @@ class Lpar_profile
     unless @vnic_adapters_raw.nil?
       'none'
     end
-
   end
-
 
   # the result of command it the same as: lssyscfg -r prof -m $FRAME
   def to_s(params='all', exclude_cols='none')
@@ -286,7 +281,7 @@ class Lpar_profile
 
       if @_functions_self.include?(parameter)
 
-        tmp = self.send("#{parameter}_to_s")
+        tmp = send("#{parameter}_to_s")
         tmp = make_string(parameter, tmp)
         result_array.push(tmp) unless tmp.nil?
 
@@ -297,8 +292,8 @@ class Lpar_profile
         result_array.push(tmp) unless tmp.nil?
 
       else
-        unless self.instance_variable_get("@#{parameter}") == nil
-          result_array.push (make_string(parameter, self.instance_variable_get("@#{parameter}").to_s))
+        unless instance_variable_get("@#{parameter}") == nil
+          result_array.push (make_string(parameter, instance_variable_get("@#{parameter}").to_s))
         end
       end
     }
@@ -308,7 +303,7 @@ class Lpar_profile
 
   def vlans
     result = []
-    self.virtual_slots.virtual_eth_adapters.each { |adapter|
+    virtual_slots.virtual_eth_adapters.each { |adapter|
       result.push(adapter.portVlanID)
       adapter.additionalVlanIDs.split(',').each { |vlan|
         result.push(vlan)
@@ -318,7 +313,7 @@ class Lpar_profile
   end
 
   def mksyscfg_cmd
-    "mksyscfg -r lpar -m #{@sys} -i \"" + self.to_s + '"'
+    "mksyscfg -r lpar -m #{@sys} -i \"" + to_s + '"'
   end
 
   def remove_cmd
@@ -350,7 +345,7 @@ class Lpar_profile
         self.io_slots_raw = value
       elsif name == 'lhea_logical_ports'
         self.lhea_logical_ports_raw = value
-      elsif  @_variables['string_raw'].include?(name)
+      elsif @_variables['string_raw'].include?(name)
         instance_variable_set("@#{name}_raw", value.to_s)
       elsif @_variables['string'].include?(name)
         instance_variable_set("@#{name}", value.to_s)
@@ -364,11 +359,11 @@ class Lpar_profile
 
     @virtual_slots.profile_name=@name
 
-    if self.to_s != string
+    if to_s != string
       puts 'Incoming string:'
       pp string
       puts 'Analysed data as result of to_s:'
-      puts self.to_s
+      puts to_s
       raise 'wrong parsing of profile string'
     end
 
@@ -387,16 +382,16 @@ class Lpar_profile
   end
 
   def lhea_logical_ports_raw=(string)
-      if string != 'none'
-        string.split(',').each { |adapter_string|
-          @lhea_logical_ports.push(adapter_string.split('/'))
-        }
+    if string != 'none'
+      string.split(',').each { |adapter_string|
+        @lhea_logical_ports.push(adapter_string.split('/'))
+      }
       end
       @lhea_logical_ports_raw = string
   end
 
-  def ==(another_profile)
-    self.to_s == another_profile.to_s
+  def ==(other)
+    to_s == other.to_s
   end
 
   def diff_show (another_profile, columns_to_compare = 'all', columns_to_ignore = 'none')
@@ -412,18 +407,18 @@ class Lpar_profile
         next if columns_to_compare != 'all' && !compare.include?(name)
 
         if type == 'string_virtual_raw'
-          diffs.merge!(self.virtual_slots.diff(another_profile.virtual_slots, type))
+          diffs.merge!(virtual_slots.diff(another_profile.virtual_slots, type))
           next
         end
 
-        val_self    = self.instance_variable_get("@#{name}")
+        val_self    = instance_variable_get("@#{name}")
         val_profile = another_profile.instance_variable_get("@#{name}")
 
         if val_self != val_profile
           val_self    = 'nil' if val_self.nil?
           val_profile = 'nil' if val_profile.nil?
 
-          difference = Hash.new
+          difference = {}
           difference[another_profile.name] = val_profile
           difference[self.name]            = val_self
 
