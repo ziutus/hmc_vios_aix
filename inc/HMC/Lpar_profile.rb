@@ -7,7 +7,7 @@ include HmcString
 
 class Lpar_profile
 
-	attr_accessor :sys
+  attr_accessor :sys
   attr_accessor :name
   attr_accessor :lpar_name
 
@@ -61,7 +61,6 @@ class Lpar_profile
   attr_accessor :bsr_arrays
   attr_accessor :lpar_proc_compat_mode
   attr_accessor :lhea_capabilities
-  attr_accessor :lpar_proc_compat_mode
   attr_accessor :electronic_err_reporting
 
   attr_reader :io_slots
@@ -78,7 +77,6 @@ class Lpar_profile
   attr_accessor :hca_adapters_raw
   attr_accessor :sriov_eth_logical_ports_raw
 
-
   attr_reader :virtual_vasi_adapters
   attr_reader :virtual_eth_vsi_profiles
 
@@ -87,21 +85,21 @@ class Lpar_profile
 
   attr_accessor :sni_device_ids
 
-  #taken from: https://www.ibm.com/support/knowledgecenter/en/POWER8/p8edm/lssyscfg.html (see description of -F parameter)
+  # taken from: https://www.ibm.com/support/knowledgecenter/en/POWER8/p8edm/lssyscfg.html
+  # (see description of -F parameter)
   attr_reader :sriov_eth_logical_ports_raw
   attr_reader :sriov_eth_logical_ports
   attr_reader :vnic_adapters_raw
   attr_reader :vnic_adapters
 
-
    # own attributes
   attr_accessor :_compatibility
-  attr_reader   :_parametr_order
+  attr_reader   :_parameter_order
   attr_reader   :_default_params
 
   attr_reader   :virtual_slots
 
-	def initialize(lpar_id='', profile_name='normal')
+  def initialize(lpar_id = '', profile_name = 'normal')
 
     string = ''
 
@@ -112,48 +110,49 @@ class Lpar_profile
       end
     end
 
-
     @lpar_id = lpar_id
     @name    = profile_name
 
-    @_variables = Hash.new
-    @_variables['variables_int'] = %w(lpar_id min_mem desired_mem max_mem all_resources min_procs desired_procs max_procs max_virtual_slots
-            auto_start conn_monitoring uncap_weight bsr_arrays shared_proc_pool_id)
-    @_variables['variables_float'] = %w(min_proc_units desired_proc_units max_proc_units mem_expansion)
+    @_variables = {}
+    @_variables['variables_int'] = %w[lpar_id min_mem desired_mem max_mem all_resources min_procs desired_procs
+                                      max_procs max_virtual_slots
+                                      auto_start conn_monitoring uncap_weight bsr_arrays shared_proc_pool_id]
+    @_variables['variables_float'] = %w[min_proc_units desired_proc_units max_proc_units mem_expansion]
 
-    @_variables['string'] = ['name', 'lpar_name', 'lpar_env', 'mem_mode', 'proc_mode', 'sharing_mode',
-                              'lpar_io_pool_ids', 'boot_mode',
-                              'power_ctrl_lpar_ids', 'work_group_id', 'redundant_err_path_reporting', 'hpt_ratio',
-                              'affinity_group_id', 'lhea_capabilities' 'lpar_proc_compat_mode', 'lhea_capabilities', 'lpar_proc_compat_mode',
-                              'electronic_err_reporting', 'min_num_huge_pages', 'desired_num_huge_pages', 'max_num_huge_pages',
-                              'shared_proc_pool_name', 'sni_device_ids']
-
-
-    @_variables['string_raw'] = %w( hca_adapters vtpm_adapters virtual_vasi_adapters virtual_eth_vsi_profiles sriov_eth_logical_ports vnic_adapters
-         sriov_eth_logical_ports
-)
-
-    @_variables['string_virtual_raw'] = %w(virtual_serial_adapters virtual_scsi_adapters virtual_eth_adapters virtual_fc_adapters)
-
-    @_functions_self = %w(io_slots hca_adapters vtpm_adapters lhea_logical_ports sriov_eth_logical_ports virtual_vasi_adapters virtual_eth_vsi_profiles
-      vnic_adapters)
-    @_functions_virtual_slots = %w( virtual_serial_adapters virtual_scsi_adapters virtual_eth_adapters  virtual_fc_adapters)
+    @_variables['string'] = %w[ name lpar_name lpar_env mem_mode proc_mode sharing_mode
+                                lpar_io_pool_ids boot_mode
+                                power_ctrl_lpar_ids work_group_id redundant_err_path_reporting hpt_ratio
+                                affinity_group_id lhea_capabilities lpar_proc_compat_mode lhea_capabilities
+                                lpar_proc_compat_mode electronic_err_reporting min_num_huge_pages desired_num_huge_pages
+                                max_num_huge_pages shared_proc_pool_name sni_device_ids ]
 
 
+    @_variables['string_raw'] = %w[ hca_adapters vtpm_adapters virtual_vasi_adapters virtual_eth_vsi_profiles
+                                    sriov_eth_logical_ports vnic_adapters sriov_eth_logical_ports ]
 
-    @_default_params = Hash.new
-    @_default_params['power5'] = %w{name lpar_name lpar_id lpar_env all_resources min_mem desired_mem max_mem min_num_huge_pages
-      desired_num_huge_pages max_num_huge_pages mem_mode hpt_ratio proc_mode min_proc_units
+
+    @_variables['string_virtual_raw'] = %w[virtual_serial_adapters virtual_scsi_adapters virtual_eth_adapters
+                                           virtual_fc_adapters]
+
+    @_functions_self = %w[io_slots hca_adapters vtpm_adapters lhea_logical_ports sriov_eth_logical_ports
+                          virtual_vasi_adapters virtual_eth_vsi_profiles vnic_adapters]
+    @_functions_virtual_slots = %w[ virtual_serial_adapters virtual_scsi_adapters virtual_eth_adapters  virtual_fc_adapters]
+
+
+
+    @_default_params = {}
+    @_default_params['power5'] = %w[name lpar_name lpar_id lpar_env all_resources min_mem desired_mem max_mem
+      min_num_huge_pages desired_num_huge_pages max_num_huge_pages mem_mode hpt_ratio proc_mode min_proc_units
       desired_proc_units max_proc_units min_procs desired_procs max_procs sharing_mode uncap_weight
       io_slots lpar_io_pool_ids max_virtual_slots virtual_serial_adapters virtual_scsi_adapters virtual_eth_adapters
-      hca_adapters boot_mode conn_monitoring auto_start power_ctrl_lpar_ids work_group_id redundant_err_path_reporting }
+      hca_adapters boot_mode conn_monitoring auto_start power_ctrl_lpar_ids work_group_id redundant_err_path_reporting ]
 
     @lhea_logical_ports = []
     @hca_adapters = []
     @io_slots = []
 
     @_compatibility = 'power5'
-    @_parametr_order = []
+    @_parameter_order = []
 
     @sriov_eth_logical_ports = nil
     @vtpm_adapters = nil
@@ -165,15 +164,15 @@ class Lpar_profile
     @virtual_eth_vsi_profiles_raw = nil
     @virtual_vasi_adapters_raw = nil
     @sriov_eth_logical_ports_raw = nil
-    @sys  = nil
+    @sys = nil
     @lpar_name = nil
 
 
     @virtual_slots = Lpar_virtual_slots.new
     @virtual_slots.profile_name=@name
 
-    if string.length > 0
-      self.parse(string)
+    if string.size > 0
+      parse(string)
     end
 
   end
@@ -181,16 +180,15 @@ class Lpar_profile
   def adapter_add(adapter)
 
     case adapter.class.to_s
-      when 'VirtualEthAdapter'    then self.virtual_slots.virtual_eth_adapters_add(adapter)
-      when 'VirtualScsiAdapter'   then self.virtual_slots.virtual_scsi_adapters_add(adapter)
-      when 'VirtualSerialAdapter' then self.virtual_slots.virtual_serial_adapters_add(adapter)
-      when 'VirtualFCAdapter'     then self.virtual_slots.virtual_fc_adapters_add(adapter)
-      else
-        pp 'adapter class:' +  adapter.class
-        raise 'unknown type of Virtual Adapter'
+    when 'VirtualEthAdapter'    then self.virtual_slots.virtual_eth_adapters_add(adapter)
+    when 'VirtualScsiAdapter'   then self.virtual_slots.virtual_scsi_adapters_add(adapter)
+    when 'VirtualSerialAdapter' then self.virtual_slots.virtual_serial_adapters_add(adapter)
+    when 'VirtualFCAdapter'     then self.virtual_slots.virtual_fc_adapters_add(adapter)
+    else
+      pp 'adapter class:' +  adapter.class
+      raise 'unknown type of Virtual Adapter'
     end
   end
-
 
   def io_slots_to_s
 
@@ -213,49 +211,49 @@ class Lpar_profile
   end
 
   def hca_adapters_to_s
-    #TODO: it should have separate class of each adapter and function to analyze it (not used now on my Power5)
+    # TODO: it should have separate class of each adapter and function to analyze it (not used now on my Power5)
     unless @hca_adapters_raw.nil?
       'none'
     end
   end
 
   def vtpm_adapters_to_s
-    #TODO: it should have separate class of each adapter and function to analyze it (not used now on my Power5)
+    # TODO: it should have separate class of each adapter and function to analyze it (not used now on my Power5)
     unless @vtpm_adapters_raw.nil?
       'none'
     end
   end
 
   def virtual_eth_vsi_profiles_to_s
-    #TODO: it should have separate class of each adapter and function to analyze it (not used now on my Power5)
+    # TODO: it should have separate class of each adapter and function to analyze it (not used now on my Power5)
     unless @virtual_eth_vsi_profiles_raw.nil?
       'none'
     end
   end
 
   def lhea_logical_ports_to_s
-    #TODO: it should have separate class of each adapter and function to analyze it (not used now on my Power5)
+    # TODO: it should have separate class of each adapter and function to analyze it (not used now on my Power5)
     unless @lhea_logical_ports_raw.nil?
       @lhea_logical_ports_raw
     end
   end
 
   def virtual_vasi_adapters_to_s
-    #TODO: it should have separate class of each adapter and function to analyze it (not used now on my Power5)
+    # TODO: it should have separate class of each adapter and function to analyze it (not used now on my Power5)
     unless @virtual_vasi_adapters_raw.nil?
       'none'
     end
   end
 
   def sriov_eth_logical_ports_to_s
-    #TODO: it should have separate class of each adapter and function to analyze it (not used now on my Power5)
+    # TODO: it should have separate class of each adapter and function to analyze it (not used now on my Power5)
     unless @sriov_eth_logical_ports_raw.nil?
       'none'
     end
   end
 
   def vnic_adapters_to_s
-    #TODO: it should have separate class of each adapter and function to analyze it (not used now on my Power5, found in manual on IBM site)
+    # TODO: it should have separate class of each adapter and function to analyze it (not used now on my Power5, found in manual on IBM site)
     unless @vnic_adapters_raw.nil?
       'none'
     end
@@ -269,8 +267,8 @@ class Lpar_profile
     result_array = []
 
     if params == 'all'
-      if @_parametr_order.count > 0
-        params_to_print = @_parametr_order
+      if @_parameter_order.count > 0
+        params_to_print = @_parameter_order
       else
         params_to_print = @_default_params[@_compatibility]
       end
@@ -279,29 +277,28 @@ class Lpar_profile
     end
 
     if exclude_cols != 'none'
-        exclude_cols.split(',').each { |column|
-          params_to_print.delete(column)
-        }
+      exclude_cols.split(',').each { |column|
+        params_to_print.delete(column)
+      }
     end
 
+    params_to_print.each { |parameter|
 
-    params_to_print.each {|parametr|
+      if @_functions_self.include?(parameter)
 
-      if @_functions_self.include?(parametr)
-
-        tmp = self.send("#{parametr}_to_s")
-        tmp = make_string(parametr, tmp)
+        tmp = self.send("#{parameter}_to_s")
+        tmp = make_string(parameter, tmp)
         result_array.push(tmp) unless tmp.nil?
 
-      elsif @_functions_virtual_slots.include?(parametr)
+      elsif @_functions_virtual_slots.include?(parameter)
 
-          tmp = @virtual_slots.send("#{parametr}_to_s")
-          tmp = make_string(parametr, tmp)
-          result_array.push(tmp) unless tmp.nil?
+        tmp = @virtual_slots.send("#{parameter}_to_s")
+        tmp = make_string(parameter, tmp)
+        result_array.push(tmp) unless tmp.nil?
 
       else
-        unless self.instance_variable_get("@#{parametr}") == nil
-          result_array.push (make_string(parametr, self.instance_variable_get("@#{parametr}").to_s))
+        unless self.instance_variable_get("@#{parameter}") == nil
+          result_array.push (make_string(parameter, self.instance_variable_get("@#{parameter}").to_s))
         end
       end
     }
@@ -321,21 +318,19 @@ class Lpar_profile
   end
 
   def mksyscfg_cmd
-		"mksyscfg -r lpar -m #{@sys} -i \"" + self.to_s + '"'
-	end
+    "mksyscfg -r lpar -m #{@sys} -i \"" + self.to_s + '"'
+  end
 
+  def remove_cmd
+    "rmsyscfg -m #{@sys} -r lpar -n #{@lpar_name}"
+  end
 
-	def remove_cmd
-		"rmsyscfg -m #{@sys} -r lpar -n #{@lpar_name}"
-	end
-
-
-	def lssyscfgProfDecode(string)
+  def lssyscfgProfDecode(string)
 
     string.gsub!("\n", '')
     string.gsub!("\r", '')
 
-    HmcString.parse(string).each {|name, value|
+    HmcString.parse(string).each { |name, value|
 
       if @_variables['variables_int'].include?(name)
         instance_variable_set("@#{name}", value.to_i)
@@ -344,12 +339,12 @@ class Lpar_profile
       elsif @_variables['string_virtual_raw'].include?(name)
 
         case name
-          when 'virtual_fc_adapters'     then @virtual_slots.virtual_fc_adapters_raw = value
-          when 'virtual_eth_adapters'    then @virtual_slots.virtual_eth_adapters_raw = value
-          when 'virtual_scsi_adapters'   then @virtual_slots.virtual_scsi_adapters_raw = value
-          when 'virtual_serial_adapters' then @virtual_slots.virtual_serial_adapters_raw = value
-          else
-            raise 'unknown virtual slot type' + name
+        when 'virtual_fc_adapters'     then @virtual_slots.virtual_fc_adapters_raw = value
+        when 'virtual_eth_adapters'    then @virtual_slots.virtual_eth_adapters_raw = value
+        when 'virtual_scsi_adapters'   then @virtual_slots.virtual_scsi_adapters_raw = value
+        when 'virtual_serial_adapters' then @virtual_slots.virtual_serial_adapters_raw = value
+        else
+          raise 'unknown virtual slot type' + name
         end
       elsif name == 'io_slots'
         self.io_slots_raw = value
@@ -364,7 +359,7 @@ class Lpar_profile
         raise
       end
 
-      @_parametr_order.push(name)
+      @_parameter_order.push(name)
     }
 
     @virtual_slots.profile_name=@name
@@ -383,12 +378,12 @@ class Lpar_profile
 
 
   def io_slots_raw=(string)
-      if string != 'none'
-        string.split(',').each { |adapter_string|
-          @io_slots.push(Lpar_IO_slot.new(adapter_string))
-        }
-      end
-      @io_slots_raw = string
+    if string != 'none'
+      string.split(',').each { |adapter_string|
+        @io_slots.push(Lpar_IO_slot.new(adapter_string))
+      }
+    end
+    @io_slots_raw = string
   end
 
   def lhea_logical_ports_raw=(string)
@@ -406,7 +401,7 @@ class Lpar_profile
 
   def diff_show (another_profile, columns_to_compare = 'all', columns_to_ignore = 'none')
 
-    diffs = Hash.new
+    diffs = {}
     ignore = columns_to_ignore.split(',')
     compare = columns_to_compare.split(',')
 
@@ -414,7 +409,7 @@ class Lpar_profile
       @_variables[type].each { |name|
 
         next if ignore.include?(name)
-        next if columns_to_compare != 'all' and ! compare.include?(name)
+        next if columns_to_compare != 'all' && !compare.include?(name)
 
         if type == 'string_virtual_raw'
           diffs.merge!(self.virtual_slots.diff(another_profile.virtual_slots, type))
@@ -432,7 +427,7 @@ class Lpar_profile
           difference[another_profile.name] = val_profile
           difference[self.name]            = val_self
 
-          diffs[name] =  difference
+          diffs[name] = difference
         end
 
       }
