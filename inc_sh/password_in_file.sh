@@ -1,5 +1,8 @@
+#@IgnoreInspection BashAddShebang
 
 password_write_to_file_if_empty() {
+
+    (($DEBUG >= 9)) && set -x
 
     [ -z $PASSWORD_FILE ] && PASSWORD_FILE="$HOME/.tmp/passwd.$$"
 
@@ -20,6 +23,7 @@ password_write_to_file_if_empty() {
 
 password_remove_file() {
 
+    (($DEBUG >= 9)) && set -x
     [ -z ${PASSWORD_FILE} ] && rm ${PASSWORD_FILE}
 
 }
