@@ -1,5 +1,4 @@
 #! /bin/bash
-set -x
 
 . ../inc_sh/password_in_file.sh
 
@@ -44,7 +43,7 @@ do
     -u|--user)   shift; HMC_USER=$1;   shift;;
     -d|--base-dir) shift; DIR_BASE=$1; shift;;
     -p|--password|--passwd) shift; PASSWORD=$1; shift;;
-    --verbose) shift; VERBOSE=$1; shift;;
+    --verbose) shift; DEBUG=$1; shift;;
 
     *) echo "Wrong option $1"; exit 1;
     esac
