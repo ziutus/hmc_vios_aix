@@ -5,7 +5,6 @@ require 'AIX/ErrptEntry'
 require 'test/unit'
 require 'pp'
 
-
 # noinspection RubyResolve
 class TestAixErrptEntry < Test::Unit::TestCase
 
@@ -14,50 +13,49 @@ class TestAixErrptEntry < Test::Unit::TestCase
 #A6DF45AA   0925162713 I O RMCdaemon      The daemon is started.
 #1BA7DF4E   0925162713 P S SRC            SOFTWARE PROGRAM ERROR
 
-	# example data taken from: http://www.unixmantra.com/2013/09/aix-os-errpt-error-output-explained.html
+  # example data taken from: http://www.unixmantra.com/2013/09/aix-os-errpt-error-output-explained.html
 	def test_decode_1
-		string='982C78BF   0930152713 T S mir0           DISPLAY ADAPTER CONFIGURATION ERROR'
-		
-		entry = ErrptEntry.new(string)
-		assert_equal('982C78BF',    entry.identifier)
-		assert_equal('0930152713',  entry.datetime)
-		assert_equal('T', 			entry.type)
-		assert_equal('S', 			entry.class)
-		assert_equal('mir0', 		entry.resource_name)
-		assert_equal('DISPLAY ADAPTER CONFIGURATION ERROR', entry.description)
-	end	
+        string='982C78BF   0930152713 T S mir0           DISPLAY ADAPTER CONFIGURATION ERROR'
 
-	# example data taken from: http://www.unixmantra.com/2013/09/aix-os-errpt-error-output-explained.html
-	def test_decode_2
-		string='49A83216   0930152913 T H hdisk0         DISK OPERATION ERROR'
-		
-		entry = ErrptEntry.new(string)
-		assert_equal('49A83216',    entry.identifier)
-		assert_equal('0930152913',  entry.datetime)
-		assert_equal('T', 			entry.type)
-		assert_equal('H', 			entry.class)
-		assert_equal('hdisk0', 		entry.resource_name)
-		assert_equal('DISK OPERATION ERROR', entry.description)
-	end	
-	
-	# example data taken from: http://www.unixmantra.com/2013/09/aix-os-errpt-error-output-explained.html
-	def test_decode_3
-		string='9DBCFDEE   0929104613 T O errdemon       ERROR LOGGING TURNED ON'
-		
-		entry = ErrptEntry.new(string)
-		assert_equal('9DBCFDEE',    entry.identifier)
-		assert_equal('0929104613',  entry.datetime)
-		assert_equal('T', 			entry.type)
-		assert_equal('O', 			entry.class)
-		assert_equal('errdemon', 		entry.resource_name)
-		assert_equal('ERROR LOGGING TURNED ON', entry.description)
-	end	
-	
-	
-	# example data taken from: http://www.unixmantra.com/2013/09/aix-os-errpt-error-output-explained.html
-	def test_decode_long_1
+        entry = ErrptEntry.new(string)
+        assert_equal('982C78BF',    entry.identifier)
+        assert_equal('0930152713',  entry.datetime)
+        assert_equal('T', 			entry.type)
+        assert_equal('S', 			entry.class)
+        assert_equal('mir0', 		entry.resource_name)
+        assert_equal('DISPLAY ADAPTER CONFIGURATION ERROR', entry.description)
+    end
 
-		string='LABEL:          DISK_ERR4
+  # example data taken from: http://www.unixmantra.com/2013/09/aix-os-errpt-error-output-explained.html
+  def test_decode_2
+    string='49A83216   0930152913 T H hdisk0         DISK OPERATION ERROR'
+
+    entry = ErrptEntry.new(string)
+    assert_equal('49A83216',    entry.identifier)
+    assert_equal('0930152913',  entry.datetime)
+    assert_equal('T', 			entry.type)
+    assert_equal('H', 			entry.class)
+    assert_equal('hdisk0', 		entry.resource_name)
+    assert_equal('DISK OPERATION ERROR', entry.description)
+  end
+
+  # example data taken from: http://www.unixmantra.com/2013/09/aix-os-errpt-error-output-explained.html
+  def test_decode_3
+    string='9DBCFDEE   0929104613 T O errdemon       ERROR LOGGING TURNED ON'
+
+    entry = ErrptEntry.new(string)
+    assert_equal('9DBCFDEE',    entry.identifier)
+    assert_equal('0929104613',  entry.datetime)
+    assert_equal('T', 			entry.type)
+    assert_equal('O', 			entry.class)
+    assert_equal('errdemon', 		entry.resource_name)
+    assert_equal('ERROR LOGGING TURNED ON', entry.description)
+  end
+
+  # example data taken from: http://www.unixmantra.com/2013/09/aix-os-errpt-error-output-explained.html
+  def test_decode_long_1
+
+    string='LABEL:          DISK_ERR4
 IDENTIFIER:     49A83216
 
 Date/Time:       Thu Sep 30 15:29:45 CST 2013
@@ -118,10 +116,10 @@ SENSE DATA
 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 
 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 001A 0000'
 
-		entry = ErrptEntry.new(string)
-		assert_equal('DISK_ERR4', entry.label)
-		assert_equal('49A83216', entry.identifier)
-		assert_equal('Thu Sep 30 15:29:45 CST 2013', entry.datetime_long)
+    entry = ErrptEntry.new(string)
+    assert_equal('DISK_ERR4', entry.label)
+    assert_equal('49A83216', entry.identifier)
+    assert_equal('Thu Sep 30 15:29:45 CST 2013', entry.datetime_long)
 #		assert_equal('hdisk0', entry.resource_name)
-	end
+  end
 end

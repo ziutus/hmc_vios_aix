@@ -74,10 +74,10 @@ class TestHMCLparProfile < Test::Unit::TestCase
 
     assert_equal(string, profile.to_s)
 
-    assert_equal(profile._parametr_order.count, 32)
-    assert_equal(profile._parametr_order[0], 'name')
-    assert_equal(profile._parametr_order[3], 'lpar_env')
-    assert_equal(profile._parametr_order[9], 'hpt_ratio')
+    assert_equal(profile._parameter_order.count, 32)
+    assert_equal(profile._parameter_order[0], 'name')
+    assert_equal(profile._parameter_order[3], 'lpar_env')
+    assert_equal(profile._parameter_order[9], 'hpt_ratio')
 
 		assert_equal(profile.name, 							'normal')
 		assert_equal(profile.lpar_name,						'vios2')
