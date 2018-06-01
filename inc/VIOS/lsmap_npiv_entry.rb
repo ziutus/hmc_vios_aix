@@ -16,11 +16,10 @@ class Lsmap_npiv_entry
   attr_reader :vfc_client_name
   attr_reader :vfc_client_drc
 
-
   def initialize(string)
 
-    @data = Hash.new
-    @data_string_raw=''
+    @data = {}
+    @data_string_raw = ''
 
     @name = nil
     @physloc = nil
@@ -35,28 +34,32 @@ class Lsmap_npiv_entry
     @vfc_client_name = nil
     @vfc_client_drc = nil
 
-
-    if string.length > 0
+    unless string.empty?
       @data_string_raw = string
-      self.parse(string)
+      parse(string)
     end
   end
 
   def parse(string)
 
+    r_status = 'LOGGED_IN|NOT_LOGGED_IN'
+    r_flags = 'a<LOGGED_IN,STRIP_MERGE>|1<NOT_MAPPED,NOT_CONNECTED>|4<NOT_LOGGED>'
+    r_client_drc  = '\w{5}\.\w{3}\.\w{7}\-V\d+\-C\d+|\w{5}\.\w{3}\.\w{7}\-V\d+\-C\d+\-T\d+|'
+    r_physloc     = '\w{5}\.\w{3}\.\w{7}\-V\d+\-C\d+'
+    r_fc_loc_code = '\w{5}\.\w{3}\.\w{7}\-P\d+\-C\d+\-T\d+|'
+    r_lparname = '[\w\w_\-]+|'
+
     regexp = %r{^\s*Name\s+Physloc\s+ClntID\s+ClntName\s+ClntOS\s+
 .*\s*
-(vfchost\d+)\s+(\w{5}\.\w{3}.\w{7}-V\d+-C\d+)\s+(\d+)\s+([\w\w_\-]+|)\s+(AIX|)\s*
-Status:(LOGGED_IN|NOT_LOGGED_IN)\s+
-FC\sname:(fcs\d+|)\s+FC\s+loc\s+code:(\w{5}\.\w{3}\.\w{7}\-P\d+\-C\d+\-T\d+|)\s+
+(vfchost\d+)\s+(#{r_physloc})\s+(\d+)\s+(#{r_lparname})\s+(AIX|)\s*
+Status:(#{r_status})\s+
+FC\sname:(fcs\d+|)\s+FC\s+loc\s+code:(#{r_fc_loc_code})\s+
 Ports\slogged\sin:(\d+)\s+
-Flags:(a<LOGGED_IN,STRIP_MERGE>|1<NOT_MAPPED,NOT_CONNECTED>|4<NOT_LOGGED>)\s+
-VFC\s+client\s+name:(fcs\d+|)\s+VFC\s+client\s+DRC:(\w{5}\.\w{3}\.\w{7}\-V\d+-C\d+|\w{5}\.\w{3}\.\w{7}\-V\d+-C\d+\-T\d+|)\s*$
+Flags:(#{r_flags})\s+
+VFC\s+client\s+name:(fcs\d+|)\s+VFC\s+client\s+DRC:(#{r_client_drc})\s*$
 }mx
 
-    match        = regexp.match(string)
-
-    if match
+    if match = regexp.match(string)
       @name            = match[1]
       @physloc         = match[2]
       @clntid          = match[3].to_i
