@@ -3,36 +3,34 @@ require 'HMC/FrameIOSlot'
 
 class FrameIOSlots
 
-	attr_reader :data_string_raw
-	
-	def initialize string='' 
+  attr_reader :data_string_raw
 
-		@array = Array.new()
-		
-		if string.length > 0
-		  @data_string_raw = string
-		  self.parse(string)
-		end			
-	end
-		
-	def parse string
+  def initialize string=''
 
-		string.each_line { |line|
-				@array <<  FrameIOSlot.new(line)
-		}
-	
-	end
+    @array = Array.new()
 
-	def get_lpar lpar
+    if string.length > 0
+      @data_string_raw = string
+      self.parse(string)
+    end
+  end
 
-		@array.each { |slot|
-			
-			#if lpar == slot.lpar_name
-				##pp  slot.lpar_name.to_s + " " + slot.description
-			#end	
-		}
-	
-	end
+  def parse string
 
-	
+    string.each_line { |line|
+        @array <<  FrameIOSlot.new(line)
+    }
+
+  end
+
+  def get_lpar lpar
+
+    @array.each { |slot|
+
+      #if lpar == slot.lpar_name
+        ##pp  slot.lpar_name.to_s + " " + slot.description
+      #end
+    }
+
+  end
 end
