@@ -21,14 +21,14 @@ class HmcUpdateTest < Test::Unit::TestCase
 
   # Fake test
   def test_hmc_update_1
-    upgradeCmd = HmcUpgrade.new
-    upgradeCmd.hostname = '192.168.200.20'
-    upgradeCmd.user = 'ziutus'
-    upgradeCmd.password = 'password'
-    upgradeCmd.filename = '/hmc/HMC_Update_V7R790_SP1.iso'
+    upgrade_cmd = HmcUpgrade.new
+    upgrade_cmd.hostname = '192.168.200.20'
+    upgrade_cmd.user = 'ziutus'
+    upgrade_cmd.password = 'password'
+    upgrade_cmd.filename = '/hmc/HMC_Update_V7R790_SP1.iso'
 
     expected = 'updhmc -t s -h 192.168.200.20 -u ziutus -p password -f /hmc/HMC_Update_V7R790_SP1.iso'
-    assert_equal(expected,upgradeCmd.cmd)
+    assert_equal(expected, upgrade_cmd.cmd)
 
   end
 end
