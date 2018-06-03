@@ -2,7 +2,7 @@ module HmcString
 
   def parse(string)
 
-    myResult = Hash.new()
+    myResult = {}
     key = ''
     value = ''
     insideIndex = 1
@@ -34,9 +34,8 @@ module HmcString
 
 
     if string[i] == "=" and insideIndex == 1
-
       insideIndex = 0
-      i=i+1
+      i+=1
       next
     end
 
@@ -47,9 +46,8 @@ module HmcString
       value << string[i]
     end
   
-	  i=i+1
+	  i+=1
 	end
-	
     myResult[key]= value #last key and value (loop is ended as we haven't last ",")
 
     myResult
@@ -61,12 +59,11 @@ module HmcString
   insiteQuotationMark = 0
 	key=''
 	value=''
-	array = Array.new()
+	array = []
 
 	while i < string.length
 
 		if string[i] == '"' and string[i+1] == '"'
-			
 			if insiteQuotationMark == 0
 				insiteQuotationMark = 1
 			else 
@@ -89,7 +86,6 @@ module HmcString
 	end
 
 	array.push(value)
-	
 	array
   end
 
