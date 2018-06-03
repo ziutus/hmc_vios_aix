@@ -5,32 +5,29 @@ class FrameIOSlots
 
   attr_reader :data_string_raw
 
-  def initialize string=''
+  def initialize(string = '')
 
     @array = Array.new()
 
-    if string.length > 0
+    unless string.empty?
       @data_string_raw = string
-      self.parse(string)
+      parse(string)
     end
   end
 
-  def parse string
+  def parse(string)
 
-    string.each_line { |line|
-        @array <<  FrameIOSlot.new(line)
-    }
+    string.each_line do |line|
+      @array << FrameIOSlot.new(line)
+    end
 
   end
 
-  def get_lpar lpar
-
-    @array.each { |slot|
-
-      #if lpar == slot.lpar_name
-        ##pp  slot.lpar_name.to_s + " " + slot.description
-      #end
-    }
-
+  def get_lpar(lpar)
+    @array.each do |slot|
+      # if lpar == slot.lpar_name
+        # pp  slot.lpar_name.to_s + " " + slot.description
+      # end
+    end
   end
 end
