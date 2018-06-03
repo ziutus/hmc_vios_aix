@@ -18,7 +18,7 @@ module HmcString
       end
 
       if string[i] == '"' && string[i + 1] != '"'
-        insite_quotation_mark ==0 ? insite_quotation_mark =1 : insite_quotation_mark = 0
+        insite_quotation_mark.zero? ? insite_quotation_mark = 1 : insite_quotation_mark = 0
         i += 1
         next
       end
