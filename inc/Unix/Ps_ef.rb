@@ -6,46 +6,37 @@ require 'Unix/Ps_process'
 
 class Ps_ef
 
-	attr_reader :table  
-	attr_reader :zombies
+  attr_reader :table
+  attr_reader :zombies
 
-	def initialize string=""
+  def initialize(string = '')
+    @table = {}
 
-		@table = Hash.new()
-	
-		if string.length > 0
-			self.decode string 
-		end	
-	end 
-	
+    decode(string) unless string.empty?
+  end
 
-	def decode string 
-		
-		lines = string.split("\n")
-		
-		lines.each { |string|
-				next if string.match("UID\s+PID\s+PPID\s+C\s+STIME\s+TTY\s+TIME\s+CMD")
-		
-				process =  Ps_process.new(string)
-				@table[process.pid] = process 
-		}
+  def decode(string)
+    string.split("\n").each do |string|
+      next if string =~ /"UID\s+PID\s+PPID\s+C\s+STIME\s+TTY\s+TIME\s+CMD"/
 
-		@table.keys.each { |key|
-			entry = @table[key]
-			@table[entry.ppid].children += 1 unless entry.ppid == 0
-		} 
-		
-	end
+      process = Ps_process.new(string)
+      @table[process.pid] = process
+    end
 
-	def have_more_children	number
-		
-		array = Array.new()
-	
-		@table.keys.each { |key|
-			next if @table[key].pid == 1 or @table[key].pid == 2
-			array << @table[key].pid if @table[key].children > number
-		}
-		
-		array
-	end
+    @table.each_key do |key|
+      entry = @table[key]
+      @table[entry.ppid].children += 1 unless entry.ppid == 0
+    end
+  end
+
+  def have_more_children(number)
+    array = []
+
+    @table.each_key do |key|
+      next if @table[key].pid == 1 || @table[key].pid == 2
+      array << @table[key].pid if @table[key].children > number
+    end
+
+    array
+  end
 end
