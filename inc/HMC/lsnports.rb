@@ -4,25 +4,21 @@ class Lsnports
   attr_reader :data_string_raw
 
   def initialize(string)
+    @data = {}
+    @data_string_raw = ''
 
-    @data = Hash.new
-    @data_string_raw=''
-
-
-    if string.length > 0
-      @data_string_raw = string
-      self.parse(string)
-    end
+    parse(string) unless string.empty?
   end
 
   def parse(string)
+    @data_string_raw = string
 
-    string.split("\n").each { |line|
-      if line =~ /^\s*name\s+physloc\s+fabric\s+tports\s+aports\s+swwpns\s+awwpns\s*$/
+    string.split("\n").each do |line|
+      if line =~ %r{^\s*name\s+physloc\s+fabric\s+tports\s+aports\s+swwpns\s+awwpns\s*$}
         next
-      elsif match = /(fcs\d+)\s+(\w{5}.\d{3}.\w{7}-P\d+-C\d+-T\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s*$/.match(line)
+      elsif match = %r{(fcs\d+)\s+(\w{5}.\d{3}.\w{7}-P\d+-C\d+-T\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s*$}.match(line)
 
-        fcs = Hash.new
+        fcs = {}
         fcs['name'] = match[1]
         fcs['physloc'] = match[2]
         fcs['fabric'] = match[3].to_i
@@ -33,11 +29,10 @@ class Lsnports
 
         @data[fcs['name']] = fcs
       else
-        raise Exception, "Wrong string >#{Line}"
+        raise Exception, "Wrong string >#{line}"
       end
 
-    }
-
+    end
 
   end
 end
