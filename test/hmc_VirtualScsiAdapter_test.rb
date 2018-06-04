@@ -82,6 +82,35 @@ class TestVirtualScsiAdapter < Test::Unit::TestCase
 		assert_equal('virtualSlotNumber is not number', exception.message)
 	end
 
+	def test_can_parse
+
+		adapter = VirtualScsiAdapter.new
+
+    assert_equal(true, adapter.can_parse?('lpar_name=vios1,lpar_id=2,slot_num=2,state=1,is_required=1,adapter_type=server,remote_lpar_id=5,remote_lpar_name=nim1,remote_slot_num=2'))
+
+
+	end
+
+  def test_real_1
+
+    string = 'lpar_name=vios1,lpar_id=2,slot_num=2,state=1,is_required=1,adapter_type=server,remote_lpar_id=5,remote_lpar_name=nim1,remote_slot_num=2'
+    adapter = VirtualScsiAdapter.new
+    adapter.parse(string)
+
+    assert_equal('vios1', adapter.lpar_name)
+    assert_equal(2, adapter.lpar_id)
+    assert_equal(2, adapter.virtualSlotNumber)
+    assert_equal(1, adapter.state)
+    assert_equal(1, adapter.isRequired)
+    assert_equal('server',adapter.clientOrServer)
+    assert_equal(5, adapter.remoteLparID)
+    assert_equal('nim1', adapter.remoteLparName)
+    assert_equal(2, adapter.remoteSlotNumber)
+    assert_equal(string, adapter.to_s)
+
+  end
+
+
 #	def test_validation_2
 #	end
 end
