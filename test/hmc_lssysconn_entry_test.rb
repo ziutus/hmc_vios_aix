@@ -6,7 +6,6 @@ require 'HMC/lssysconn_entry'
 
 class HmcLssysconnTest < Test::Unit::TestCase
 
-
   def test_type_model_serial_num_to_array
     entry = Lssysconn_entry.new
     array = entry.type_model_serial_num_to_array('9131-52A*6535CCG')
@@ -218,7 +217,7 @@ class HmcLssysconnTest < Test::Unit::TestCase
   # https://www.ibm.com/developerworks/community/forums/atom/download/hmc%20lssysconn%20output.docx?nodeId=170cf43e-2872-41d9-a90a-254f8339afd0
   #
   def test_sp_phys_loc
-    string ='resource_type=sys,type_model_serial_num=8286-42A*218CA0V,sp=primary,sp_phys_loc=U78C9.001.WZS05NY-P1,ipaddr=10.128.0.23,alt_ipaddr=unavailable,state=Connected'
+    string = 'resource_type=sys,type_model_serial_num=8286-42A*218CA0V,sp=primary,sp_phys_loc=U78C9.001.WZS05NY-P1,ipaddr=10.128.0.23,alt_ipaddr=unavailable,state=Connected'
     entry = Lssysconn_entry.new(string)
 
     assert_equal('sys', entry.resource_type)
@@ -229,6 +228,5 @@ class HmcLssysconnTest < Test::Unit::TestCase
     assert_equal('unavailable', entry.alt_ipaddr)
     assert_equal('Connected', entry.state)
   end
-
 
 end
