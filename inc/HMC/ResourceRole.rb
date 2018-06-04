@@ -71,4 +71,5 @@ class ResourceRole
     end
     false
   end
+
 end
