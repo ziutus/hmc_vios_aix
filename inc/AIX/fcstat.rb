@@ -4,84 +4,91 @@ class Fcstat
   attr_accessor :device
   attr_accessor :data
 
+  attr_reader :_parsed
+
   def initialize(string)
+    @data = {}
+    @data_string_raw = ''
+    @_parsed = false
 
-    @data = Hash.new
-    @data_string_raw=''
-
-    if string.length > 0
-      @data_string_raw = string
-      self.parse(string)
-    end
+    parse(string) unless string.empty?
   end
 
-  def get_stats
+  def stats
     @data
   end
 
+  alias get_stats stats
+
   def parse(string)
+    @data_string_raw = string
 
     regexp = %r{FIBRE\sCHANNEL\sSTATISTICS\sREPORT:\s(fcs\d+)\s+
 Device\sType:\s(.*?)\s+
-Serial\sNumber:\s(\w+)\s
-Option\sROM\sVersion:\s(\w+)\s
-ZA:\s([\w\.]+)\s
-Node\sWWN:\s(\w+)\s
-Port\sWWN:\s(\w+)\s
-\s
-FC4\sTypes\s
-\s+Supported:\s+(0x\d+)\s
-\s+Active:\s+(0x\d+)\s
-Class\sof\sService:\s+(\d+)\s
-Port\sFC\sID:\s+(\w+)\s
-Port\sSpeed\s\(supported\):\s+(\d+\sGBIT)\s
-Port\sSpeed\s\(running\):\s+(\d+\sGBIT)\s
-Port\sType:\s(Fabric)\s
-\s
-Seconds\sSince\sLast\sReset:\s+(\d+)\s
-\s
-Transmit\sStatistics\s+Receive\sStatistics\s
-[-]+\s+[-]+\s
+Serial\sNumber:\s(\w+)\s+
+Option\sROM\sVersion:\s(\w+)\s+
+ZA:\s([\w\.]+)\s+
+Node\sWWN:\s(\w+)\s+
+Port\sWWN:\s(\w+)\s+
+\s+
+FC4\sTypes\s+
+\s+Supported:\s+(0x\d+)\s+
+\s+Active:\s+(0x\d+)\s+
+Class\sof\sService:\s+(\d+)\s+
+Port\sFC\sID:\s+(\w+)\s+
+Port\sSpeed\s\(supported\):\s+(\d+\sGBIT)\s+
+Port\sSpeed\s\(running\):\s+(\d+\sGBIT)\s+
+Port\sType:\s(Fabric)\s+
+\s+
+Seconds\sSince\sLast\sReset:\s+(\d+)\s+
+\s+
+Transmit\sStatistics\s+Receive\sStatistics\s+
+[-]+\s+[-]+\s+
 Frames:\s(\d+)\s+Frames:\s(\d+)\s+
 Words:\s(\d+)\s+Words:\s(\d+)\s+
-\s
-LIP\sCount:\s+(\d+)\s
-NOS\sCount:\s+(\d+)\s
-Error\sFrames:\s+(\d+)\s
-Dumped\sFrames:\s+(\d+)\s
-Link\sFailure\sCount:\s+(\d+)\s
-Loss\sof\sSync\sCount:\s+(\d+)\s
-Loss\sof\sSignal:\s+(\d+)\s
-Primitive\sSeq\sProtocol\sErr\sCount:\s+(\d+)\s
-Invalid\sTx\sWord\sCount:\s+(\d+)\s
-Invalid\sCRC\sCount:\s+(\d+)\s
 \s+
-IP\sover\sFC\sAdapter\sDriver\sInformation\s
-\s+No\sDMA\sResource\sCount:\s+(\d+)\s
-\s+No\sAdapter\sElements\sCount:\s+(\d+)\s
-\s
-FC\sSCSI\sAdapter\sDriver\sInformation\s
-\s+No\sDMA\sResource\sCount:\s+(\d+)\s
-\s+No\sAdapter\sElements\sCount:\s+(\d+)\s
-\s+No\sCommand\sResource\sCount:\s+(\d+)\s
-\s
-IP\sover\sFC\sTraffic\sStatistics\s
-\s+Input\sRequests:\s+(\d+)\s
-\s+Output\sRequests:\s+(\d+)\s
-\s+Control\sRequests:\s+(\d+)\s
-\s+Input\sBytes:\s+(\d+)\s
-\s+Output\sBytes:\s+(\d+)\s
-\s
-FC\sSCSI\sTraffic\sStatistics\s
-\s+Input\sRequests:\s+(\d+)\s
-\s+Output\sRequests:\s+(\d+)\s
-\s+Control\sRequests:\s+(\d+)\s
-\s+Input\sBytes:\s+(\d+)\s
+LIP\sCount:\s+(\d+)\s+
+NOS\sCount:\s+(\d+)\s+
+Error\sFrames:\s+(\d+)\s+
+Dumped\sFrames:\s+(\d+)\s+
+Link\sFailure\sCount:\s+(\d+)\s+
+Loss\sof\sSync\sCount:\s+(\d+)\s+
+Loss\sof\sSignal:\s+(\d+)\s+
+Primitive\sSeq\sProtocol\sErr\sCount:\s+(\d+)\s+
+Invalid\sTx\sWord\sCount:\s+(\d+)\s+
+Invalid\sCRC\sCount:\s+(\d+)\s+
+\s+
+\s+
+IP\sover\sFC\sAdapter\sDriver\sInformation\s+
+\s+No\sDMA\sResource\sCount:\s+(\d+)\s+
+\s+No\sAdapter\sElements\sCount:\s+(\d+)\s+
+\s+
+FC\sSCSI\sAdapter\sDriver\sInformation\s+
+\s+No\sDMA\sResource\sCount:\s+(\d+)\s+
+\s+No\sAdapter\sElements\sCount:\s+(\d+)\s+
+\s+No\sCommand\sResource\sCount:\s+(\d+)\s+
+\s+
+IP\sover\sFC\sTraffic\sStatistics\s+
+\s+Input\sRequests:\s+(\d+)\s+
+\s+Output\sRequests:\s+(\d+)\s+
+\s+Control\sRequests:\s+(\d+)\s+
+\s+Input\sBytes:\s+(\d+)\s+
+\s+Output\sBytes:\s+(\d+)\s+
+\s+
+FC\sSCSI\sTraffic\sStatistics\s+
+\s+Input\sRequests:\s+(\d+)\s+
+\s+Output\sRequests:\s+(\d+)\s+
+\s+Control\sRequests:\s+(\d+)\s+
+\s+Input\sBytes:\s+(\d+)\s+
 \s+Output\sBytes:\s+(\d+)\s*
 }x
 
-    if match = regexp.match(string)
-      @device         = match[1]
+    if string =~ /^\s*Error\saccessing\sODM\s*Device\snot\sfound\s*$/
+      raise 'Error accessing ODM - Device not found'
+    elsif string =~ /^\s*Error\saccessing\sODM\s*VPD\sinformation\snot\sfound\s*$/
+      raise 'Error accessing ODM - VPD information not found'
+    elsif match = regexp.match(string)
+      @device = match[1]
 
       @data['device']             = match[1]
       @data['Device Type']        = match[2]
@@ -93,13 +100,13 @@ FC\sSCSI\sTraffic\sStatistics\s
       @data['FC4 Types'] = { 'Supported' => match[8], 'Active' => match[9]  }
 
       @data['Class of Service']       = match[10]
-      @data['Port FC ID']         = match[11]
+      @data['Port FC ID']             = match[11]
       @data['Port Speed (supported)'] = match[12]
       @data['Port Speed (running)']   = match[13]
       @data['Port Type']              = match[14]
       @data['Seconds Since Last Reset'] = match[15].to_i
       @data['Transmit Statistics'] = { 'Frames' => match[16].to_i, 'Words'  => match[18].to_i}
-      @data['Receive Statistics']= { 'Frames' => match[17].to_i, 'Words'  => match[19].to_i}
+      @data['Receive Statistics'] = { 'Frames' => match[17].to_i, 'Words'  => match[19].to_i}
       @data['LIP Count']          = match[20].to_i
       @data['NOS Count']          = match[21].to_i
       @data['Error Frames']       = match[22].to_i
@@ -122,6 +129,8 @@ FC\sSCSI\sTraffic\sStatistics\s
       puts string
       raise 'fcstat - regexp is not working'
     end
+
+    @_parsed = true
   end
 
 end
