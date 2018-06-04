@@ -8,12 +8,12 @@ class TestVirtualScsiAdapter < Test::Unit::TestCase
  
 	def test_base
 		adapter = VirtualScsiAdapter.new
-		adapter.virtualSlotNumber =1
-		adapter.clientOrServer		='client'
-		adapter.remoteLparID		  =2
-		adapter.remoteLparName		='lpar2'
-		adapter.remoteSlotNumber	=3
-		adapter.isRequired			  =1
+		adapter.virtualSlotNumber = 1
+		adapter.clientOrServer		= 'client'
+		adapter.remoteLparID		  = 2
+		adapter.remoteLparName		= 'lpar2'
+		adapter.remoteSlotNumber	= 3
+		adapter.isRequired			  = 1
 		
 		#virtual-slot-number/client-or-server/[remote-lpar-ID]/[remote-lpar-name]/[remote-slot-number]/is-required
 		assert_equal('1/client/2/lpar2/3/1', adapter.to_s)
