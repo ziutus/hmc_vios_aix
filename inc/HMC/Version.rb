@@ -8,14 +8,10 @@ class Version
   attr_reader :patches
   attr_reader :patches_raw
 
+  def initialize(string = '')
 
-  def initialize string=''
-
-	@patches = Hash.new()
-  
-    if string.length > 0
-        self.parse(string)
-    end
+    @patches = {}
+    parse(string) unless string.empty?
   end
 
   def parse(string)
@@ -39,16 +35,14 @@ HMC\sBuild\slevel\s([\d\.]+)\s*
     match = regexp.match(string)
 
     if match
-      @version        = match[1]
-      @release		    = match[2]
-      @servicePack 		= match[3]
+      @version = match[1]
+      @release	= match[2]
+      @servicePack = match[3]
       @hmcBuildLevel 	= match[4]
-      @patches_raw	    = match[5]
-      @base_version 	= match[6]
+      @patches_raw	= match[5]
+      @base_version = match[6]
 
-        if @patches_raw.length > 0
-          parsePatches(@patches_raw)
-        end
+      parse_patches(@patches_raw) unless @patches_raw.empty?
 
     else
       puts string
@@ -60,7 +54,7 @@ HMC\sBuild\slevel\s([\d\.]+)\s*
     end
   end
 
-  def parsePatches string
+  def parse_patches(string)
 
     regexp = %r{(MH\d{5})\:(.*)}
     match = regexp.match(string)
@@ -68,21 +62,19 @@ HMC\sBuild\slevel\s([\d\.]+)\s*
     if match
       version        = match[1]
       description	 = match[2]
-	  
- 	  @patches[version] = description			  
+      @patches[version] = description
     else
       puts string
       puts regexp
       puts match
       puts "regexp couldn't decode string #{string}"
       raise
-
     end
 
   end
 
-  def hasFix?(fixName)
-    return @patches.has_key?(fixName)
+  def hasFix?(fix_name)
+    @patches.key?(fix_name)
   end
 
   def version_cmd
