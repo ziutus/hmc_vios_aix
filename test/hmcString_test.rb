@@ -13,12 +13,12 @@ class TestString < Test::Unit::TestCase
 
   def test_String
 
-      string = 'name=L2support,"resources=lpar:root/ibmhscS1_0|1*9131-52A*6535CCG|IBMHSC_Partition,lpar:root/ibmhscS1_0|5*9131-52A*6535CCG|IBMHSC_Partition",nameLong=L2supportRole'
+    string = 'name=L2support,"resources=lpar:root/ibmhscS1_0|1*9131-52A*6535CCG|IBMHSC_Partition,lpar:root/ibmhscS1_0|5*9131-52A*6535CCG|IBMHSC_Partition",nameLong=L2supportRole'
 
-      hash = HmcString.parse(string)
+    hash = HmcString.parse(string)
 
-      assert_equal('L2support', hash['name'], 'name - L2support')
-      assert_equal('L2supportRole', hash['nameLong'], 'nameLong - L2supportRole')
+    assert_equal('L2support', hash['name'], 'name - L2support')
+    assert_equal('L2supportRole', hash['nameLong'], 'nameLong - L2supportRole')
 
   end
 
