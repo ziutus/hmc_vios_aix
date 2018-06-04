@@ -8,9 +8,8 @@ class Lsmap
 #	attr_reader :data_string_raw
 	
 	
-	def initialize string='' 
-		
-		@mapping = Hash.new()
+	def initialize(string = '')
+		@mapping = {}
 		
 		if string.length > 0
 #		  @data_string_raw = string
