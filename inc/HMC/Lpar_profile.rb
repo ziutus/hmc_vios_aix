@@ -196,10 +196,10 @@ class Lpar_profile
       elsif @io_slots.size == 1
         result = @io_slots[0].join('/')
       else
-        adapters=[]
-        @io_slots.each { |adapter|
+        adapters = []
+        @io_slots.each do |adapter|
           adapters.push(adapter.to_s)
-        }
+        end
         result = adapters.join(',')
       end
     end
@@ -209,23 +209,17 @@ class Lpar_profile
 
   def hca_adapters_to_s
     # TODO: it should have separate class of each adapter and function to analyze it (not used now on my Power5)
-    unless @hca_adapters_raw.nil?
-      'none'
-    end
+    'none' unless @hca_adapters_raw.nil?
   end
 
   def vtpm_adapters_to_s
     # TODO: it should have separate class of each adapter and function to analyze it (not used now on my Power5)
-    unless @vtpm_adapters_raw.nil?
-      'none'
-    end
+    'none' unless @vtpm_adapters_raw.nil?
   end
 
   def virtual_eth_vsi_profiles_to_s
     # TODO: it should have separate class of each adapter and function to analyze it (not used now on my Power5)
-    unless @virtual_eth_vsi_profiles_raw.nil?
-      'none'
-    end
+    'none' unless @virtual_eth_vsi_profiles_raw.nil?
   end
 
   def lhea_logical_ports_to_s
@@ -277,7 +271,7 @@ class Lpar_profile
       }
     end
 
-    params_to_print.each { |parameter|
+    params_to_print.each do |parameter|
 
       if @_functions_self.include?(parameter)
 
@@ -292,11 +286,11 @@ class Lpar_profile
         result_array.push(tmp) unless tmp.nil?
 
       else
-        unless instance_variable_get("@#{parameter}") == nil
-          result_array.push (make_string(parameter, instance_variable_get("@#{parameter}").to_s))
+        unless instance_variable_get("@#{parameter}").nil?
+          result_array.push(make_string(parameter, instance_variable_get("@#{parameter}").to_s))
         end
       end
-    }
+    end
 
     result_array.join(',')
   end
@@ -322,8 +316,8 @@ class Lpar_profile
 
   def lssyscfgProfDecode(string)
 
-    string.gsub!("\n", '')
-    string.gsub!("\r", '')
+    string.delete!("\n")
+    string.delete!("\r")
 
     HmcString.parse(string).each { |name, value|
 
@@ -369,25 +363,25 @@ class Lpar_profile
 
   end
 
-   alias :parse :lssyscfgProfDecode
+  alias parse lssyscfgProfDecode
 
 
   def io_slots_raw=(string)
     if string != 'none'
-      string.split(',').each { |adapter_string|
+      string.split(',').each do |adapter_string|
         @io_slots.push(Lpar_IO_slot.new(adapter_string))
-      }
+      end
     end
     @io_slots_raw = string
   end
 
   def lhea_logical_ports_raw=(string)
     if string != 'none'
-      string.split(',').each { |adapter_string|
+      string.split(',').each do |adapter_string|
         @lhea_logical_ports.push(adapter_string.split('/'))
-      }
       end
-      @lhea_logical_ports_raw = string
+    end
+    @lhea_logical_ports_raw = string
   end
 
   def ==(other)
