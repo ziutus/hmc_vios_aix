@@ -1,152 +1,169 @@
 class VirtualEthAdapter
 
+  attr_accessor :virtualSlotNumber
+  attr_accessor :isIEEE
+  attr_accessor :portVlanID
+  attr_accessor :additionalVlanIDs
+  attr_accessor :trunkPriority
+  attr_accessor :isTrunk
+  attr_accessor :isRequired
+  attr_accessor :virtualSwitch
+  attr_accessor :macAddress
+  attr_accessor :allowedOsMacAddresses
+  attr_accessor :qosPiority
 
-	attr_accessor :virtualSlotNumber
-	attr_accessor :isIEEE
-	attr_accessor :portVlanID
-	attr_accessor :additionalVlanIDs
-	attr_accessor :trunkPriority
-	attr_accessor :isTrunk
-	attr_accessor :isRequired
-	attr_accessor :virtualSwitch
-	attr_accessor :macAddress
-	attr_accessor :allowedOsMacAddresses
-	attr_accessor :qosPiority
+  def initialize string=''
+    @virtualSlotNumber = nil
+    @isIEEE = 0
+    @portVlanID = nil
+    @additionalVlanIDs = ''
+    @isTrunk = 0
+    @trunkPriority = 0 #if trunk is true, trunk priority has to to be set up
+    @isRequired = 0
 
-	def initialize string='' 
-		@virtualSlotNumber
-		@isIEEE=0
-		@portVlanID 
-		@additionalVlanIDs=''
-		@isTrunk=0
-		@trunkPriority=0 #if trunk is true, trunk priority has to to be set up
-		@isRequired=0
-		
-		@virtualSwitch
-		
-		@macAddress
-		@allowedOsMacAddresses
-		@qosPiority
-		
-		if string.length > 0
-		  @data_string_raw = string
-		  self.parse(string)
-		end			
-	end
-		
-		
-	def validate
-		raise 'class: VirtualEthAdapter: function: validation, virtualSlotNumber not defined' unless (@virtualSlotNumber.is_a? Numeric)
-		raise 'class: VirtualEthAdapter: function: validation, isIEEE not defined' unless (@isIEEE.is_a? Numeric)
-		raise 'class: VirtualEthAdapter: function: validation, isRequired not defined' unless (@isRequired.is_a? Numeric)
-	end
-		
-	def to_s
-	
-		self.validate
-	
-		result ="#{@virtualSlotNumber}/#{@isIEEE}/#{@portVlanID}/#{@additionalVlanIDs}/#{@trunkPriority}/#{@isRequired}" 
-		result = result+"/#{@virtualSwitch}" 		 unless (@virtualSwitch.nil?)
-		result = result+"/#{@macAddress}" 			 unless (@macAddress.nil?)
-		result = result+"/#{@allowedOsMacAddresses}" unless (@allowedOsMacAddresses.nil?)
-		result = result+"/#{@qosPiority}" 			 unless (@qosPiority.nil?)
+    @virtualSwitch = nil
 
-		if result.include?(',')
-		  result = '""' + result + '""'
+    @macAddress = nil
+    @allowedOsMacAddresses = nil
+    @qosPiority = nil
+
+    if string.length > 0
+      @data_string_raw = string
+      self.parse(string)
+    end
+  end
+
+
+  def validate
+    raise 'class: VirtualEthAdapter: function: validation, virtualSlotNumber not defined' unless (@virtualSlotNumber.is_a? Numeric)
+    raise 'class: VirtualEthAdapter: function: validation, isIEEE not defined' unless (@isIEEE.is_a? Numeric)
+    raise 'class: VirtualEthAdapter: function: validation, isRequired not defined' unless (@isRequired.is_a? Numeric)
+  end
+
+  def to_s
+
+    self.validate
+
+    result ="#{@virtualSlotNumber}/#{@isIEEE}/#{@portVlanID}/#{@additionalVlanIDs}/#{@trunkPriority}/#{@isRequired}"
+    result = result+"/#{@virtualSwitch}" 		 unless (@virtualSwitch.nil?)
+    result = result+"/#{@macAddress}" 			 unless (@macAddress.nil?)
+    result = result+"/#{@allowedOsMacAddresses}" unless (@allowedOsMacAddresses.nil?)
+    result = result+"/#{@qosPiority}" 			 unless (@qosPiority.nil?)
+
+    if result.include?(',')
+      result = '""' + result + '""'
     end
 
-		result
-	end
-	
-	def decode(string)
+    result
+  end
+
+  def can_parse?(string)
+
+    regexp_minimum 			         = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)\s*$}
+    regexp_vswitch 			         = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\-]+)\s*$}
+    regexp_mac_address 		       = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\-]+)/(\w+|)\s*$}
+    regexp_allowed_mac_address  = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\-]+)/(\w+|)/([\w\,]+|all)\s*$}
+    regexp_qos_priority 	       = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\-]+)/(\w+|)/([\w\,]+|all)/(\d+|none)\s*$}
+
+    return true if  match = regexp_minimum
+    return true if  match = regexp_vswitch
+    return true if  match = regexp_mac_address
+    return true if  match = regexp_allowed_mac_address
+    return true if  match = regexp_qos_priority
+
+    false
+
+  end
+
+  def decode(string)
 
 #virtual-slot-number/is-IEEE/port-vlan-ID/[additional-vlan-IDs]/[trunk-priority]/is-required[/[virtual-switch][/[MAC-address]/ 
 #[allowed-OS-MAC-addresses]/[QoS-priority]]]
-	
-		regexp_minimum 			   = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)\s*$}
-		regexp_vswitch 			   = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\-]+)\s*$}
-		regexp_mac_address 		   = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\-]+)/(\w+|)\s*$}
-		regexp_allowed_mac_address = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\-]+)/(\w+|)/([\w\,]+|all)\s*$}
-		regexp_qos_priority 	   = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\-]+)/(\w+|)/([\w\,]+|all)/(\d+|none)\s*$}
 
-		if match = regexp_minimum.match(string)
-		
-			@virtualSlotNumber	= match[1].to_i	
-			@isIEEE				= match[2].to_i	
-			@portVlanID			= match[3].to_i	
-			@additionalVlanIDs	= match[4]
-			@trunkPriority		= match[5].to_i
-			@isRequired			= match[6].to_i
+    regexp_minimum 			         = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)\s*$}
+    regexp_vswitch 			         = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\-]+)\s*$}
+    regexp_mac_address 		       = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\-]+)/(\w+|)\s*$}
+    regexp_allowed_mac_address  = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\-]+)/(\w+|)/([\w\,]+|all)\s*$}
+    regexp_qos_priority 	       = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\-]+)/(\w+|)/([\w\,]+|all)/(\d+|none)\s*$}
 
-		elsif match = regexp_vswitch.match(string)
-		
-			@virtualSlotNumber	= match[1].to_i	
-			@isIEEE				= match[2].to_i	
-			@portVlanID			= match[3].to_i	
-			@additionalVlanIDs	= match[4]
-			@trunkPriority		= match[5].to_i
-			@isRequired			= match[6].to_i
-			@virtualSwitch		= match[7].to_i
+    if match = regexp_minimum.match(string)
 
-		elsif match = regexp_mac_address.match(string)
-		
-			@virtualSlotNumber	= match[1].to_i	
-			@isIEEE				= match[2].to_i	
-			@portVlanID			= match[3].to_i	
-			@additionalVlanIDs	= match[4]
-			@trunkPriority		= match[5].to_i
-			@isRequired			= match[6].to_i
-			@virtualSwitch		= match[7]
-			@macAddress			= match[8]
-			
-		elsif match = regexp_allowed_mac_address.match(string)
+      @virtualSlotNumber	= match[1].to_i
+      @isIEEE				= match[2].to_i
+      @portVlanID			= match[3].to_i
+      @additionalVlanIDs	= match[4]
+      @trunkPriority		= match[5].to_i
+      @isRequired			= match[6].to_i
 
-			@virtualSlotNumber	= match[1].to_i	
-			@isIEEE				= match[2].to_i	
-			@portVlanID			= match[3].to_i	
-			@additionalVlanIDs	= match[4]
-			@trunkPriority		= match[5].to_i
-			@isRequired			= match[6].to_i
-			@virtualSwitch		= match[7]
-			@macAddress			= match[8]
-			@allowedOsMacAddresses = match[9]
+    elsif match = regexp_vswitch.match(string)
 
-		elsif match = regexp_qos_priority.match(string)
+      @virtualSlotNumber	= match[1].to_i
+      @isIEEE				= match[2].to_i
+      @portVlanID			= match[3].to_i
+      @additionalVlanIDs	= match[4]
+      @trunkPriority		= match[5].to_i
+      @isRequired			= match[6].to_i
+      @virtualSwitch		= match[7].to_i
 
-			@virtualSlotNumber	= match[1].to_i	
-			@isIEEE				= match[2].to_i	
-			@portVlanID			= match[3].to_i	
-			@additionalVlanIDs	= match[4]
-			@trunkPriority		= match[5].to_i
-			@isRequired			= match[6].to_i
-			@virtualSwitch		= match[7]
-			@macAddress			= match[8]
-			@allowedOsMacAddresses = match[9]
-			@qosPiority			= match[10]
-			
-		else
-			raise "class:VirtualEthAdapter, function:parse, RegExp couldn't decode string >#{string}<"
-		end
-		
-		
-	end
+    elsif match = regexp_mac_address.match(string)
 
-	alias :parse :decode
+      @virtualSlotNumber	= match[1].to_i
+      @isIEEE				= match[2].to_i
+      @portVlanID			= match[3].to_i
+      @additionalVlanIDs	= match[4]
+      @trunkPriority		= match[5].to_i
+      @isRequired			= match[6].to_i
+      @virtualSwitch		= match[7]
+      @macAddress			= match[8]
 
-	def ==(another_adapter)
+    elsif match = regexp_allowed_mac_address.match(string)
+
+      @virtualSlotNumber	= match[1].to_i
+      @isIEEE				= match[2].to_i
+      @portVlanID			= match[3].to_i
+      @additionalVlanIDs	= match[4]
+      @trunkPriority		= match[5].to_i
+      @isRequired			= match[6].to_i
+      @virtualSwitch		= match[7]
+      @macAddress			= match[8]
+      @allowedOsMacAddresses = match[9]
+
+    elsif match = regexp_qos_priority.match(string)
+
+      @virtualSlotNumber	= match[1].to_i
+      @isIEEE				= match[2].to_i
+      @portVlanID			= match[3].to_i
+      @additionalVlanIDs	= match[4]
+      @trunkPriority		= match[5].to_i
+      @isRequired			= match[6].to_i
+      @virtualSwitch		= match[7]
+      @macAddress			= match[8]
+      @allowedOsMacAddresses = match[9]
+      @qosPiority			= match[10]
+
+    else
+      raise "class:VirtualEthAdapter, function:parse, RegExp couldn't decode string >#{string}<"
+    end
+
+
+  end
+
+  alias :parse :decode
+
+  def ==(another_adapter)
      self.to_s == another_adapter.to_s
-	end
+  end
 
-	def diff(other_adapter, profile1, profile2)
+  def diff(other_adapter, profile1, profile2)
 
-		diff = Hash.new
+    diff = Hash.new
 
-		if @isIEEE != other_adapter.isIEEE
-			diff_entry = Hash.new
-			diff_entry[profile1] = "isIEEE is setup to #{@isIEEE}"
-			diff_entry[profile2] = "isIEEE is setup to #{other_adapter.isIEEE}"
-			diff['isIEEE'] = diff_entry
-		end
+    if @isIEEE != other_adapter.isIEEE
+      diff_entry = Hash.new
+      diff_entry[profile1] = "isIEEE is setup to #{@isIEEE}"
+      diff_entry[profile2] = "isIEEE is setup to #{other_adapter.isIEEE}"
+      diff['isIEEE'] = diff_entry
+    end
 
     if @portVlanID != other_adapter.portVlanID
       diff_entry = Hash.new
@@ -205,14 +222,14 @@ class VirtualEthAdapter
     end
 
     if @qosPiority != other_adapter.qosPiority
-				diff_entry = Hash.new
-				diff_entry[profile1] = "qosPiority is setup to #{@qosPiority}"
-				diff_entry[profile2] = "qosPiority is setup to #{other_adapter.qosPiority}"
-				diff["qosPiority"] = diff_entry
+        diff_entry = Hash.new
+        diff_entry[profile1] = "qosPiority is setup to #{@qosPiority}"
+        diff_entry[profile2] = "qosPiority is setup to #{other_adapter.qosPiority}"
+        diff["qosPiority"] = diff_entry
     end
 
-		diff
-	end
+    diff
+  end
 
 
 end
