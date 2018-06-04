@@ -33,7 +33,6 @@ class TestVirtualFCAdapter < Test::Unit::TestCase
     assert_equal(string, adapter.to_s)
 
     # virtual-slot-number/client-or-server/[remote-lpar-ID]/[remote-lpar-name]/remote-slot-number/[wwpns]/is-required
-
     assert_equal(10, adapter.virtualSlotNumber)
     assert_equal('client', 	adapter.clientOrServer)
     assert_equal(20, adapter.remoteLparID)
