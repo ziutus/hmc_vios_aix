@@ -5,7 +5,6 @@ require 'HMC/VirtualSerialAdapter'
 require 'HMC/VirtualFCAdapter'
 
 require 'HMC/HmcString'
-
 include HmcString
 
 class Lpar_real
