@@ -2,11 +2,11 @@ require 'pp'
 
 class Lpar_IO_slot
 
+  attr_reader :data_string_raw
+
   attr_accessor :slot_DRC_index
   attr_accessor :slot_IO_pool_ID
   attr_accessor :is_required
-
-  attr_reader :data_string_raw
 
   def initialize(string)
     @slot_DRC_index = nil
