@@ -1,5 +1,9 @@
 require 'pp'
 require 'HMC/VirtualEthAdapter'
+require 'HMC/VirtualScsiAdapter'
+require 'HMC/VirtualSerialAdapter'
+require 'HMC/VirtualFCAdapter'
+
 require 'HMC/HmcString'
 
 include HmcString
@@ -52,20 +56,24 @@ class Lpar_real
   attr_reader	:curr_min_mem
   attr_reader :curr_mem
   attr_reader :curr_max_mem
-  attr_reader :pend_min_mem
-  attr_reader :pend_mem
-  attr_reader :pend_max_mem
-  attr_reader :run_min_mem
-  attr_reader :run_mem
   attr_reader :curr_min_num_huge_pages
   attr_reader :curr_num_huge_pages
   attr_reader	:curr_max_num_huge_pages
+  attr_reader :curr_hpt_ratio
+
+  # pending are target values for DLPAR
+  attr_reader :pend_min_mem
+  attr_reader :pend_mem
+  attr_reader :pend_max_mem
   attr_reader :pend_min_num_huge_pages
   attr_reader :pend_num_huge_pages
   attr_reader :pend_max_num_huge_pages
+
+  attr_reader :run_min_mem
+  attr_reader :run_mem
   attr_reader :run_num_huge_pages
+
   attr_reader :mem_mode
-  attr_reader :curr_hpt_ratio
 
   #
   attr_reader :curr_proc_mode
@@ -73,6 +81,7 @@ class Lpar_real
   attr_reader :curr_procs
   attr_reader :curr_max_procs
   attr_reader :curr_sharing_mode
+
   attr_reader	:pend_proc_mode
   attr_reader :pend_min_procs
   attr_reader :pend_procs
@@ -85,11 +94,13 @@ class Lpar_real
   attr_reader :curr_max_proc_units
   attr_reader :curr_uncap_weight
   attr_reader :curr_shared_proc_pool_id
+
   attr_reader :pend_min_proc_units
   attr_reader :pend_proc_units
   attr_reader :pend_max_proc_units
   attr_reader :pend_uncap_weight
   attr_reader :pend_shared_proc_pool_id
+
   attr_reader :run_proc_units
   attr_reader :run_procs
   attr_reader :run_uncap_weight
@@ -102,6 +113,10 @@ class Lpar_real
   attr_reader :adaptersReal
   attr_reader :adaptersVirtual
   attr_reader :virtual_scsi_adapters
+
+  #tmp values, to remove
+  attr_reader :_parsed
+  attr_accessor :type_model
 
   # https://www.ibm.com/support/knowledgecenter/HW4P4/p8edm/rsthwres.html
 
@@ -208,6 +223,19 @@ class Lpar_real
     @virtual_scsi_adapters   = []
     @virtual_serial_adapters = []
 
+    @_parsed = {
+      'lpar_info' => false,
+      'memory' => false,
+      'cpu' => false,
+      'virtual_slot' => false,
+      'virtual_eth' => false,
+      'virtual_scsi' => false,
+      'virtual_serial' => false,
+      'virtual_fc' => false,
+    }
+
+    @type_model = nil
+
     @_variables = {}
     @_variables['variables_int']    = %w[lpar_id allow_perf_collection auto_start shared_proc_pool_util_auth redundant_err_path_reporting sync_curr_profile
       time_ref lpar_avail_priority remote_restart_capable suspend_capable simplified_remote_restart_capable vtpm_enabled msp powervm_mgmt_capable]
@@ -267,7 +295,7 @@ class Lpar_real
 
   def lssyscfg_decode(string)
 
-    HmcString.parse(string).each {|name, value|
+    HmcString.parse(string).each { |name, value|
 
       if @_variables['variables_int'].include?(name)
         instance_variable_set("@#{name}", value.to_i)
@@ -277,8 +305,8 @@ class Lpar_real
         print "unknown name: #{name} with value #{value}"
         raise
       end
-
     }
+    @_parsed['lpar_info'] = true
   end
 
   def decode_mem(string)
@@ -298,6 +326,7 @@ class Lpar_real
         raise
       end
     }
+    @_parsed['memory'] = true
 
   end
 
@@ -318,6 +347,7 @@ class Lpar_real
         raise
       end
     }
+    @_parsed['cpu'] = true
 
   end
 
@@ -337,7 +367,37 @@ class Lpar_real
     @curr_max_virtual_slots = match[3].to_i
     @pend_max_virtual_slots = match[4].to_i
     @next_avail_virtual_slot = match[5].to_i
+
+    @_parsed['virtual_slot'] = true
   end
+
+  def decode_virtual_scsi(string)
+
+    string.split("\n").each { |line|
+      adapter = VirtualScsiAdapter.new
+      if adapter.can_parse?(line)
+        adapter.parse(line)
+        adaptersVirtual[adapter.virtualSlotNumber] = adapter
+      end
+    }
+    @_parsed['virtual_scsi'] = true
+
+  end
+
+  def decode_virtual_serial(string)
+
+    string.split("\n").each { |line|
+      adapter = VirtualSerialAdapter.new
+      if adapter.can_parse?(line)
+        adapter.parse(line)
+        adaptersVirtual[adapter.virtualSlotNumber] = adapter
+      end
+    }
+
+    @_parsed['virtual_serial'] = true
+  end
+
+
 
   def decode_virtualio_eth(string)
 
@@ -389,6 +449,8 @@ class Lpar_real
         puts "RegExp couldn't decode string >#{line}<"
         raise
       end
+
+      @_parsed['virtual_eth'] = true
     }
   end
 
@@ -418,11 +480,21 @@ class Lpar_real
 
   def adapter_scsi_add(adapter)
 
-    @virtual_scsi_adapters[adapter.virtualSlotNmuber] = adapter
+    @virtual_scsi_adapters[adapter.virtualSlotNumber] = adapter
 
 
     #@virtual_eth_adapters[adapter]
 #		@virtual_scsi_adapters.push(adapter)
   end
 
-end	
+  def parsed_all?
+    parsed_all = true
+    @_parsed.each_pair { |key,value|
+
+      next if @type_model == '9131-52A' and key == 'virtual_fc'
+      parsed_all = false if value == false
+    }
+    parsed_all
+  end
+
+end
