@@ -24,19 +24,11 @@ class RemoteAccess
   attr_reader :sol
 
 
-  def initialize string
-
-    if string.length > 0
-      self.parse(string)
-    end
+  def initialize(string)
+    parse(string) unless string.empty?
   end
 
-
-
-
-
-def parse(string)
-
+  def parse(string)
 
     regexp = %r{ssh=(enable|disable),
 sshprotocol=(|\d),
@@ -68,25 +60,25 @@ sol=(enabled|disabled)
       @ssh         = match[1]
       @sshprotocol = match[2]
       @remotewebui = match[3]
-      @xntp=match[4]
-      @xntpserver=match[5]
-      @syslogserver=match[6]
-      @syslogtcpserver=match[7]
-      @syslogtlsserver=match[8]
-      @altdiskboot=match[9]
-      @ldap=match[10]
-      @kerberos=match[11]
-      @kerberos_default_realm=match[12]
-      @kerberos_realm_kdc=match[13]
-      @kerberos_clockskew=match[14]
-      @kerberos_ticket_lifetime=match[15]
-      @kpasswd_admin=match[16]
-      @trace=match[17]
-      @kerberos_keyfile_present=match[18]
-      @kerberos_allow_weak_crypto=match[19]
-      @legacyhmccomm=match[20]
-      @security=match[21]
-      @sol=match[22]
+      @xntp = match[4]
+      @xntpserver = match[5]
+      @syslogserver = match[6]
+      @syslogtcpserver = match[7]
+      @syslogtlsserver = match[8]
+      @altdiskboot = match[9]
+      @ldap = match[10]
+      @kerberos = match[11]
+      @kerberos_default_realm = match[12]
+      @kerberos_realm_kdc = match[13]
+      @kerberos_clockskew = match[14]
+      @kerberos_ticket_lifetime = match[15]
+      @kpasswd_admin = match[16]
+      @trace = match[17]
+      @kerberos_keyfile_present = match[18]
+      @kerberos_allow_weak_crypto = match[19]
+      @legacyhmccomm = match[20]
+      @security = match[21]
+      @sol = match[22]
 
     else
       puts string
@@ -94,10 +86,7 @@ sol=(enabled|disabled)
       puts match
       puts "regexp couldn't decode string #{string}"
       raise
-
     end
-
-
   end
 
 end
