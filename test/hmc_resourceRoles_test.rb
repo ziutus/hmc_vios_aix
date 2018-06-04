@@ -8,19 +8,19 @@ require 'test/unit'
 class TestHMCResourceRoles < Test::Unit::TestCase
 
   
-	def test_constructor
-		string = 'name=L2support,"resources=lpar:root/ibmhscS1_0|ALL_PARTITIONS*9131-52A*6535CCG|IBMHSC_Partition"
+  def test_constructor
+    string = 'name=L2support,"resources=lpar:root/ibmhscS1_0|ALL_PARTITIONS*9131-52A*6535CCG|IBMHSC_Partition"
 name=LparAdmin,"resources=lpar:root/ibmhscS1_0|1*9131-52A*6535CCG|IBMHSC_Partition,lpar:root/ibmhscS1_0|5*9131-52A*6535CCG|IBMHSC_Partition"'
 
-		roles = ResourceRoles.new(string)
+    roles = ResourceRoles.new(string)
 
     assert_equal(false, roles.role_exist?('L3support'))
     assert_equal(true,  roles.role_exist?('L2support'))
     assert_equal(true , roles.role_exist?('LparAdmin'))
 
 
-		assert_equal(true,  roles.has_lpar?('LparAdmin',    '9131-52A*6535CCG', '1'))
-		assert_equal(false, roles.has_lpar?('LparAdmin',    '9131-52A*6535CCG', '2'))
+    assert_equal(true,  roles.has_lpar?('LparAdmin',    '9131-52A*6535CCG', '1'))
+    assert_equal(false, roles.has_lpar?('LparAdmin',    '9131-52A*6535CCG', '2'))
     assert_equal(false, roles.has_lpar?('NotexistRole', '9131-52A*6535CCG', '2'))
     assert_equal(false, roles.has_lpar?('L2support',    '9131-52A*0000000', '2'))
     assert_equal(true,  roles.has_lpar?('L2support',    '9131-52A*6535CCG', '4'))
@@ -28,7 +28,7 @@ name=LparAdmin,"resources=lpar:root/ibmhscS1_0|1*9131-52A*6535CCG|IBMHSC_Partiti
     assert_equal(true,   roles.has_lpar?('LparAdmin,LparAdmin2',     '9131-52A*6535CCG', '1'))
     assert_equal(false,  roles.has_lpar?('LparAdmin2,LparAdmin3',    '9131-52A*6535CCG', '1'))
 
-	end
+  end
 
   def test_lpar_has_roles
 
@@ -104,4 +104,3 @@ name=LparAdmin,"resources=lpar:root/ibmhscS1_0|1*9131-52A*6535CCG|IBMHSC_Partiti
   end
 
 end			
-		
