@@ -12,15 +12,15 @@ class Lpar_IO_slot
     @slot_DRC_index = nil
     @slot_IO_pool_ID = 'none'
     @is_required = 0
+    @data_string_raw = nil
 
-    if string.length > 0
-      self.parse(string)
-    end
+    parse(string) unless string.empty?
   end
 
   def parse(string)
-    regexp = /^\s*(\w+)\/(none|d+)\/(0|1)\s*$/
-#    regexp = %r{(\w+)/(none|d+)/(0/1)}
+    @data_string_raw = string
+
+    regexp = %r{^\s*(\w+)\/(none|d+)\/([01])\s*$}
 
     if match = regexp.match(string)
       @slot_DRC_index = match[1]
