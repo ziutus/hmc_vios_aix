@@ -6,11 +6,8 @@ require 'HMC/lspartition_dlpar'
 
 class HmcLspartitionDlparTest < Test::Unit::TestCase
 
-
-  # Fake test
   def test_1
-
-    #data source from https://www.ibm.com/support/knowledgecenter/en/POWER8/p8hc3/p8hc3_hmcpreprmc.htm
+    # data source from https://www.ibm.com/support/knowledgecenter/en/POWER8/p8hc3/p8hc3_hmcpreprmc.htm
     # changed IP only to have more real data
     string='<#0> Partition:<5*8203-E4A*1000xx, servername1.austin.ibm.com, 192.168.100.101>
 Active:<0>, OS:< , , >, DCaps:<0x2f>, CmdCaps:<0x0b, 0x0b>, PinnedMem:<0>
