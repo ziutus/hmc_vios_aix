@@ -113,7 +113,7 @@ class Test_Lpar_virtual_slots < Test::Unit::TestCase
     slots = Lpar_virtual_slots.new(20)
 
     vserial = VirtualSerialAdapter.new
-    vserial.virtualSlotNmuber=0
+    vserial.virtualSlotNumber=0
     vserial.clientOrServer='server'
     vserial.supportsHMC=1
     vserial.remoteLparID='any'

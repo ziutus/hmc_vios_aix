@@ -7,7 +7,7 @@ require 'VIOS/lsmap_npiv'
 
 class ViosLsmapNpivTest < Test::Unit::TestCase
 
-  #test data taken from: https://wissamdagher.wordpress.com/2013/05/09/vio-npiv-mapping-to-fc-unmap/
+  # test data taken from: https://wissamdagher.wordpress.com/2013/05/09/vio-npiv-mapping-to-fc-unmap/
   def entry_logged
 
 string = 'Name          Physloc                            ClntID ClntName       ClntOS

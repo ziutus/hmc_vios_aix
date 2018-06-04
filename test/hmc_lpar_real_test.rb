@@ -210,5 +210,29 @@ lpar_name=vios1,lpar_id=15,slot_num=9,state=1,is_required=0,is_trunk=1,trunk_pri
 		assert_equal(true,  lpar.virtual_adapter_exist?(6))
 		
 	end
-	
-end	
+
+	def test_virtual_scsi
+		string = 'lpar_name=nim1,lpar_id=5,slot_num=3,state=0,is_required=1,adapter_type=client,remote_lpar_id=3,remote_lpar_name=vios2,remote_slot_num=2
+lpar_name=nim1,lpar_id=5,slot_num=2,state=0,is_required=1,adapter_type=client,remote_lpar_id=2,remote_lpar_name=vios1,remote_slot_num=2'
+
+		lpar = Lpar_real.new
+    lpar.decode_virtual_scsi(string)
+
+    assert_equal(2, lpar.adaptersVirtual[2].virtualSlotNumber)
+
+	end
+
+  def test_virtual_serial
+    string = 'lpar_name=nim1,lpar_id=5,slot_num=1,state=0,is_required=1,connect_status=unavailable,adapter_type=server,supports_hmc=1,remote_lpar_id=any,remote_lpar_name=,remote_slot_num=any
+lpar_name=nim1,lpar_id=5,slot_num=0,state=0,is_required=1,connect_status=unavailable,adapter_type=server,supports_hmc=1,remote_lpar_id=any,remote_lpar_name=,remote_slot_num=any
+'
+
+    lpar = Lpar_real.new
+    lpar.decode_virtual_serial(string)
+
+    assert_equal(1, lpar.adaptersVirtual[1].virtualSlotNumber)
+
+  end
+
+
+end
