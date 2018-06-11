@@ -35,6 +35,20 @@ class TestVirtualSerialAdapter < Test::Unit::TestCase
     assert_equal(1, 	     adapter.isRequired)
   end
 
+  def test_initializer
+    adapter = VirtualSerialAdapter.new('0/server/1/any//any/1')
+
+    assert_equal(0, adapter.virtualSlotNumber)
+    assert_equal('server', adapter.clientOrServer)
+    assert_equal(1, 	     adapter.supportsHMC)
+    assert_equal('any', 	 adapter.remoteLparID)
+    assert_equal('', adapter.remoteLparName)
+    assert_equal('any', 	 adapter.remoteSlotNumber)
+    assert_equal(1, 	     adapter.isRequired)
+
+
+  end
+
   def test_compare1
 
     adapter1 = VirtualSerialAdapter.new('0/server/1/any//any/1')
@@ -43,6 +57,25 @@ class TestVirtualSerialAdapter < Test::Unit::TestCase
 
     assert_equal(false, adapter2 == adapter3, 'is adapter2 the same like adapter3')
     assert_equal(true,  adapter1 == adapter3, 'is adapter1 the same like adapter3')
+
+  end
+
+  def test_diff
+
+    adapter1 = VirtualSerialAdapter.new('0/server/1/any//any/1')
+    adapter2 = VirtualSerialAdapter.new('0/server/1/any//1/0')
+
+    diff = adapter1.diff(adapter2, 'profile1', 'profile2')
+
+    assert_equal(2, diff.keys.count)
+
+    assert_equal('isRequired', diff.keys[0])
+    assert_equal(1, diff['isRequired']['profile1'])
+    assert_equal(0, diff['isRequired']['profile2'])
+
+    assert_equal('remoteSlotNumber', diff.keys[1])
+    assert_equal('any', diff['remoteSlotNumber']['profile1'])
+    assert_equal('1', diff['remoteSlotNumber']['profile2'])
 
   end
 
