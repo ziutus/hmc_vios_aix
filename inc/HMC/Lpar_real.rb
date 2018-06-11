@@ -308,6 +308,8 @@ class Lpar_real
     @_parsed['lpar_info'] = true
   end
 
+  alias lssyscfgDecode lssyscfg_decode
+
   def decode_mem(string)
 
     HmcString.parse(string).each { |name, value|
