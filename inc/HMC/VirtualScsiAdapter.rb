@@ -1,38 +1,29 @@
-class VirtualScsiAdapter
+require 'HMC/virtual_adapter'
+
+class VirtualScsiAdapter < VirtualAdapter
 
   # TODO: analyze if in case that remote lpar or slot is 'any' can we do simpler code (not so many if..elsif...)
-
-  attr_accessor :virtualSlotNumber
   attr_accessor :clientOrServer
   attr_accessor :remoteLparID
   attr_accessor :remoteLparName
   attr_accessor :remoteSlotNumber
-  attr_accessor :isRequired
 
-  attr_accessor :lpar_name
-  attr_accessor :lpar_id
-  attr_accessor :state
-  attr_reader :_type
+  def initialize(string = '')
 
-
-  def initialize string=''
-    @virtualSlotNumber = nil
+    super(string)
     @clientOrServer = nil
     @remoteLparID = nil
     @remoteLparName = nil
     @remoteSlotNumber = nil
-    @isRequired = nil
-    @lpar_name = nil
-    @lpar_id = nil
 
-    @_type = 'profile'
+    @params = %w[virtualSlotNumber clientOrServer remoteLparID remoteLparName remoteSlotNumber isRequired lpar_name lpar_id]
 
     parse(string) unless string.empty?
   end
 
-  #virtual-slot-number/client-or-server/[remote-lpar-ID]/[remote-lpar-name]/[remote-slot-number]/is-required
+  # virtual-slot-number/client-or-server/[remote-lpar-ID]/[remote-lpar-name]/[remote-slot-number]/is-required
   def to_s
-    self.validate
+    validate
     if @_type == 'real'
       "lpar_name=#{@lpar_name},lpar_id=#{@lpar_id},slot_num=#{@virtualSlotNumber},state=#{@state},is_required=#{@isRequired},adapter_type=#{@clientOrServer},remote_lpar_id=#{@remoteLparID},remote_lpar_name=#{@remoteLparName},remote_slot_num=#{@remoteSlotNumber}"
     else
@@ -51,17 +42,17 @@ class VirtualScsiAdapter
     raise "clientOrServer has wrong value #{@clientOrServer}" unless clientOrServer_allowed.include?(@clientOrServer)
 
     raise 'remoteLparID not defined' if @remoteLparID.nil?
-    raise 'remoteLparID is not number or "any"' unless (@remoteLparID.is_a? Numeric or @remoteLparID == 'any')
+    raise 'remoteLparID is not number or "any"' unless @remoteLparID.is_a? Numeric or @remoteLparID == 'any'
 
     raise 'remoteLparName not defined' if @remoteLparName.nil?
     raise 'remoteLparName is not string'	unless @remoteLparName.is_a? String
 
     raise 'remoteSlotNumber not defined' 	if @remoteSlotNumber.nil?
-    raise 'remoteSlotNumber is not number or "any"' 	unless (@remoteSlotNumber.is_a? Numeric or @remoteSlotNumber == "any")
+    raise 'remoteSlotNumber is not number or "any"' 	unless @remoteSlotNumber.is_a? Numeric or @remoteSlotNumber == "any"
 
     raise 'isRequired not defined' 			if @isRequired.nil?
     raise 'isRequired is not number'		unless @isRequired.is_a? Numeric
-    raise "isRequired has wrong value #{@isRequired} " unless (@isRequired == 0 or @isRequired == 1)
+    raise "isRequired has wrong value #{@isRequired} " unless @isRequired == 0 or @isRequired == 1
   end
 
   def can_parse?(string)
@@ -127,50 +118,4 @@ class VirtualScsiAdapter
   end
 
   alias parse decode
-
-  def ==(other)
-    to_s == other.to_s
-  end
-
-  def diff(other_adapter, profile1, profile2)
-    diff = {}
-
-    if @clientOrServer != other_adapter.clientOrServer
-      diff_entry = {}
-      diff_entry[profile1] = "clientOrServer is setup to #{@clientOrServer}"
-      diff_entry[profile2] = "clientOrServer is setup to #{other_adapter.clientOrServer}"
-      diff['clientOrServer'] = diff_entry
-    end
-
-    if @remoteLparID != other_adapter.remoteLparID
-      diff_entry = {}
-      diff_entry[profile1] = "remoteLparID is setup to #{@remoteLparID}"
-      diff_entry[profile2] = "remoteLparID is setup to #{other_adapter.remoteLparID}"
-      diff['remoteLparID'] = diff_entry
-    end
-
-    if @remoteLparName != other_adapter.remoteLparName
-      diff_entry = {}
-      diff_entry[profile1] = "remoteLparName is setup to #{@remoteLparName}"
-      diff_entry[profile2] = "remoteLparName is setup to #{other_adapter.remoteLparName}"
-      diff['remoteLparName'] = diff_entry
-    end
-
-    if @remoteSlotNumber != other_adapter.remoteSlotNumber
-      diff_entry = {}
-      diff_entry[profile1] = "remoteSlotNumber is setup to #{@remoteSlotNumber}"
-      diff_entry[profile2] = "remoteSlotNumber is setup to #{other_adapter.remoteSlotNumber}"
-      diff['remoteSlotNumber'] = diff_entry
-    end
-
-    if @isRequired != other_adapter.isRequired
-      diff_entry = {}
-      diff_entry[profile1] = "isRequired is setup to #{@isRequired}"
-      diff_entry[profile2] = "isRequired is setup to #{other_adapter.isRequired}"
-      diff['isRequired'] = diff_entry
-    end
-
-    diff
-  end
-
 end
