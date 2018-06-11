@@ -1,33 +1,28 @@
-class VirtualSerialAdapter
+require 'HMC/virtual_adapter'
 
-  attr_accessor :virtualSlotNumber
+class VirtualSerialAdapter < VirtualAdapter
+
   attr_accessor :clientOrServer
   attr_accessor :supportsHMC
   attr_accessor :remoteLparID
   attr_accessor :remoteLparName
   attr_accessor :remoteSlotNumber
-  attr_accessor :isRequired
+
   # below data can be taken only from lshwres, they are exist only for running lpars
-  attr_accessor :lpar_name
-  attr_accessor :lpar_id
-  attr_accessor :state
   attr_accessor :connectStatus
-  # type of input / output (data can be taken from profile or real setup (lshwres...))
-  attr_reader :_type
 
   def initialize(string='')
-    @virtualSlotNumber = nil
+    super(string)
+
     @clientOrServer = nil
     @supportsHMC = nil
     @remoteLparID = nil
     @remoteLparName = nil
     @remoteSlotNumber = nil
-    @isRequired = nil
-    @lpar_name = nil
-    @lpar_id = nil
-    @state = nil
     @connectStatus = nil
     @_type = 'profile'
+
+    @params = %w[clientOrServer supportsHMC remoteLparID remoteLparName remoteSlotNumber isRequired]
 
     parse(string) unless string.empty?
   end
@@ -86,61 +81,6 @@ class VirtualSerialAdapter
     "#{@virtualSlotNumber}/#{@clientOrServer}/#{@supportsHMC}/#{@remoteLparID}/#{@remoteLparName}/#{@remoteSlotNumber}/#{@isRequired}"
   end
 
-  def ==(other)
-    to_s == other.to_s
-  end
 
-  def diff(other_adapter, profile1, profile2)
-    diff = []
-
-    #if class.name != other_adapter.class.name
-    #  diff.push('different types of adapters')
-    #  return diff
-    #end
-
-    if @clientOrServer != other_adapter.clientOrServer
-      diff_entry = {}
-      diff_entry[profile1] = "clientOrServer is setup to #{@clientOrServer}"
-      diff_entry[profile2] = "clientOrServer is setup to #{other_adapter.clientOrServer}"
-      diff["clientOrServer"] = diff_entry
-    end
-
-    if @supportsHMC != other_adapter.supportsHMC
-      diff_entry = {}
-      diff_entry[profile1] = "supportsHMC is setup to #{@supportsHMC}"
-      diff_entry[profile2] = "supportsHMC is setup to #{other_adapter.supportsHMC}"
-      diff["supportsHMC"] = diff_entry
-    end
-
-    if @remoteLparID != other_adapter.remoteLparID
-      diff_entry = {}
-      diff_entry[profile1] = "remoteLparID is setup to #{@remoteLparID}"
-      diff_entry[profile2] = "remoteLparID is setup to #{other_adapter.remoteLparID}"
-      diff["remoteLparID"] = diff_entry
-    end
-
-    if @remoteLparName != other_adapter.remoteLparName
-      diff_entry = {}
-      diff_entry[profile1] = "remoteLparName is setup to #{@remoteLparName}"
-      diff_entry[profile2] = "remoteLparName is setup to #{other_adapter.remoteLparName}"
-      diff["remoteLparName"] = diff_entry
-    end
-
-    if @remoteSlotNumber != other_adapter.remoteSlotNumber
-      diff_entry = {}
-      diff_entry[profile1] = "remoteSlotNumber is setup to #{@remoteSlotNumber}"
-      diff_entry[profile2] = "remoteSlotNumber is setup to #{other_adapter.remoteSlotNumber}"
-      diff["remoteSlotNumber"] = diff_entry
-    end
-
-    if @isRequired != other_adapter.isRequired
-      diff_entry = {}
-      diff_entry[profile1] = "isRequired is setup to #{@isRequired}"
-      diff_entry[profile2] = "isRequired is setup to #{other_adapter.isRequired}"
-      diff["isRequired"] = diff_entry
-    end
-
-    diff
-  end
 
 end
