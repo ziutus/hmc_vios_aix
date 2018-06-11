@@ -2,7 +2,7 @@ require 'HMC/Lpar_profile'
 require 'HMC/Lpar_real'
 
 # class for something
-class HmcLpar < Lpar_real
+class Lpar < Lpar_real
 
   attr_accessor :sys
   attr_accessor :name
