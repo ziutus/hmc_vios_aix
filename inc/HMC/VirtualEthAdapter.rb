@@ -35,6 +35,8 @@ class VirtualEthAdapter < VirtualAdapter
     @regexp_real                = %r{^lpar_name=([\w\_\-]+),lpar_id=(\d+),slot_num=(\d+),state=(0|1),is_required=(0|1),is_trunk=(0),ieee_virtual_eth=(0|1),port_vlan_id=(\d+),addl_vlan_ids=(\d+|),mac_addr=(\w{12})$}
     @regexp_real2               = %r{^lpar_name=([\w\_\-]+),lpar_id=(\d+),slot_num=(\d+),state=(0|1),is_required=(0|1),is_trunk=(1),trunk_priority=(\d+),ieee_virtual_eth=(0|1),port_vlan_id=(\d+),addl_vlan_ids=(\d+|),mac_addr=(\w{12})$}
 
+    @params = %w[isIEEE portVlanID additionalVlanIDs trunkPriority isTrunk virtualSwitch macAddress allowedOsMacAddresses qosPiority]
+
     parse(string) unless string.empty?
   end
 
