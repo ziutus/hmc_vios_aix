@@ -115,14 +115,18 @@ class TestVirtualFCAdapter < Test::Unit::TestCase
   end
 
   # data source:     #https://www.ibm.com/developerworks/community/forums/html/threadTopic?id=77777777-0000-0000-0000-000014412555
-  def test_compare_isRequired
+  def test_diff
     adapter1 = VirtualFCAdapter.new('21/server/10/bt11/21//0')
-    adapter2 = VirtualFCAdapter.new('21/server/10/bt11/21//1')
+    adapter2 = VirtualFCAdapter.new('21/server/10/bt11/22//1')
 
     diff = adapter1.diff(adapter2, 'normal1', 'normal2')
 
-    #assert_equal(1, diff.size)
-    #assert_equal("in profile normal1 isRequired is setup to 0 but in profile normal2 to 1 ", diff[0])
+    assert_equal(2, diff.size)
+    assert_equal(0, diff['isRequired']['normal1'])
+    assert_equal(1, diff['isRequired']['normal2'])
+
+    assert_equal(21, diff['remoteSlotNumber']['normal1'])
+    assert_equal(22, diff['remoteSlotNumber']['normal2'])
   end
 
 end
