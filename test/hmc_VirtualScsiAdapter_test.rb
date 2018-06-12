@@ -99,4 +99,17 @@ class TestVirtualScsiAdapter < Test::Unit::TestCase
 
   end
 
-end
+  def test_diff
+    adapter1 = VirtualScsiAdapter.new('2/server/any//any/0')
+    adapter2 = VirtualScsiAdapter.new('2/client/any//any/1')
+
+    diff = adapter1.diff(adapter2, 'profile1', 'profile2')
+    assert_equal(2, diff.keys.count)
+    assert_equal(0, diff['isRequired']['profile1'])
+    assert_equal(1, diff['isRequired']['profile2'])
+
+    assert_equal('server', diff['clientOrServer']['profile1'])
+    assert_equal('client', diff['clientOrServer']['profile2'])
+  end
+
+  end
