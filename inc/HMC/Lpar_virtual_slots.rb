@@ -116,7 +116,7 @@ class Lpar_virtual_slots
   def virtual_adapters_raw(string, adapter_type)
 
     unless string == 'none'
-      HmcString.parse_value(string).each { |adapter|
+      HmcString.parse_value(string).each do |adapter|
         case adapter_type
         when 'virtual_fc_adapters' then virtual_adapter_add(VirtualFCAdapter.new(adapter))
         when 'virtual_eth_adapters' then virtual_adapter_add(VirtualEthAdapter.new(adapter))
@@ -125,7 +125,7 @@ class Lpar_virtual_slots
         else
           raise 'unknown type of virtual adapter'
         end
-      }
+      end
     end
 
     case adapter_type
