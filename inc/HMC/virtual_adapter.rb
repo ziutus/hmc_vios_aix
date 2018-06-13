@@ -15,6 +15,7 @@ class VirtualAdapter
     @lpar_name = nil
     @lpar_id = nil
     @state = nil
+    @isRequired = 0
     @_type = 'profile'
     @params = []
   end
