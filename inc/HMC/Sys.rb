@@ -1,5 +1,4 @@
 require 'HMC/HmcString'
-require 'HMC/HmcLpar'
 
 include HmcString
 
