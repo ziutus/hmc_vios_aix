@@ -402,57 +402,15 @@ class Lpar_real
 
   def decode_virtualio_eth(string)
 
-    reg_exp1 = /lpar_name=([\w\_\-]+),lpar_id=(\d+),slot_num=(\d+),state=(0|1),is_required=(0|1),is_trunk=(0),ieee_virtual_eth=(\d+),port_vlan_id=(\d+),addl_vlan_ids=([\w\,]+|),mac_addr=(\w+|)/
-    reg_exp2 = /lpar_name=([\w\_\-]+),lpar_id=(\d+),slot_num=(\d+),state=(0|1),is_required=(0|1),is_trunk=(1),trunk_priority=(\d+),ieee_virtual_eth=(0|1),port_vlan_id=(\d+),addl_vlan_ids=([\w\,]+|),mac_addr=(\w+|)/
-
-    string.split(/\n/).each { |line|
-
-      match  = reg_exp1.match(line)
-      match2 = reg_exp2.match(line)
-
-      if match
-        next unless match[2].to_i == @lpar_id.to_i
-
-        adapter = VirtualEthAdapter.new
-
-        adapter.virtualSlotNumber = match[3].to_i
-        adapter.isIEEE = match[4].to_i
-        adapter.portVlanID = match[5].to_i
-        adapter.additionalVlanIDs = match[6]
-        adapter.isTrunk           = match[7].to_i
-        adapter.isRequired		  = match[8].to_i
-
-        adapter.macAddress		  = match[9]
-
-        adaptersVirtual[adapter.virtualSlotNumber] = adapter
-
-      elsif match2
-
-        next unless match2[2].to_i == @lpar_id.to_i
-
-        adapter = VirtualEthAdapter.new
-
-        adapter.virtualSlotNumber = match2[3].to_i
-        adapter.isRequired		      = match2[5].to_i
-        adapter.isTrunk           = match2[6].to_i
-        adapter.trunkPriority     = match2[7].to_i
-        adapter.isIEEE			        = match2[8].to_i
-        adapter.portVlanID 		    = match2[9].to_i
-        adapter.additionalVlanIDs = match2[10]
-        adapter.macAddress		      = match2[11]
-
-        #				@adaptersVirtual << adapter
-        adaptersVirtual[adapter.virtualSlotNumber] = adapter
-
-      else
-        puts match
-        puts match2
-        puts "RegExp couldn't decode string >#{line}<"
-        raise
+    string.split(/\n/).each do |line|
+      adapter = VirtualEthAdapter.new
+      if adapter.can_parse?(line)
+        adapter.parse(line)
+        adaptersVirtual[adapter.virtualSlotNumber] = adapter if adapter.lpar_id == @lpar_id.to_i
       end
+    end
 
-      @_parsed['virtual_eth'] = true
-    }
+    @_parsed['virtual_eth'] = true
   end
 
   def adapter_eth_add(adapter)
@@ -480,21 +438,15 @@ class Lpar_real
 
 
   def adapter_scsi_add(adapter)
-
     @virtual_scsi_adapters[adapter.virtualSlotNumber] = adapter
-
-
-    #@virtual_eth_adapters[adapter]
-#		@virtual_scsi_adapters.push(adapter)
   end
 
   def parsed_all?
     parsed_all = true
-    @_parsed.each_pair { |key,value|
-
+    @_parsed.each_pair do |key,value|
       next if @type_model == '9131-52A' and key == 'virtual_fc'
       parsed_all = false if value == false
-    }
+    end
     parsed_all
   end
 
