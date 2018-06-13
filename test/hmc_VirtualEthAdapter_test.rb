@@ -103,6 +103,27 @@ class TestVirtualEthAdapter < Test::Unit::TestCase
     assert_equal(string, adapter.to_s)
   end
 
+  # test data source: https://www.ibm.com/developerworks/community/forums/html/topic?id=77777777-0000-0000-0000-000014577291
+  def test_parse_real3
+    string = 'lpar_name=vios1,lpar_id=1,slot_num=12,state=1,is_required=1,is_trunk=1,trunk_priority=1,ieee_virtual_eth=1,port_vlan_id=1,vswitch=ETHERNET0,"addl_vlan_ids=54",mac_addr=FE9F66D5360C'
+    adapter = VirtualEthAdapter.new(string)
+    assert_equal('vios1', adapter.lpar_name)
+  end
+
+  # test data source: https://www.ibm.com/developerworks/community/forums/html/topic?id=77777777-0000-0000-0000-000014577291
+  def test_parse_real4
+    string = 'lpar_name=clpar5,lpar_id=5,slot_num=2,state=1,is_required=0,is_trunk=0,ieee_virtual_eth=0,port_vlan_id=54,vswitch=ETHERNET0,addl_vlan_ids=,mac_addr=FE9F6044E802'
+    adapter = VirtualEthAdapter.new(string)
+    assert_equal('clpar5', adapter.lpar_name)
+  end
+
+  # test data source: http://www-01.ibm.com/support/docview.wss?uid=isg3T7000527
+  def test_parse_real_5
+    string = 'lpar_name=p72vio1,lpar_id=1,slot_num=2,state=1,is_required=0, is_trunk=1,trunk_priority=1,ieee_virtual_eth=1, port_vlan_id=1,vswitch=ETHERNET0," addl_vlan_ids=10,11",mac_addr=761FA3934802,allowed_os_mac_addrs=all,qos_priority=none'
+    adapter = VirtualEthAdapter.new(string)
+    assert_equal('p72vio1', adapter.lpar_name)
+  end
+
   def test_validation
     adapter = VirtualEthAdapter.new
     exception = assert_raise(RuntimeError) { adapter.to_s }
