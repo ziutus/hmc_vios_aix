@@ -374,26 +374,26 @@ class Lpar_real
 
   def decode_virtual_scsi(string)
 
-    string.split("\n").each { |line|
+    string.split("\n").each do |line|
       adapter = VirtualScsiAdapter.new
       if adapter.can_parse?(line)
         adapter.parse(line)
         adaptersVirtual[adapter.virtualSlotNumber] = adapter
       end
-    }
+    end
     @_parsed['virtual_scsi'] = true
 
   end
 
   def decode_virtual_serial(string)
 
-    string.split("\n").each { |line|
+    string.split("\n").each do |line|
       adapter = VirtualSerialAdapter.new
       if adapter.can_parse?(line)
         adapter.parse(line)
         adaptersVirtual[adapter.virtualSlotNumber] = adapter
       end
-    }
+    end
 
     @_parsed['virtual_serial'] = true
   end
