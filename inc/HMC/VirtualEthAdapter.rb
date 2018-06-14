@@ -91,7 +91,9 @@ class VirtualEthAdapter < VirtualAdapter
 # virtual-slot-number/is-IEEE/port-vlan-ID/[additional-vlan-IDs]/[trunk-priority]/is-required[/[virtual-switch][/[MAC-address]/
 # [allowed-OS-MAC-addresses]/[QoS-priority]]]
 
-    if match = @regexp_minimum.match(string)
+    if can_parse_real?(string)
+      parse_real(string)
+    elsif match = @regexp_minimum.match(string)
 
       @virtualSlotNumber	= match[1].to_i
       @isIEEE	= match[2].to_i
@@ -146,8 +148,6 @@ class VirtualEthAdapter < VirtualAdapter
       @allowedOsMacAddresses = match[9]
       @qosPiority	= match[10]
 
-    elsif can_parse_real?(string)
-      parse_real(string)
     else
       raise "class:VirtualEthAdapter, function:parse, RegExp couldn't decode string >#{string}<"
     end
@@ -160,7 +160,7 @@ class VirtualEthAdapter < VirtualAdapter
     data = HmcString.parse(string)
 
     data.each_pair do |key, value|
-      false unless @params_real.include?(key)
+      return false unless @params_real.include?(key.delete("\s"))
     end
 
     true
@@ -168,17 +168,6 @@ class VirtualEthAdapter < VirtualAdapter
   end
 
   def parse_real(string)
-    # @isIEEE = 0
-    # @portVlanID = nil
-    # @additionalVlanIDs = ''
-    # @isTrunk = 0
-    # @trunkPriority = 0 #if trunk is true, trunk priority has to to be set up
-    #
-    # @virtualSwitch = nil
-    #
-    # @macAddress = nil
-    # @allowedOsMacAddresses = nil
-    # @qosPiority = nil
 
     data = HmcString.parse(string)
     data.each_pair do |key, value|
