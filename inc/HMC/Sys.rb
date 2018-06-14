@@ -4,7 +4,6 @@ include HmcString
 
 class Sys
 
-  # attr_accessor :sys, :dataString
   attr_reader :sys
   attr_reader :dataString
 
@@ -89,13 +88,11 @@ class Sys
 
   attr_reader :_variables
 
-  attr_reader :lpars
-
-  def initialize name = ''
+  def initialize(name = '')
 
     @name = name
 
-    @_variables = Hash.new
+    @_variables = {}
     @_variables['int'] = %w[
       addr_broadcast_perf_policy_capable
       firmware_power_saver_capable
@@ -103,12 +100,12 @@ class Sys
       hca_capable
       huge_page_mem_capable
       sp_failover_capable
-
       sni_msg_passing_capable
       max_power_ctrl_lpars
     ]
 
-    @_variables['int_unavialble'] = %w[ power_off_policy
+    @_variables['int_unavialble'] = %w[
+      power_off_policy
       active_lpar_mobility_capable
       inactive_lpar_mobility_capable
       active_lpar_share_idle_procs_capable
@@ -176,8 +173,6 @@ class Sys
       pend_mfg_default_boot_mode
     ]
 
-    @lpars = []
-
   end
 
   def dataSet(data_string)
@@ -228,7 +223,7 @@ class Sys
       elsif @_variables['string'].include?(name)
         instance_variable_set("@#{name}", value.to_s)
       elsif  name == '5250_application_capable'
-        @application_capable_5250=value.to_i
+        @application_capable_5250 = value.to_i
       else
         print "unknown name: #{name} with value #{value}"
         raise
@@ -292,11 +287,6 @@ class Sys
   # lslic - list Licensed Internal Code levels
   def lslic_cmd
     "lslic -m #{@name} -t syspower"
-  end
-
-  def lpar_add_by_profile(profile_or_string)
-    # lpar.sys = @name
-    # @lpars.push(lpar)
   end
 
 end
