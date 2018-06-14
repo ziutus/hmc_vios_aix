@@ -156,10 +156,10 @@ class Lpar_virtual_slots
 
   def adapters_to_s(type)
 
-    return nil if type == 'virtual_fc_adapters'     and @virtual_fc_adapters_raw.nil?
-    return nil if type == 'virtual_eth_adapters'    and @virtual_eth_adapters_raw.nil?
-    return nil if type == 'virtual_serial_adapters' and @virtual_serial_adapters_raw.nil?
-    return nil if type == 'virtual_scsi_adapters'   and @virtual_scsi_adapters_raw.nil?
+    return nil if type == 'virtual_fc_adapters'     && @virtual_fc_adapters_raw.nil?
+    return nil if type == 'virtual_eth_adapters'    && @virtual_eth_adapters_raw.nil?
+    return nil if type == 'virtual_serial_adapters' && @virtual_serial_adapters_raw.nil?
+    return nil if type == 'virtual_scsi_adapters'   && @virtual_scsi_adapters_raw.nil?
 
     adapters_tmp = case type
                    when 'virtual_fc_adapters'     then @virtual_fc_adapters
