@@ -113,7 +113,7 @@ class Lpar_real
   attr_reader :adaptersVirtual
   attr_reader :virtual_scsi_adapters
 
-  #tmp values, to remove
+  # tmp values, to remove
   attr_reader :_parsed
   attr_accessor :type_model
 
@@ -413,10 +413,8 @@ class Lpar_real
     @_parsed['virtual_eth'] = true
   end
 
-  def adapter_eth_add(adapter)
-    puts adapter.inspect
-    exit 10
-    #@virtual_eth_adapters[adapter]
+  def virtual_adapter_eth_add(adapter)
+    adaptersVirtual[adapter.virtualSlotNumber] = adapter
   end
 
   def virtual_adapter_remove(slot_id)
@@ -437,7 +435,7 @@ class Lpar_real
   end
 
 
-  def adapter_scsi_add(adapter)
+  def virtual_adapter_scsi_add(adapter)
     @virtual_scsi_adapters[adapter.virtualSlotNumber] = adapter
   end
 
