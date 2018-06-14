@@ -1,7 +1,7 @@
 $LOAD_PATH << File.dirname(__FILE__) + '/../inc'
 $LOAD_PATH << File.dirname(__FILE__) + './inc'
 
-require 'HMC/HmcLpar'
+require 'Framework/Lpar'
 require 'HMC/Lpar_profile'
 require 'test/unit'
 require 'pp'
@@ -20,7 +20,7 @@ class TestHMCLpar < Test::Unit::TestCase
     profile_low = Lpar_profile.new(5)
     profile_low.lssyscfgProfDecode(profile_string_low)
 
-    lpar = HmcLpar.new(5)
+    lpar = Lpar.new(5)
     lpar.profile_add(profile_normal)
     lpar.profile_add(profile_low)
     lpar.decode_mem(running_mem_string)

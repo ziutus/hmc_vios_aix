@@ -124,6 +124,22 @@ class TestVirtualEthAdapter < Test::Unit::TestCase
     assert_equal('p72vio1', adapter.lpar_name)
   end
 
+  #test data taken from: https://sort.veritas.com/public/documents/sfha/6.1/aix/productguides/html/sfhas_virtualization/ch08s05.htm
+  def test_can_parse_real_1
+    string='name=lpar05,lpar_id=15,lpar_env=aixlinux,state=Running,resource_config=1,os_version=AIX 7.1 7100-00-00-0000,logical_serial_num=06C3A0PF,default_profile=lpar05,curr_profile=lpar05,work_group_id=none,shared_proc_pool_util_auth=0,allow_perf_collection=0,power_ctrl_lpar_ids=none,boot_mode=norm,lpar_keylock=norm,auto_start=0,redundant_err_path_reporting=0,rmc_state=inactive,rmc_ipaddr=10.207.111.93,time_ref=0,lpar_avail_priority=127,desired_lpar_proc_compat_mode=default,curr_lpar_proc_compat_mode=POWER7,suspend_capable=0,remote_restart_capable=0,affinity_group_id=none'
+    adapter = VirtualEthAdapter.new
+    assert_equal(false, adapter.can_parse_real?(string))
+    assert_equal(false, adapter.can_parse?(string))
+  end
+
+  # test data source: http://www-01.ibm.com/support/docview.wss?uid=isg3T7000527
+  def test_can_parse_real_5
+    string = 'lpar_name=p72vio1,lpar_id=1,slot_num=2,state=1,is_required=0, is_trunk=1,trunk_priority=1,ieee_virtual_eth=1, port_vlan_id=1,vswitch=ETHERNET0," addl_vlan_ids=10,11",mac_addr=761FA3934802,allowed_os_mac_addrs=all,qos_priority=none'
+    adapter = VirtualEthAdapter.new
+    assert_equal(true, adapter.can_parse_real?(string))
+    assert_equal(true, adapter.can_parse?(string))
+  end
+
   def test_validation
     adapter = VirtualEthAdapter.new
     exception = assert_raise(RuntimeError) { adapter.to_s }

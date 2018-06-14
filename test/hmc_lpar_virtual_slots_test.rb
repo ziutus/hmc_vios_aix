@@ -73,8 +73,8 @@ class Test_Lpar_virtual_slots < Test::Unit::TestCase
     diff = slots1.diff(slots2, 'virtual_fc_adapters')
 
     assert_equal(1, diff.size)
-    assert_equal('isRequired is setup to 0', diff['VirtualSlot 21 isRequired']['normal_1'])
-    assert_equal('isRequired is setup to 1', diff['VirtualSlot 21 isRequired']['normal_2'])
+    assert_equal(0, diff['VirtualSlot 21 isRequired']['normal_1'])
+    assert_equal(1, diff['VirtualSlot 21 isRequired']['normal_2'])
   end
 
 
@@ -87,11 +87,12 @@ class Test_Lpar_virtual_slots < Test::Unit::TestCase
     vent1 = VirtualEthAdapter.new
     vent1.virtualSlotNumber=2
     vent1.portVlanID=1
+    vent1.isRequired=1
 
 
     slots.virtual_adapter_add(vent1)
     result = slots.virtual_eth_adapters_to_s
-    assert_equal('2/0/1//0/0',result )
+    assert_equal('2/0/1//0/1',result )
   end
 
   def test_virtual_scsi_adapter

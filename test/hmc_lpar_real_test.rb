@@ -211,6 +211,23 @@ lpar_name=vios1,lpar_id=15,slot_num=9,state=1,is_required=0,is_trunk=1,trunk_pri
 		
 	end
 
+  # test data source: https://www.ibm.com/developerworks/community/forums/html/topic?id=77777777-0000-0000-0000-000014577291
+	def test_virtual_eth_2
+    string = 'lpar_name=vios1,lpar_id=1,slot_num=12,state=1,is_required=1,is_trunk=1,trunk_priority=1,ieee_virtual_eth=1,port_vlan_id=1,vswitch=ETHERNET0,"addl_vlan_ids=54",mac_addr=FE9F66D5360C
+lpar_name=vios1,lpar_id=1,slot_num=14,state=1,is_required=1,is_trunk=1,trunk_priority=2,ieee_virtual_eth=1,port_vlan_id=1,vswitch=Ethernet1,"addl_vlan_ids=3071",mac_addr=FE9F66D5360E
+lpar_name=clpar5,lpar_id=5,slot_num=2,state=1,is_required=0,is_trunk=0,ieee_virtual_eth=0,port_vlan_id=54,vswitch=ETHERNET0,addl_vlan_ids=,mac_addr=FE9F6044E802
+lpar_name=clpar18,lpar_id=18,slot_num=2,state=1,is_required=0,is_trunk=0,ieee_virtual_eth=0,port_vlan_id=3071,vswitch=Ethernet1,addl_vlan_ids=,mac_addr=FE9F6179A102
+'
+    lpar = Lpar_real.new('123-ABC', 18, 'clpar18')
+    lpar.decode_virtualio_eth(string)
+
+    assert_equal(1, lpar.adaptersVirtual.count)
+    assert_equal(true, lpar.virtual_adapter_exist?(2))
+    assert_equal(false, lpar.virtual_adapter_exist?(1))
+
+
+  end
+
 	def test_virtual_scsi
 		string = 'lpar_name=nim1,lpar_id=5,slot_num=3,state=0,is_required=1,adapter_type=client,remote_lpar_id=3,remote_lpar_name=vios2,remote_slot_num=2
 lpar_name=nim1,lpar_id=5,slot_num=2,state=0,is_required=1,adapter_type=client,remote_lpar_id=2,remote_lpar_name=vios1,remote_slot_num=2'
