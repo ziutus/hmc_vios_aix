@@ -1,7 +1,7 @@
 $LOAD_PATH << File.dirname(__FILE__)+'/../inc'
 $LOAD_PATH << File.dirname(__FILE__) + './inc'
 
-require 'VIOS/Vtd2'
+require 'VIOS/Vtd'
 require 'test/unit'
 require 'pp'
 
@@ -15,7 +15,7 @@ LUN                   0x8100000000000000
 Backing device        vtd0-1
 Physloc'
 
-		vtd = Vtd2.new(string)
+		vtd = Vtd.new(string)
 
 		assert_equal('vtscsi0', 			     vtd.name)
 		assert_equal('Available', 			   vtd.status)
@@ -33,7 +33,7 @@ LUN                   0x8200000000000000
 Backing device        vtd0-2
 Physloc'
 
-		vtd = Vtd2.new(string)
+		vtd = Vtd.new(string)
 
 		assert_equal('vtscsi1', 			     vtd.name)
 		assert_equal('0x8200000000000000', vtd.lun)
@@ -52,7 +52,7 @@ Backing device        hdisk2
 Physloc               U787A.001.0397658-P1-T16-L5-L0
 Mirrored              false'
 
-		vtd = Vtd2.new(string)
+		vtd = Vtd.new(string)
 
 		assert_equal('vtscsi2', 			                 vtd.name)
 		assert_equal('Available', 			               vtd.status)

@@ -6,7 +6,7 @@ NO VIRTUAL TARGET DEVICE FOUND
 
  SVSA                 Physloc				Client Partition ID
 -------------        --------------------------------- -----------------------------
-vhost2       	      U9111.520.10004BA-V1-C2           0x00000004
+vhost1       	      U9111.520.10004BA-V1-C2           0x00000004
 
 VTD                   vtscsi0
 Status                Available
@@ -28,13 +28,13 @@ Mirrored              false
 
 SVSA Physloc Client Partition ID
 --------------- -------------------------------------------- ------------------
-vhost3 U9131.52A.10E47DG-V3-C34 0x0000001c
+vhost2 U9131.52A.10E47DG-V3-C34 0x0000001c
 
 VTD NO VIRTUAL TARGET DEVICE FOUND
 
 SVSA Physloc Client Partition ID
 --------------- -------------------------------------------- ------------------
-vhost4 U9117.MMB.999BCP-V2-C8 0x00000004
+vhost3 U9117.MMB.999BCP-V2-C8 0x00000004
 VTD d7f1_lpar1
 Status Available
 LUN 0x8100000000000000
@@ -59,13 +59,13 @@ Physloc U78C0.001.DBJ1531-P2-C5-T1-W50060E80164DFB26-L19000000000000
 
 SVSA Physloc Client Partition ID
 --------------- -------------------------------------------- ------------------
-vhost0 U9131.52A.10E47DG-V3-C31 0x00000000
+vhost4 U9131.52A.10E47DG-V3-C31 0x00000000
 
 NO VIRTUAL TARGET DEVICE FOUND
 
  SVSA                 Physloc				Client Partition ID
 -------------        --------------------------------- -----------------------------
-vhost2       	      U9111.520.10004BA-V1-C2           0x00000004
+vhost5       	      U9111.520.10004BA-V1-C2           0x00000004
 
 VTD                   vtscsi0
 Status                Available
@@ -87,13 +87,13 @@ Mirrored              false
 
 SVSA Physloc Client Partition ID
 --------------- -------------------------------------------- ------------------
-vhost3 U9131.52A.10E47DG-V3-C34 0x0000001c
+vhost6 U9131.52A.10E47DG-V3-C34 0x0000001c
 
 VTD NO VIRTUAL TARGET DEVICE FOUND
 
 SVSA Physloc Client Partition ID
 --------------- -------------------------------------------- ------------------
-vhost4 U9117.MMB.999BCP-V2-C8 0x00000004
+vhost7 U9117.MMB.999BCP-V2-C8 0x00000004
 VTD d7f1_lpar1
 Status Available
 LUN 0x8100000000000000

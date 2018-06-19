@@ -1,12 +1,10 @@
 require 'pp'
-require 'VIOS/Vtd2'
+require 'VIOS/Vtd'
 require 'VIOS/Vhost'
 
 class Lsmap
 
   attr_accessor :mapping
-#	attr_reader :data_string_raw
-
 
   def initialize(string = '')
     @mapping = {}
@@ -16,95 +14,77 @@ class Lsmap
 
   def parse_long(string)
 
-    vhost_number=0
-    vtd_number=0
+    vhost_number = 0
+    vtd_number = 0
     vhost = ''
     vhost_value = ''
 
-    string.each_line { |line|
-      if (line =~ /^\s*SVSA\s+Physloc\s+Client\sPartition\sID\s*$/)
-        next
-      elsif (line =~ /^\s*[-]+\s+[-]+\s+[-]+\s*$/)
-        next
-      elsif (line =~ /NO VIRTUAL TARGET DEVICE FOUND/)
-        next
-      elsif (line =~ /^\s*(vhost\d+)\s+([\w\-\.]+)\s+(\w+)\s*$/)
-        if vhost_number > 0
-          if vtd_number > 0
-            vhost.vtds_add(Vtd2.new(vhost_value))
-          end
+    regexp_text = /^\s*SVSA\s+Physloc\s+Client\sPartition\sID\s*$/
+    regexp_separator = /^\s*[-]+\s+[-]+\s+[-]+\s*$/
+    regexp_no_devices = /NO VIRTUAL TARGET DEVICE FOUND/
+    regexp_empty = /^\s*$/
 
+    regexp_mirrored = /^\s*Mirrored\s+(true|false)\s*$/
+    regexp_status = /^\s*Status\s+(Available|Defined)\s*$/
+    regexp_physloc = /Physloc/
+    regexp_lun_id = /^\s*LUN\s+(0x\w+)\s*$/
+    regexp_b_device = /Backing\sdevice\s+([\w\-\_]+)/
+    regexp_vtd = /^\s*VTD\s+([\w\_\-]+)\s*$/
+
+    regexp_vhost = /^\s*(vhost\d+)\s+([\w\-\.]+)\s+(\w+)\s*$/
+
+    string.each_line do |line|
+      next if line =~ /#{regexp_empty}|#{regexp_text}|#{regexp_separator}|#{regexp_no_devices}/
+
+      if line =~ /#{regexp_vhost}/
+        if vhost_number > 0
+          vhost.vtds.push(Vtd.new(vhost_value)) unless vhost_value.empty?
           @mapping[vhost.name] = vhost
         end
 
         vhost = Vhost.new(line)
-        vhost_number = vhost_number + 1
-        vhost_value  = ''
-        vtd_number=0
+        vhost_number += 1
+        vhost_value = ''
+        vtd_number = 0
 
-      elsif (line =~ /^\s*$/)
-        next
-      elsif (line =~ /^\s*VTD\s+([\w\_\-]+)\s*$/)
-        if vtd_number > 0
-          vhost.vtds_add(Vtd2.new(vhost_value))
-        end
-
-        vtd_number = vtd_number +1
-
+      elsif line =~ /#{regexp_vtd}/
+        vhost.vtds.push(Vtd.new(vhost_value)) if vtd_number > 0
+        vtd_number += 1
         vhost_value = line
-      elsif (line =~ /^\s*Status\s+(Available|Defined)\s*$/)
-        vhost_value = vhost_value + line
-      elsif (line =~ /^\s*LUN\s+(0x\w+)\s*$/)
-        vhost_value = vhost_value + line
-      elsif (line =~ /Backing\sdevice\s+([\w\-\_]+)/)
-        vhost_value = vhost_value + line
-      elsif (line =~ /Physloc/)
-        vhost_value = vhost_value + line
-      elsif (line =~ /^\s*Mirrored\s+(true|false)\s*$/)
-        vhost_value = vhost_value + line
+      elsif line =~ /#{regexp_status}|#{regexp_lun_id}|#{regexp_b_device}|#{regexp_physloc}|#{regexp_mirrored}/
+        vhost_value += line
       else
         raise "Class:VIOS:lsmap, function: parse_long, RegExp couldn't decode line >>#{line}<<"
       end
-    }
+    end
 
-    vhost.vtds_add(Vtd2.new(vhost_value)) if vtd_number > 0
+    vhost.vtds.push(Vtd.new(vhost_value)) if vtd_number > 0
     @mapping[vhost.name] = vhost if vhost_number > 0
   end
 
   def lpars
-
     result = []
-
     @mapping.each_value do |vhost|
-			result.push(vhost.client_partition_id_nice)
+      result.push(vhost.client_partition_id_nice)
     end
-
     result.uniq
   end
 
-
-  def mapping_for_lpar lpar_id
-
-    result = Array.new()
-
-    @mapping.each_value { |vhost|
+  def mapping_for_lpar(lpar_id)
+    result = []
+    @mapping.each_value do |vhost|
       result.push(vhost) if vhost.client_partition_id_nice == lpar_id
-    }
-
+    end
     result
   end
 
-  def backing_devices_for_lpar lpar_id
-
-    result = Array.new()
-
-    self.mapping_for_lpar(lpar_id).each { |vhost|
-      vhost.vtds.each { |vtd|
-          result.push(vtd.backing_device)
-      }
-    }
-
+  def backing_devices_for_lpar(lpar_id)
+    result = []
+    mapping_for_lpar(lpar_id).each do |vhost|
+      vhost.vtds.each do |vtd|
+        result.push(vtd.backing_device)
+      end
+    end
     result.sort
   end
-
 end
