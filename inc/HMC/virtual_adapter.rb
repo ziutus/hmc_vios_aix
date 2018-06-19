@@ -11,12 +11,21 @@ class VirtualAdapter
   # type of input / output (data can be taken from profile or real setup (lshwres...))
   attr_reader :_type
 
+  # for compare where important are only adapters
+  attr_accessor :vios
+  attr_accessor :frame
+
+
   def initialize(string = '')
     @lpar_name = nil
     @lpar_id = nil
     @state = nil
     @isRequired = 0
     @_type = 'profile'
+
+    @vios = nil
+    @frame = nil
+
     @params = []
   end
 
