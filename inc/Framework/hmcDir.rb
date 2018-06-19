@@ -1,11 +1,13 @@
 require 'HMC/HmcString'
 include HmcString
 
-class HmcData
+class HmcDir
 
   attr_reader :errors
   attr_reader :warnings
   attr_accessor :verbose
+
+  attr_reader :sys
 
   def initialize(dir)
     @errors   = []
@@ -24,7 +26,7 @@ class HmcData
     }
 
     @frame_files_map = {
-      'frame_memory'  => '_mem.txt',
+      'frame_memory' => '_mem.txt',
       'frame_proc' => '_proc.txt',
     }
 
@@ -45,6 +47,8 @@ class HmcData
   def validate
     errors = 0
 
+    puts "Checking HMC directory #{@dir}" if @verbose > 0
+
     puts 'HMC files:' if @verbose > 0
     if File.directory?(@dir)
       puts "checking if directory #{@dir} exist [OK]" if @verbose > 0
@@ -64,7 +68,7 @@ class HmcData
       errors += 1 unless file_exist?(file_type, @dir + '/' + filename)
     end
 
-    list_of_frames
+    create_list_of_frames
 
     @sys.each do |sys_name|
       puts "Frame: #{sys_name}" if @verbose > 0
@@ -81,12 +85,13 @@ class HmcData
     true
   end
 
-  def list_of_frames
+  def create_list_of_frames
     File.read(@dir + '/' + @hmc_dir_map['sys_list']).split("\n").each do |string|
-      sys = Sys.new()
+      sys = Sys.new
       sys.parse_f(string, 'name,serial_num,state')
       @sys.push(sys.name)
     end
+    @sys.uniq!
   end
 
   def file_exist?(file_type, filename)
@@ -98,6 +103,10 @@ class HmcData
       return false
     end
     true
+  end
+
+  def file_content(frame, type)
+    File.read(@dir + '/' + frame + @frame_lpar_map[type])
   end
 
   def lpar_hash(sys_name, lpar_id)
