@@ -12,6 +12,7 @@ require 'HMC/VirtualFCAdapter'
 class System < Sys
 
   attr_reader :lpars
+  attr_reader :lpars_by_name
 
   def initialize(name = '')
     super(name)
@@ -41,7 +42,7 @@ class System < Sys
         lpar_add_adapter('virtual_fc', line)
       elsif match = %r{^name=([\w\_\-]+),lpar_id=(\d+),lpar_env=}.match(line)
         lpar_add(match[2], match[1])
-        @lpars[match[2]].parse(line)
+        @lpars[match[2]].lssyscfg_decode(line)
       else
         raise Exception, "Can't parse line >#{line}"
       end
@@ -76,6 +77,14 @@ class System < Sys
 
   def lpar_name_exist?(name)
     @lpars_by_name.include?(name)
+  end
+
+  def vioses
+    vioses = []
+    @lpars.each_pair do |lpar_id, lpar|
+      vioses.push(lpar.name) if lpar.lpar_env == 'vioserver'
+    end
+    vioses
   end
 
 end
