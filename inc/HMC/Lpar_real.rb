@@ -123,8 +123,6 @@ class Lpar_real
 
     @lpar_name = nil
 
-    @lpar_env = nil
-
     # string from command ''
     @lpar_id = nil
     @allow_perf_collection = nil
