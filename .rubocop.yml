@@ -11,3 +11,6 @@ Metrics/MethodLength:
 # bla test itp
 Metrics/AbcSize:
   Max: 20
+
+Style/RegexpLiteral:
+  EnforcedStyle: mixed
