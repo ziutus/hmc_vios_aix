@@ -9,10 +9,10 @@ require 'pp'
 # noinspection RubyResolve
 class TestAixErrptEntry < Test::Unit::TestCase
 
-  #Test data taken from: https://community.aveksa.com/thread/227734?start=0&tstart=0
+  # Test data taken from: https://community.aveksa.com/thread/227734?start=0&tstart=0
   def test_errpt1
 
-string='A5E6DB96   0414083416 I S pmig           Client Partition Migration Completed
+    string = 'A5E6DB96   0414083416 I S pmig           Client Partition Migration Completed
 1BBD20F4   0414083416 I H hdiskpower3    FUNCTION DEGRADED
 C6E26F3B   0414083416 I H hdisk19        BACK-UP PATH STATUS CHANGE
 1E67811B   0414083316 P H hdisk19        UNABLE TO COMMUNICATE WITH DEVICE
@@ -37,6 +37,43 @@ C6E26F3B   0414083416 I H hdisk19        BACK-UP PATH STATUS CHANGE
 
 
 #    pp errpt
+  end
+
+  # Test data created using information from: https://www.ibm.com/developerworks/community/blogs/KRblog/entry/powerha_and_powerpath_error_notification?lang=en_us
+
+  # The errpt source: http://ahix.fr/index.php/107-documentations/pseries-p6/vio-serveur/installation/705-npiv-implantation-et-validation
+  def test_powerpath2
+    string = 'IDENTIFIER TIMESTAMP T C RESOURCE_NAME DESCRIPTION
+D712FEAE   0726162611 T S fcs0          LINK_DEAD events reported by the VIOS
+26623394   0726162111 T H fscsi0         COMMUNICATION PROTOCOL ERROR
+4B436A3D   0726162111 T H fscsi0         LINK ERROR
+26623394   0726162111 T H fscsi0         COMMUNICATION PROTOCOL ERROR
+4B436A3D   0726162111 T H fscsi0         LINK ERROR
+26623394   0726162111 T H fscsi0         COMMUNICATION PROTOCOL ERROR
+4B436A3D   0726162111 T H fscsi0         LINK ERROR
+26623394   0726162111 T H fscsi0         COMMUNICATION PROTOCOL ERROR
+4B436A3D   0726162111 T H fscsi0        LINK ERROR
+3767AAFF   0726162111 I H hdisk2         BACK-UP PATH INOPERATIVE
+516A2BC4   0726162111 P H hdisk2         CONNECTION FAILURE
+26623394   0726162111 T H fscsi0         COMMUNICATION PROTOCOL ERROR
+4B436A3D   0726162111 T H fscsi0         LINK ERROR
+26623394   0726162111 T H fscsi0         COMMUNICATION PROTOCOL ERROR
+4B436A3D   0726162111 T H fscsi0         LINK ERROR
+3767AAFF   0726162111 I H hdisk3         BACK-UP PATH INOPERATIVE
+516A2BC4   0726162111 P H hdisk3         CONNECTION FAILURE
+26623394   0726162111 T H fscsi0         COMMUNICATION PROTOCOL ERROR
+4B436A3D   0726162111 T H fscsi0         LINK ERROR
+26623394   0726162111 T H fscsi0         COMMUNICATION PROTOCOL ERROR
+4B436A3D   0726162111 T H fscsi0         LINK ERROR
+26623394   0726162111 T H fscsi0         COMMUNICATION PROTOCOL ERROR
+4B436A3D   0726162111 T H fscsi0         LINK ERROR
+26623394   0726162111 T H fscsi0         COMMUNICATION PROTOCOL ERROR
+4B436A3D   0726162111 T H fscsi0         LINK ERROR
+26623394   0726162111 T H fscsi0         COMMUNICATION PROTOCOL ERROR
+4B436A3D   0726162111 T H fscsi0         LINK ERROR'
+
+    errpt = Errpt.new(string)
+
   end
 
 end
