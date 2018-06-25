@@ -6,27 +6,21 @@ class Lsmap_npiv
   attr_reader :data
   attr_reader :data_string_raw
 
-  def initialize(string)
-
-    @data = Hash.new
-    @data_string_raw=''
-    if string.length > 0
-      @data_string_raw = string
-      self.parse(string)
-    end
+  def initialize(string = '')
+    @data = {}
+    @data_string_raw = ''
+    parse(string) unless string.empty?
   end
 
   def parse(string)
+    @data_string_raw = string
 
-    string.gsub!("\nName", "--split--Name")
+    string.gsub!("\nName", '--split--Name')
 
-    array = string.split("--split--")
-    array2 = Array.new
-
-    array.each { |str|
-        entry = Lsmap_npiv_entry.new(str)
-        @data[entry.name] = entry
-    }
+    string.split('--split--').each do |str|
+      entry = Lsmap_npiv_entry.new(str)
+      @data[entry.name] = entry
+    end
 
     @data
   end
