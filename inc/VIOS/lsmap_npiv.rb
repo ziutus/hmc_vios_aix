@@ -15,9 +15,7 @@ class Lsmap_npiv
   def parse(string)
     @data_string_raw = string
 
-    string.gsub!("\nName", '--split--Name')
-
-    string.split('--split--').each do |str|
+    string.gsub("\nName", '--split--Name').split('--split--').each do |str|
       entry = Lsmap_npiv_entry.new(str)
       @data[entry.name] = entry
     end
