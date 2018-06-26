@@ -7,22 +7,31 @@ class Lpar < Lpar_real
   attr_accessor :sys
   attr_accessor :name
   attr_accessor :lpar_name
-  attr_accessor :hmcs
+  attr_accessor :hmc
   attr_accessor :lpar_id
 
   attr_reader :errors
   attr_reader :warnings
   attr_accessor :verbose
 
+  attr_accessor :vioses
 
   attr_reader :profiles
 
-  def initialize(sys = nil,lpar_id = nil,name = nil)
+  attr_accessor :npiv
+  attr_accessor :vscsi
+
+  def initialize(sys = nil, lpar_id = nil, name = nil, hmc = nil)
     super(sys, lpar_id, name)
+    @hmc = hmc
     @sys = sys
-    @lpar_id  = lpar_id
+    @lpar_id = lpar_id
     @name = name
     @profiles = {}
+    @vioses = {}
+
+    @npiv = {}
+    @vscsi = {}
 
     @errors   = []
     @warnings = []
@@ -76,19 +85,18 @@ class Lpar < Lpar_real
         @errors.push("curr_#{name}:" + instance_variable_get("@curr_#{name}") +  "  vs pend_#{name}:" + instance_variable_get("@pend_#{name}") )
       end
     }
-
   end
 
   def current_profile_vs_running
     unless parsed_all?
-      print "Not all needed data are provided"
+      print 'Not all needed data are provided'
       pp @_parsed
       return false
     end
 
-    #let's compare CPU and memory
+    # let's compare CPU and memory
 
-    #let's compare virtual slots
+    # let's compare virtual slots
     @profiles.each_pair { |name, profile|
       pp profile.to_s
     }
