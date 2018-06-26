@@ -167,4 +167,52 @@ VFC client name:                VFC client DRC:'
 
   end
 
+  # test data source: https://www.ibm.com/developerworks/aix/library/au-NPIV/index.html
+  def test_npiv_for_lpar
+    string = 'Name          Physloc                            ClntID ClntName       ClntOS
+------------- ---------------------------------- ------ -------------- -------
+vfchost0      U8233.E8B.XXXXXXX-V1-C66                4 LPAR4          AIX
+
+Status:LOGGED_IN
+FC name:fcs0                    FC loc code:U78A0.001.XXXXXXX-P1-C3-T1
+Ports logged in:5
+Flags:a<LOGGED_IN,STRIP_MERGE>
+VFC client name:fcs0            VFC client DRC:U8233.E8B.XXXXXXX-V6-C30-T1
+
+Name          Physloc                            ClntID ClntName       ClntOS
+------------- ---------------------------------- ------ -------------- -------
+vfchost1      U8233.E8B.XXXXXXX-V1-C67                4 LPAR4          AIX
+
+Status:LOGGED_IN
+FC name:fcs1                    FC loc code:U78A0.001.XXXXXXX-P1-C3-T2
+Ports logged in:5
+Flags:a<LOGGED_IN,STRIP_MERGE>
+VFC client name:fcs1            VFC client DRC:U8233.E8B.XXXXXXX-V6-C31-T1
+
+Name          Physloc                            ClntID ClntName       ClntOS
+------------- ---------------------------------- ------ -------------- -------
+vfchost3      U8233.E8B.XXXXXXX-V1-C30                3 nim1           AIX
+
+Status:LOGGED_IN
+FC name:fcs2                    FC loc code:U5877.001.XXXXXXX-P1-C1-T1
+Ports logged in:5
+Flags:a<LOGGED_IN,STRIP_MERGE>
+VFC client name:fcs0            VFC client DRC:U8233.E8B.XXXXXXX-V3-C30-T1
+
+Name          Physloc                            ClntID ClntName       ClntOS
+------------- ---------------------------------- ------ -------------- -------
+vfchost4      U8233.E8B.XXXXXXX-V1-C31                3 nim1           AIX
+
+Status:LOGGED_IN
+FC name:fcs3                    FC loc code:U5877.001.XXXXXXX-P1-C1-T2
+Ports logged in:5
+Flags:a<LOGGED_IN,STRIP_MERGE>
+VFC client name:fcs1            VFC client DRC:U8233.E8B.XXXXXXX-V3-C31-T1'
+    lsmap = Lsmap_npiv.new(string)
+
+    lsmap_lpar3 = lsmap.mapping_for_lpar_id(3)
+    assert_equal(2, lsmap_lpar3.count)
+  end
+
+
 end

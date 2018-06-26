@@ -19,7 +19,15 @@ class Lsmap_npiv
       entry = Lsmap_npiv_entry.new(str)
       @data[entry.name] = entry
     end
-
     @data
   end
+
+  def mapping_for_lpar_id(lpar_id)
+    result = []
+    @data.each_pair do |name, entry|
+      result.push(entry) if entry.clntid == lpar_id
+    end
+    result
+  end
+
 end
