@@ -6,7 +6,14 @@ class Lsmap_npiv
   attr_reader :data
   attr_reader :data_string_raw
 
-  def initialize(string = '')
+  attr_accessor :vios
+  attr_accessor :sys
+
+
+  def initialize(string = '', vios = nil, sys = nil)
+    @vios = vios
+    @sys = sys
+
     @data = {}
     @data_string_raw = ''
     parse(string) unless string.empty?
@@ -15,9 +22,16 @@ class Lsmap_npiv
   def parse(string)
     @data_string_raw = string
 
-    string.gsub("\nName", '--split--Name').split('--split--').each do |str|
-      entry = Lsmap_npiv_entry.new(str)
-      @data[entry.name] = entry
+    if (string =~ /Name\s*Physloc/)
+      string.gsub("\nName", '--split--Name').split('--split--').each do |str|
+        entry = Lsmap_npiv_entry.new(str)
+        @data[entry.name] = entry
+      end
+    else
+      string.each_line do |line|
+        entry = Lsmap_npiv_entry.new(line)
+        @data[entry.name] = entry
+      end
     end
     @data
   end
@@ -30,4 +44,12 @@ class Lsmap_npiv
     result
   end
 
+  def to_s(separator = ':')
+    result = ''
+    @data.each_pair do |name, entry|
+      result += entry.to_s(separator)
+    end
+
+    result
+  end
 end

@@ -214,5 +214,34 @@ VFC client name:fcs1            VFC client DRC:U8233.E8B.XXXXXXX-V3-C31-T1'
     assert_equal(2, lsmap_lpar3.count)
   end
 
+  def test_lsmap_fmt
+    # test data source: http://blog.sekratech.de/2014/05/28/change-on-the-fly-vio-fc-mapping-because-of-problem-with-live-partition-mobility/
+    string = 'vfchost18:U9117.MMB.06xxxxx-V2-C49:38:nim9:AIX:LOGGED_IN:fcs3:U78C0.001.DBJN321-P2-C5-T2:5:a:fcs1:U9117.MMB.06xxxxx-V38-C5'
+    lsmap = Lsmap_npiv.new(string)
+
+    assert_equal('vfchost18',                 lsmap.data['vfchost18'].name)
+    assert_equal('U9117.MMB.06xxxxx-V2-C49',  lsmap.data['vfchost18'].physloc)
+    assert_equal(38,                          lsmap.data['vfchost18'].clntid)
+    assert_equal('nim9',                      lsmap.data['vfchost18'].clntname)
+    assert_equal('AIX',                       lsmap.data['vfchost18'].clntos)
+    assert_equal('LOGGED_IN',                 lsmap.data['vfchost18'].status)
+    assert_equal('fcs3',                      lsmap.data['vfchost18'].fc_name)
+    assert_equal('U78C0.001.DBJN321-P2-C5-T2',lsmap.data['vfchost18'].fc_loc_code)
+    assert_equal(5,                           lsmap.data['vfchost18'].ports_logged_in)
+    assert_equal('a',                         lsmap.data['vfchost18'].flags)
+    assert_equal('fcs1',                      lsmap.data['vfchost18'].vfc_client_name)
+    assert_equal('U9117.MMB.06xxxxx-V38-C5',  lsmap.data['vfchost18'].vfc_client_drc)
+
+    assert_equal(string, lsmap.data['vfchost18'].to_s)
+  end
+
+  # test data source: http://blog.sekratech.de/2014/05/28/change-on-the-fly-vio-fc-mapping-because-of-problem-with-live-partition-mobility/
+  def test_lsmap_fmt_many
+    string = 'vfchost18:U9117.MMB.06xxxxx-V2-C49:38:nim9:AIX:LOGGED_IN:fcs3:U78C0.001.DBJN321-P2-C5-T2:5:a:fcs1:U9117.MMB.06xxxxx-V38-C5
+vfchost28:U9117.MMB.06xxxxx-V2-C43:38:nim9:AIX:LOGGED_IN:fcs3:U78C0.001.DBJN321-P2-C5-T2:3:a:fcs3:U9117.MMB.06xxxxx-V38-C93'
+
+    lsmap = Lsmap_npiv.new(string)
+    assert_equal(2, lsmap.data.count)
+  end
 
 end

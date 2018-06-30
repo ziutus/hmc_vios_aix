@@ -3,6 +3,9 @@ class Lsmap_npiv_entry
   attr_reader :data
   attr_reader :data_string_raw
 
+  attr_accessor :vios
+  attr_accessor :sys
+
   attr_reader :name
   attr_reader :physloc
   attr_reader :clntid
@@ -16,10 +19,13 @@ class Lsmap_npiv_entry
   attr_reader :vfc_client_name
   attr_reader :vfc_client_drc
 
-  def initialize(string)
+  def initialize(string, vios = nil, sys = nil)
 
     @data = {}
     @data_string_raw = ''
+
+    @vios = vios
+    @sys = sys
 
     @name = nil
     @physloc = nil
@@ -59,7 +65,23 @@ Flags:(#{r_flags})\s+
 VFC\s+client\s+name:(fcs\d+|)\s+VFC\s+client\s+DRC:(#{r_client_drc})\s*$
 }mx
 
-    if match = regexp.match(string)
+    regexp_fmt = /(vfchost\d+):(#{r_physloc}):(\d+):(#{r_lparname}):(AIX|):(#{r_status}):(fcs\d+):(#{r_fc_loc_code}):(\d+):(\w+):(fcs\d+):(#{r_client_drc})/
+
+    if match = regexp_fmt.match(string)
+      @name            = match[1]
+      @physloc         = match[2]
+      @clntid          = match[3].to_i
+      @clntname        = match[4]
+      @clntos          = match[5]
+      @status          = match[6]
+      @fc_name         = match[7]
+      @fc_loc_code     = match[8]
+      @ports_logged_in = match[9].to_i
+      @flags           = match[10]
+      @vfc_client_name = match[11]
+      @vfc_client_drc  = match[12]
+
+    elsif match = regexp.match(string)
       @name            = match[1]
       @physloc         = match[2]
       @clntid          = match[3].to_i
@@ -77,6 +99,12 @@ VFC\s+client\s+name:(fcs\d+|)\s+VFC\s+client\s+DRC:(#{r_client_drc})\s*$
       raise Exception, "Wrong string >#{string}<"
     end
 
+  end
+
+  def to_s(separator = ':')
+    "#{@name}#{separator}#{@physloc}#{separator}#{@clntid}#{separator}#{@clntname}#{separator}#{@clntos}" +
+    "#{separator}#{@status}#{separator}#{fc_name}#{separator}#{@fc_loc_code}#{separator}#{@ports_logged_in}" +
+    "#{separator}#{@flags}#{separator}#{@vfc_client_name}#{separator}#{@vfc_client_drc}"
   end
 
 end
