@@ -212,6 +212,13 @@ VFC client name:fcs1            VFC client DRC:U8233.E8B.XXXXXXX-V3-C31-T1'
 
     lsmap_lpar3 = lsmap.mapping_for_lpar_id(3)
     assert_equal(2, lsmap_lpar3.count)
+    #assert_equal(4, lsmap.working_fcs.count)
+    assert_equal(4, lsmap.fc_names.count)
+    assert_equal(true, lsmap.using_fcs?('fcs0'))
+    assert_equal(true, lsmap.using_fcs?('fcs3'))
+    assert_equal(false, lsmap.using_fcs?('fcs10'))
+
+
   end
 
   def test_lsmap_fmt

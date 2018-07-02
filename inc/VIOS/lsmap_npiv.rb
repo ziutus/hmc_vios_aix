@@ -6,9 +6,10 @@ class Lsmap_npiv
   attr_reader :data
   attr_reader :data_string_raw
 
+  attr_reader :fc_names
+
   attr_accessor :vios
   attr_accessor :sys
-
 
   def initialize(string = '', vios = nil, sys = nil)
     @vios = vios
@@ -33,6 +34,7 @@ class Lsmap_npiv
         @data[entry.name] = entry
       end
     end
+    working_fcs()
     @data
   end
 
@@ -51,5 +53,18 @@ class Lsmap_npiv
     end
 
     result
+  end
+
+  def working_fcs
+    result = []
+    @data.each_pair do |name, entry|
+      result.push(entry.fc_name)
+    end
+    @fc_names = result.uniq
+    @fc_names
+  end
+
+  def using_fcs?(name)
+    @fc_names.include?(name)
   end
 end
