@@ -1,0 +1,58 @@
+FIBRE CHANNEL STATISTICS REPORT: fcs0
+
+Device Type: FC Adapter (df1000fd)
+Serial Number: 1B9999999
+Option ROM Version: 02C82138
+Firmware Version: B1F2.10X8
+World Wide Node Name: 0x20000000C964777E
+World Wide Port Name: 0x10000000C964777E
+
+FC-4 TYPES:
+ Supported: 0x0000012000000000000000000000000000000000000000000000000000000000
+ Active: 0x0000010000000000000000000000000000000000000000000000000000000000
+Class of Service: 3
+Port Speed (supported): 4 GBIT
+Port Speed (running): 4 GBIT
+Port FC ID: 0x610213
+Port Type: Fabric
+
+Seconds Since Last Reset: 1049191
+
+ Transmit Statistics Receive Statistics
+ ------------------- ------------------
+Frames: 2877134108 1261755420
+Words: 1099511627520 586414879232
+
+LIP Count: 0
+NOS Count: 0
+Error Frames: 0
+Dumped Frames: 0
+Link Failure Count: 0
+Loss of Sync Count: 6
+Loss of Signal: 0
+Primitive Seq Protocol Error Count: 0
+Invalid Tx Word Count: 0
+Invalid CRC Count: 0
+
+IP over FC Adapter Driver Information
+ No DMA Resource Count: 0
+ No Adapter Elements Count: 0
+
+FC SCSI Adapter Driver Information
+ No DMA Resource Count: 0
+ No Adapter Elements Count: 316556
+ No Command Resource Count: 2045709
+
+IP over FC Traffic Statistics
+ Input Requests: 0
+ Output Requests: 0
+ Control Requests: 0
+ Input Bytes: 0
+ Output Bytes: 0
+
+FC SCSI Traffic Statistics
+ Input Requests: 35188289
+ Output Requests: 47812736
+ Control Requests: 890940
+ Input Bytes: 2312815985241
+ Output Bytes: 5720318319104

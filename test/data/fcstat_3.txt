@@ -1,0 +1,39 @@
+FIBRE CHANNEL STATISTICS REPORT: fcs0
+
+Device Type: 4Gb FC PCI Express Adapter (df1000fe) (adapter/pciex/df1000fe)
+Serial Number: 1B84204CD5
+Option ROM Version: 02E8277F
+ZA: Z1F2.70A5
+World Wide Node Name: 0x20000000C980DBE8
+World Wide Port Name: 0x10000000C980DBE8
+
+FC-4 TYPES:
+Supported: 0x0000012000000000000000000000000000000000000000000000000000000000
+Active: 0x0000010000000000000000000000000000000000000000000000000000000000
+Class of Service: 3
+Port Speed (supported): 4 GBIT
+Port Speed (running): 4 GBIT
+Port FC ID: 0x000001
+Port Type: Private Loop
+
+Seconds Since Last Reset: 1219675
+
+Transmit Statistics Receive Statistics
+------------------- ------------------
+Frames: 203978 407400
+Words: 2862592 12623616
+
+LIP Count: 1
+NOS Count: 0
+Error Frames: 0
+Dumped Frames: 0
+Link Failure Count: 0
+Loss of Sync Count: 4
+Loss of Signal: 0
+Primitive Seq Protocol Error Count: 0
+Invalid Tx Word Count: 7
+Invalid CRC Count: 0
+
+IP over FC Adapter Driver Information
+No DMA Resource Count: 0
+No Adapter Elements Count: 0
