@@ -7,7 +7,13 @@ class Vhost
   attr_accessor :vtds
   attr_reader :client_partition_id_nice
 
-  def initialize(string = '')
+  attr_accessor :vios
+  attr_accessor :sys
+
+  def initialize(string = '', vios = nil, sys = nil)
+    @vios = vios
+    @sys = sys
+
     @vtds = []
     parse(string) unless string.empty?
   end

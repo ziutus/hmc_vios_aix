@@ -1,4 +1,8 @@
 class Lsmap_net_entry
+
+  attr_accessor :vios
+  attr_accessor :sys
+
   attr_reader :svea
   attr_reader :physloc
   attr_reader :sea
@@ -6,7 +10,10 @@ class Lsmap_net_entry
   attr_reader :bdphysloc
   attr_reader :status
 
-  def initialize(string = nil)
+  def initialize(string = nil, vios = nil, sys = nil)
+    @vios = vios
+    @sys = sys
+
     @physloc = nil
     @svea = nil
     @sea = nil

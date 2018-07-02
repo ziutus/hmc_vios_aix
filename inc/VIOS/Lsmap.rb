@@ -6,7 +6,15 @@ class Lsmap
 
   attr_accessor :mapping
 
-  def initialize(string = '')
+  attr_accessor :vios
+  attr_accessor :sys
+
+
+
+  def initialize(string = '', vios = nil, sys = nil)
+    @vios = vios
+    @sys = sys
+
     @mapping = {}
 
     parse_long(string) unless string.empty?

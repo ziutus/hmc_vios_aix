@@ -5,7 +5,14 @@ class Lsmap_net
   attr_reader :data
   attr_reader :data_string_raw
 
-  def initialize(string = '')
+  attr_accessor :vios
+  attr_accessor :sys
+
+
+  def initialize(string = '', vios = nil, sys = nil)
+    @vios = vios
+    @sys = sys
+
     @data = {}
     @data_string_raw = ''
     parse(string) unless string.empty?
