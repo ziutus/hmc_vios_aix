@@ -218,7 +218,6 @@ VFC client name:fcs1            VFC client DRC:U8233.E8B.XXXXXXX-V3-C31-T1'
     assert_equal(true, lsmap.using_fcs?('fcs3'))
     assert_equal(false, lsmap.using_fcs?('fcs10'))
 
-
   end
 
   def test_lsmap_fmt
