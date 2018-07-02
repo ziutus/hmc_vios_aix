@@ -23,46 +23,8 @@ class Fcstat
   def parse(string)
     @data_string_raw = string
 
-    regexp_all = %r{FIBRE\sCHANNEL\sSTATISTICS\sREPORT:\s(fcs\d+)\s+
-Device\sType:\s(.*?)\s+
-Serial\sNumber:\s(\w+)\s+
-Option\sROM\sVersion:\s(\w+)\s+
-(ZA:\s[\w\.]+|)\s*
-(Firmware\sVersion:\s[\w\.]+|)\s*
-(?:Node\sWWN|World\sWide\sNode\sName):\s(\w+)\s+
-(?:Port\sWWN|World\sWide\sPort\sName):\s(\w+)\s+
-\s+
-FC4\sTypes\s+
-\s+Supported:\s+(0x\d+)\s+
-\s+Active:\s+(0x\d+)\s+
-Class\sof\sService:\s+(\d+)\s+
-(Port\sFC\sID:\s+\w+|)\s*
-Port\sSpeed\s\(supported\):\s+(\d+\sGBIT)\s+
-Port\sSpeed\s\(running\):\s+(\d+\sGBIT)\s+
-(Port\sFC\sID:\s+\w+|)\s*
-Port\sType:\s(Fabric)\s+
-\s+
-Seconds\sSince\sLast\sReset:\s+(\d+)\s+
-\s+
-Transmit\sStatistics\s+Receive\sStatistics\s+
-[-]+\s+[-]+\s+
-Frames:\s(\d+)\s+Frames:\s(\d+)\s+
-Words:\s(\d+)\s+Words:\s(\d+)\s+
-LIP\sCount:\s+(\d+)\s+
-NOS\sCount:\s+(\d+)\s+
-Error\sFrames:\s+(\d+)\s+
-Dumped\sFrames:\s+(\d+)\s+
-Link\sFailure\sCount:\s+(\d+)\s+
-Loss\sof\sSync\sCount:\s+(\d+)\s+
-Loss\sof\sSignal:\s+(\d+)\s+
-Primitive\sSeq\sProtocol\sErr\sCount:\s+(\d+)\s+
-Invalid\sTx\sWord\sCount:\s+(\d+)\s+
-Invalid\sCRC\sCount:\s+(\d+)\s+
-\s+
-(IP\sover\sFC\sAdapter\sDriver\sInformation\s+.*)
-(FC\sSCSI\sAdapter\sDriver\sInformation\s+.*)
-(IP\sover\sFC\sTraffic\sStatistics\s+.*)
-(FC\sSCSI\sTraffic\sStatistics\s+.*)$}mx
+    # information about topology taken from:
+    # http://ibmsystemsmag.com/aix/administrator/systemsmanagement/tips-from-techu/
 
     regexp = %r{FIBRE\sCHANNEL\sSTATISTICS\sREPORT:\s(fcs\d+)\s+
 Device\sType:\s(.*?)\s+
@@ -82,6 +44,8 @@ Port\sSpeed\s\(supported\):\s+(\d+\sGBIT)\s+
 Port\sSpeed\s\(running\):\s+(\d+\sGBIT)\s+
 (Port\sFC\sID:\s+\w+|)\s*
 Port\sType:\s(Fabric)\s+
+(Attention\sType:\s+Link\sUp|Attention\sType:\s+Link\sDown|)\s*
+(Topology:\s+Point\sto\sPoint|Topology:\s+Fabric|)\s*
 \s+
 Seconds\sSince\sLast\sReset:\s+(\d+)\s+
 \s+
@@ -128,23 +92,25 @@ Invalid\sCRC\sCount:\s+(\d+)\s+
       @data['Port Speed (running)']   = match[14]
       @data['Port FC ID']             = match[15].gsub('Port FC ID: ', '') unless match[15].nil? or match[15].empty?
       @data['Port Type']              = match[16]
-      @data['Seconds Since Last Reset'] = match[17].to_i
-      @data['Transmit Statistics'] = { 'Frames' => match[18].to_i, 'Words'  => match[20].to_i}
-      @data['Receive Statistics'] = { 'Frames' => match[19].to_i, 'Words'  => match[21].to_i}
-      @data['LIP Count']          = match[22].to_i
-      @data['NOS Count']          = match[23].to_i
-      @data['Error Frames']       = match[24].to_i
-      @data['Dumped Frames']      = match[25].to_i
-      @data['Link Failure Count'] = match[26].to_i
-      @data['Loss of Sync Count'] = match[27].to_i
-      @data['Loss of Signal']     = match[28].to_i
-      @data['Primitive Seq Protocol Err Count'] = match[29].to_i
-      @data['Invalid Tx Word Count'] = match[30].to_i
-      @data['Invalid CRC Count']     = match[31].to_i
-      @data['IP over FC Adapter Driver Information'] = parse_ip_over_fc_adapter_driver_information(match[32]) unless match[32].nil? or match[32].empty?
-      @data['FC SCSI Adapter Driver Information'] = parse_fc_scsi_adapter_driver_information(match[33]) unless match[33].nil? or match[33].empty?
-     @data['IP over FC Traffic Statistics'] = parse_ip_over_fc_traffic_statistics(match[34])  unless match[34].nil? or match[34].empty?
-     @data['FC SCSI Traffic Statistics'] = parse_fc_scsi_traffic_statistics(match[35])  unless match[35].nil? or match[35].empty?
+      @data['Attention Type']              = match[17]
+      @data['Topology']              = match[18]
+      @data['Seconds Since Last Reset'] = match[19].to_i
+      @data['Transmit Statistics'] = { 'Frames' => match[20].to_i, 'Words'  => match[22].to_i}
+      @data['Receive Statistics'] = { 'Frames' => match[21].to_i, 'Words'  => match[23].to_i}
+      @data['LIP Count']          = match[24].to_i
+      @data['NOS Count']          = match[25].to_i
+      @data['Error Frames']       = match[26].to_i
+      @data['Dumped Frames']      = match[27].to_i
+      @data['Link Failure Count'] = match[28].to_i
+      @data['Loss of Sync Count'] = match[29].to_i
+      @data['Loss of Signal']     = match[30].to_i
+      @data['Primitive Seq Protocol Err Count'] = match[31].to_i
+      @data['Invalid Tx Word Count'] = match[32].to_i
+      @data['Invalid CRC Count']     = match[33].to_i
+      @data['IP over FC Adapter Driver Information'] = parse_ip_over_fc_adapter_driver_information(match[34]) unless match[34].nil? or match[34].empty?
+      @data['FC SCSI Adapter Driver Information'] = parse_fc_scsi_adapter_driver_information(match[35]) unless match[35].nil? or match[35].empty?
+      @data['IP over FC Traffic Statistics'] = parse_ip_over_fc_traffic_statistics(match[36])  unless match[36].nil? or match[36].empty?
+      @data['FC SCSI Traffic Statistics'] = parse_fc_scsi_traffic_statistics(match[37])  unless match[37].nil? or match[37].empty?
 
     else
       puts "can't analyze string, regexp is not working"
