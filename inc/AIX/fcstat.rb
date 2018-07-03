@@ -45,7 +45,7 @@ Port\sSpeed\s\(running\):\s+(\d+\sGBIT|UNKNOWN)\s+
 (Port\sFC\sID:\s+\w+|)\s*
 Port\sType:\s(Fabric)\s+
 (Attention\sType:\s+Link\sUp|Attention\sType:\s+Link\sDown|Attention\sType:\s+UNKNOWN|)\s*
-(Topology:\s+Point\sto\sPoint|Topology:\sor\sFabric|Topology:\s+UNKNOWN|)\s*
+(Topology:\s+Point\sto\sPoint\sor\sFabric|Topology:\s+UNKNOWN|)\s*
 \s+
 Seconds\sSince\sLast\sReset:\s+(\d+)\s+
 \s+
@@ -70,48 +70,6 @@ Invalid\sCRC\sCount:\s+([-\d]+)\s+
 (IP\sover\sFC\sTraffic\sStatistics\s+.*)
 (FC\sSCSI\sTraffic\sStatistics\s+.*)$}mx
 
-    regexp_all = %r{FIBRE\sCHANNEL\sSTATISTICS\sREPORT:\s(fcs\d+)\s+
-Device\sType:\s(.*?)\s+
-Serial\sNumber:\s(\w+)\s+
-Option\sROM\sVersion:\s(\w+)\s+
-(ZA:\s[\w\.]+|)\s*
-(Firmware\sVersion:\s[\w\.]+|)\s*
-(?:Node\sWWN|World\sWide\sNode\sName):\s(\w+)\s+
-(?:Port\sWWN|World\sWide\sPort\sName):\s(\w+)\s+
-\s+
-FC(?:-|)4\s(?:TYPES:|Types)\s+
-\s+Supported:\s+(0x\d+)\s+
-\s+Active:\s+(0x\d+)\s+
-Class\sof\sService:\s+(\d+)\s+
-(Port\sFC\sID:\s+\w+|)\s*
-Port\sSpeed\s\(supported\):\s+(\d+\sGBIT|UNKNOWN)\s+
-Port\sSpeed\s\(running\):\s+(\d+\sGBIT|UNKNOWN)\s+
-(Port\sFC\sID:\s+\w+|)\s*
-Port\sType:\s(Fabric)\s+
-(Attention\sType:\s+Link\sUp|Attention\sType:\s+Link\sDown|Attention\sType:\s+UNKNOWN|)\s*
-(Topology:\s+Point\sto\sPoint|Topology:\sor\sFabric|Topology:\s+UNKNOWN|)\s*
-\s+
-Seconds\sSince\sLast\sReset:\s+(\d+)\s+
-\s+
-Transmit\sStatistics\s+Receive\sStatistics\s+
-[-]+\s+[-]+\s+
-Frames:\s(\d+)\s*(?:Frames:\s|)(\d+)\s+
-Words:\s(\d+)\s*(?:Words:\s|)(\d+)\s+
-LIP\sCount:\s+(\d+)\s+
-NOS\sCount:\s+(\d+)\s+
-Error\sFrames:\s+(\d+)\s+
-Dumped\sFrames:\s+(\d+)\s+
-Link\sFailure\sCount:\s+(\d+)\s+
-Loss\sof\sSync\sCount:\s+(\d+)\s+
-Loss\sof\sSignal:\s+(\d+)\s+
-Primitive\sSeq\sProtocol\s(?:Err|Error)\sCount:\s+(\d+)\s+
-Invalid\sTx\sWord\sCount:\s+(\d+)\s+
-Invalid\sCRC\sCount:\s+(\d+)\s+
-\s+
-(IP\sover\sFC\sAdapter\sDriver\sInformation\s+.*)
-(FC\sSCSI\sAdapter\sDriver\sInformation\s+.*)
-(IP\sover\sFC\sTraffic\sStatistics\s+.*)
-(FC\sSCSI\sTraffic\sStatistics\s+.*)$}mx
 
     if string =~ /^\s*Error\saccessing\sODM\s*Device\snot\sfound\s*$/
       raise 'Error accessing ODM - Device not found'

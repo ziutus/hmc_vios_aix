@@ -1,39 +1,60 @@
 FIBRE CHANNEL STATISTICS REPORT: fcs0
 
-Device Type: 4Gb FC PCI Express Adapter (df1000fe) (adapter/pciex/df1000fe)
-Serial Number: 1B84204CD5
-Option ROM Version: 02E8277F
-ZA: Z1F2.70A5
-World Wide Node Name: 0x20000000C980DBE8
-World Wide Port Name: 0x10000000C980DBE8
+Device Type: Virtual Fibre Channel Client Adapter (adapter/vdevice/IBM,vfc-client)
+Serial Number: UNKNOWN
+Option ROM Version: UNKNOWN
+ZA: UNKNOWN
+World Wide Node Name: 0xC0507606F5020004
+World Wide Port Name: 0xC0507606F5020004
 
 FC-4 TYPES:
-Supported: 0x0000012000000000000000000000000000000000000000000000000000000000
-Active: 0x0000010000000000000000000000000000000000000000000000000000000000
+  Supported: 0x0000010000000000000000000000000000000000000000000000000000000000
+  Active:    0x0000010000000000000000000000000000000000000000000000000000000000
 Class of Service: 3
-Port Speed (supported): 4 GBIT
-Port Speed (running): 4 GBIT
-Port FC ID: 0x000001
-Port Type: Private Loop
+Port Speed (supported): UNKNOWN
+Port Speed (running):   8 GBIT
+Port FC ID: 0x0f1654
+Port Type: Fabric
+Attention Type:   UNKNOWN
+Topology:  UNKNOWN
 
-Seconds Since Last Reset: 1219675
+Seconds Since Last Reset: 217
 
-Transmit Statistics Receive Statistics
-------------------- ------------------
-Frames: 203978 407400
-Words: 2862592 12623616
+        Transmit Statistics     Receive Statistics
+        -------------------     ------------------
+Frames: -1                      -1
+Words:  -1                      -1
 
-LIP Count: 1
-NOS Count: 0
-Error Frames: 0
-Dumped Frames: 0
-Link Failure Count: 0
-Loss of Sync Count: 4
-Loss of Signal: 0
-Primitive Seq Protocol Error Count: 0
-Invalid Tx Word Count: 7
-Invalid CRC Count: 0
+LIP Count: -1
+NOS Count: -1
+Error Frames:  -1
+Dumped Frames: -1
+Link Failure Count: -1
+Loss of Sync Count: -1
+Loss of Signal: -1
+Primitive Seq Protocol Error Count: -1
+Invalid Tx Word Count: -1
+Invalid CRC Count: -1
 
 IP over FC Adapter Driver Information
-No DMA Resource Count: 0
-No Adapter Elements Count: 0
+  No DMA Resource Count: 0
+  No Adapter Elements Count: 0
+
+FC SCSI Adapter Driver Information
+  No DMA Resource Count: 0
+  No Adapter Elements Count: 0
+  No Command Resource Count: 0
+
+IP over FC Traffic Statistics
+  Input Requests:   0
+  Output Requests:  0
+  Control Requests: 0
+  Input Bytes:  0
+  Output Bytes: 0
+
+FC SCSI Traffic Statistics
+  Input Requests:   26673
+  Output Requests:  6821
+  Control Requests: 94
+  Input Bytes:  442182355
+  Output Bytes: 91161424
