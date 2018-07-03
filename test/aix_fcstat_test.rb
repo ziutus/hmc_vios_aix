@@ -166,12 +166,73 @@ VPD information not found'
 
   end
 
-  # test data source: http://lokams.blogspot.com/2008/08/how-to-find-world-wide-name-wwn-of.html
+  # test data source: http://docs.neverdark.ru/2016/11/15/aix-%D1%83%D0%B7%D0%BD%D0%B0%D1%82%D1%8C-wwn-%D1%8B-%D0%BF%D0%BE%D1%80%D1%82%D0%BE%D0%B2/
   def test_fcstat_long_3
 
-    string = File.read('test/data/fcstat_2.txt')
+    string = File.read('test/data/fcstat_3.txt')
     fcstat = Fcstat.new(string)
     data = fcstat.get_stats()
+
+    assert_equal('fcs0', fcstat.device, 'fcstat device name')
+    assert_equal('fcs0', data['device'], 'fcstat device name')
+
+    assert_equal('fcs0',     fcstat.data['device'], 'fcstat device name')
+
+    assert_equal('Virtual Fibre Channel Client Adapter (adapter/vdevice/IBM,vfc-client)', fcstat.data['Device Type'])
+    assert_equal('UNKNOWN', fcstat.data['Serial Number'])
+    assert_equal('UNKNOWN', fcstat.data['Option ROM Version'])
+    assert_equal('UNKNOWN', fcstat.data['ZA'])
+
+    assert_equal('0xC0507606F5020004', fcstat.data['Node WWN'])
+    assert_equal('0xC0507606F5020004', fcstat.data['Port WWN'])
+
+    assert_equal('0x0000010000000000000000000000000000000000000000000000000000000000', fcstat.data['FC4 Types']['Supported'], 'fcstat device name')
+    assert_equal('0x0000010000000000000000000000000000000000000000000000000000000000', fcstat.data['FC4 Types']['Active'],    'fcstat device name')
+
+    assert_equal('3', fcstat.data['Class of Service'])
+
+    assert_equal('0x0f1654', fcstat.data['Port FC ID'])
+    assert_equal('UNKNOWN', fcstat.data['Port Speed (supported)'])
+    assert_equal('8 GBIT', fcstat.data['Port Speed (running)'])
+    assert_equal('Fabric', fcstat.data['Port Type'])
+    assert_equal('UNKNOWN', fcstat.data['Attention Type'])
+    assert_equal('UNKNOWN', fcstat.data['Topology'])
+    assert_equal(217,  fcstat.data['Seconds Since Last Reset'])
+
+    assert_equal(-1, fcstat.data['Transmit Statistics']['Frames'])
+    assert_equal(-1, fcstat.data['Transmit Statistics']['Words'])
+    assert_equal(-1, fcstat.data['Receive Statistics']['Frames'])
+    assert_equal(-1, fcstat.data['Receive Statistics']['Words'])
+
+    assert_equal(-1,  fcstat.data['LIP Count'])
+    assert_equal(-1,  fcstat.data['NOS Count'])
+    assert_equal(-1,  fcstat.data['Error Frames'])
+    assert_equal(-1,  fcstat.data['Dumped Frames'])
+    assert_equal(-1,  fcstat.data['Link Failure Count'])
+    assert_equal(-1, fcstat.data['Loss of Sync Count'])
+    assert_equal(-1, fcstat.data['Loss of Signal'])
+    assert_equal(-1, fcstat.data['Primitive Seq Protocol Err Count'])
+    assert_equal(-1, fcstat.data['Invalid Tx Word Count'])
+    assert_equal(-1, fcstat.data['Invalid CRC Count'])
+
+    assert_equal(0, fcstat.data['IP over FC Adapter Driver Information']['No DMA Resource Count'])
+    assert_equal(0, fcstat.data['IP over FC Adapter Driver Information']['No Adapter Elements Count'])
+
+    assert_equal(0, fcstat.data['FC SCSI Adapter Driver Information']['No DMA Resource Count'])
+    assert_equal(0, fcstat.data['FC SCSI Adapter Driver Information']['No Adapter Elements Count'])
+    assert_equal(0, fcstat.data['FC SCSI Adapter Driver Information']['No Command Resource Count'])
+
+    assert_equal(0, fcstat.data['IP over FC Traffic Statistics']['Input Requests'])
+    assert_equal(0, fcstat.data['IP over FC Traffic Statistics']['Output Requests'])
+    assert_equal(0, fcstat.data['IP over FC Traffic Statistics']['Control Requests'])
+    assert_equal(0, fcstat.data['IP over FC Traffic Statistics']['Input Bytes'])
+    assert_equal(0, fcstat.data['IP over FC Traffic Statistics']['Output Bytes'])
+
+    assert_equal(26_673, fcstat.data['FC SCSI Traffic Statistics']['Input Requests'])
+    assert_equal(6_821, fcstat.data['FC SCSI Traffic Statistics']['Output Requests'])
+    assert_equal(94, fcstat.data['FC SCSI Traffic Statistics']['Control Requests'])
+    assert_equal(442_182_355, fcstat.data['FC SCSI Traffic Statistics']['Input Bytes'])
+    assert_equal(91_161_424, fcstat.data['FC SCSI Traffic Statistics']['Output Bytes'])
   end
 
   def test_fc_scsi_traffic_statistics
