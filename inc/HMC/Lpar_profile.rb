@@ -87,7 +87,6 @@ class Lpar_profile
 
   # taken from: https://www.ibm.com/support/knowledgecenter/en/POWER8/p8edm/lssyscfg.html
   # (see description of -F parameter)
-  attr_reader :sriov_eth_logical_ports
   attr_reader :vnic_adapters_raw
   attr_reader :vnic_adapters
 
@@ -388,7 +387,7 @@ class Lpar_profile
     to_s == other.to_s
   end
 
-  def diff_show (another_profile, columns_to_compare = 'all', columns_to_ignore = 'none')
+  def diff_show(another_profile, columns_to_compare = 'all', columns_to_ignore = 'none')
 
     diffs = {}
     ignore = columns_to_ignore.split(',')
