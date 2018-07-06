@@ -7,13 +7,13 @@ class Sys
   attr_reader :sys
   attr_reader :dataString
 
+  attr_accessor :hmc
   # power5
   attr_reader :name
   attr_reader :state
   attr_reader :type_model
   attr_reader :serial_num
   attr_reader :ipaddr
-  attr_reader :state
   attr_reader :detailed_state
   attr_reader :sys_time
   attr_reader :power_off_policy
@@ -88,9 +88,10 @@ class Sys
 
   attr_reader :_variables
 
-  def initialize(name = '')
+  def initialize(name = '', hmc = '')
 
     @name = name
+    @hmc = hmc
 
     @_variables = {}
     @_variables['int'] = %w[
