@@ -27,7 +27,7 @@ class VirtualFCAdapter < VirtualAdapter
     @wwpn1 = nil
     @wwpn2 = nil
 
-    @reg_exp = %r{^\s*[\"]{0,2}(\d+)/(server|client)/(\d+)/([\w\-\_]+|)/(\d+)/(\w{16}\,\w{16}|\w{16}|)/(0|1)[\"]{0,2}\s*$}
+    @reg_exp = %r{^\s*["]{0,2}(\d+)/(server|client)/(\d+)/([\w\-]+|)/(\d+)/(\w{16},\w{16}|\w{16}|)/([01])["]{0,2}\s*$}
 
     @params = %w[virtualSlotNumber isRequired clientOrServer remoteLparID remoteLparName remoteSlotNumber wwpn1 wwpn2]
 
@@ -55,7 +55,7 @@ class VirtualFCAdapter < VirtualAdapter
 
   def can_parse?(string)
     # TODO: change it to "one liner"
-    return true if match = @reg_exp.match(string)
+    return true if @reg_exp.match(string)
     false
   end
 
