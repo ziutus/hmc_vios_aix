@@ -11,7 +11,7 @@ class VirtualSerialAdapter < VirtualAdapter
   # below data can be taken only from lshwres, they are exist only for running lpars
   attr_accessor :connectStatus
 
-  def initialize(string='')
+  def initialize(string = '')
     super(string)
 
     @clientOrServer = nil
@@ -24,15 +24,14 @@ class VirtualSerialAdapter < VirtualAdapter
 
     @params = %w[clientOrServer supportsHMC remoteLparID remoteLparName remoteSlotNumber isRequired]
 
+    @regexp      = /^\s*(\d+)\/(server|client)\/([01])\/(\d+|any)\/([\w\-]+|)\/(\d+|any)\/([01])\s*$/
+    @regexp_real = %r{^\s*lpar_name=([\w\-]+),lpar_id=(\d+),slot_num=(\d+),state=([01]),is_required=([01]),connect_status=(unavailable),adapter_type=(server|client),supports_hmc=([01]),remote_lpar_id=(\d+|any),remote_lpar_name=([\w\-]+|),remote_slot_num=(\d+|any)\s*$}
+
     parse(string) unless string.empty?
   end
 
   def can_parse?(string)
-    regexp      = /^\s*(\d+)\/(server|client)\/(0|1)\/(\d+|any)\/([\w\_\-]+|)\/(\d+|any)\/(0|1)\s*$/
-    regexp_real = %r{^\s*lpar_name=([\w\_\-]+),lpar_id=(\d+),slot_num=(\d+),state=(0|1),is_required=(0|1),connect_status=(unavailable),adapter_type=(server|client),supports_hmc=(0|1),remote_lpar_id=(\d+|any),remote_lpar_name=([\w\_\-]+|),remote_slot_num=(\d+|any)\s*$}
-
-    return true if  match = regexp.match(string)
-    return true if  match = regexp_real.match(string)
+    return true if  @regexp.match(string) or @regexp_real.match(string)
 
     false
   end
@@ -41,10 +40,7 @@ class VirtualSerialAdapter < VirtualAdapter
   def decode(string)
     @data_string_raw = string
 
-    regexp = /^\s*(\d+)\/(server|client)\/(0|1)\/(\d+|any)\/([\w\_\-]+|)\/(\d+|any)\/(0|1)\s*$/
-    regexp_real = %r{^\s*lpar_name=([\w\_\-]+),lpar_id=(\d+),slot_num=(\d+),state=(0|1),is_required=(0|1),connect_status=(unavailable),adapter_type=(server|client),supports_hmc=(0|1),remote_lpar_id=(\d+|any),remote_lpar_name=([\w\_\-]+|),remote_slot_num=(\d+|any)\s*$}
-
-    if match = regexp.match(string)
+    if match = @regexp.match(string)
 
       @virtualSlotNumber	= match[1].to_i
       @clientOrServer		= match[2]
@@ -53,7 +49,7 @@ class VirtualSerialAdapter < VirtualAdapter
       @remoteLparName		= match[5]
       @remoteSlotNumber	= match[6]
       @isRequired			= match[7].to_i
-    elsif match = regexp_real.match(string)
+    elsif match = @regexp_real.match(string)
 
       @lpar_name = match[1]
       @lpar_id = match[2].to_i
@@ -69,7 +65,7 @@ class VirtualSerialAdapter < VirtualAdapter
       @_type = 'real'
 
     else
-      abort "Class VirtualSerialAdapter: RegExp couldn't decode string #{string}"
+      raise Exception, "Class VirtualSerialAdapter: RegExp couldn't decode string #{string}"
     end
   end
 
