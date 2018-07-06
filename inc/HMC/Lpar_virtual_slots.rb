@@ -144,7 +144,7 @@ class Lpar_virtual_slots
 
   def virtual_eth_adapters_raw=(string)
     virtual_adapters_raw(string, 'virtual_eth_adapters')
- end
+  end
 
   def virtual_scsi_adapters_raw=(string)
     virtual_adapters_raw(string, 'virtual_scsi_adapters')
@@ -237,15 +237,15 @@ class Lpar_virtual_slots
 
             diff_entry_slot = self_slot.diff(other_slot, self_profile_name, other_profile_name)
 
-            diff_entry_slot.each do |key, entry|
-              diff["VirtualSlot #{i} #{key}"] = entry
+            diff_entry_slot.each do |key, entry_tmp|
+              diff["VirtualSlot #{i} #{key}"] = entry_tmp
             end
           else
             raise("unsupported type of adapter #{self_slot.class.name} ")
           end
 
 
-      elsif virtual_slots.key?(i) && ! other_lpar_virtual_slots.virtual_slots.key?(i)
+      elsif virtual_slots.key?(i) && !other_lpar_virtual_slots.virtual_slots.key?(i)
 
         self_slot = virtual_slots[i]
         self_profile_name = profile_name
