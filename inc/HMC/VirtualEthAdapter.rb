@@ -32,11 +32,11 @@ class VirtualEthAdapter < VirtualAdapter
     @allowedOsMacAddresses = nil
     @qosPiority = nil
 
-    @regexp_minimum 			       = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)\s*$}
-    @regexp_vswitch 			       = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\-]+)\s*$}
-    @regexp_mac_address 		     = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\-]+)/(\w+|)\s*$}
-    @regexp_allowed_mac_address = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\-]+)/(\w+|)/([\w\,]+|all)\s*$}
-    @regexp_qos_priority 	       = %r{^\s*(\d+)/(0|1)/(\d+)/([\d\,]+|)/(\d+)/(0|1)/([\w\_\-]+)/(\w+|)/([\w\,]+|all)/(\d+|none)\s*$}
+    @regexp_minimum 			       = %r{^\s*(\d+)/([01])/(\d+)/([\d,]+|)/(\d+)/([01])\s*$}
+    @regexp_vswitch 			       = %r{^\s*(\d+)/([01])/(\d+)/([\d,]+|)/(\d+)/([01])/([\w\-]+)\s*$}
+    @regexp_mac_address 		     = %r{^\s*(\d+)/([01])/(\d+)/([\d,]+|)/(\d+)/([01])/([\w\-]+)/(\w+|)\s*$}
+    @regexp_allowed_mac_address = %r{^\s*(\d+)/([01])/(\d+)/([\d,]+|)/(\d+)/([01])/([\w\-]+)/(\w+|)/([\w,]+|all)\s*$}
+    @regexp_qos_priority 	       = %r{^\s*(\d+)/([01])/(\d+)/([\d,]+|)/(\d+)/([01])/([\w\-]+)/(\w+|)/([\w,]+|all)/(\d+|none)\s*$}
 
     @params = %w[isIEEE portVlanID additionalVlanIDs trunkPriority isTrunk virtualSwitch macAddress allowedOsMacAddresses qosPiority]
     @params_real = %w[lpar_name lpar_id slot_num state is_required is_trunk trunk_priority ieee_virtual_eth port_vlan_id vswitch addl_vlan_ids mac_addr allowed_os_mac_addrs qos_priority]
