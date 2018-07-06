@@ -18,6 +18,11 @@ class VirtualScsiAdapter < VirtualAdapter
 
     @params = %w[virtualSlotNumber clientOrServer remoteLparID remoteLparName remoteSlotNumber isRequired lpar_name lpar_id]
 
+    @regExp      = %r{^\s*(\d+)/(server|client)/(\d+)/([\w\-\.]+|)/(\d+)/([01])\s*$}
+    @regExp_any  = %r{^\s*(\d+)/(server|client)/(any)/([\w\-\.]+|)/(any)/([01])\s*$}
+    @regExp_long = %r{^\s*slot_num=(\d+),state=([01]),is_required=([01]),adapter_type=(client|server),remote_lpar_id=(\d+|any),remote_lpar_name=([\w\-]+|),remote_slot_num=(\d+|any)\s*$}
+    @regExp_real = %r{^\s*lpar_name=([\w\-]+),lpar_id=(\d+),slot_num=(\d+),state=([01]),is_required=([01]),adapter_type=(client|server),remote_lpar_id=(\d+|any),remote_lpar_name=([\w\-]+|),remote_slot_num=(\d+|any)\s*$}
+
     parse(string) unless string.empty?
   end
 
@@ -56,16 +61,7 @@ class VirtualScsiAdapter < VirtualAdapter
   end
 
   def can_parse?(string)
-
-    regExp      = %r{^\s*(\d+)/(server|client)/(\d+)/([\w\_\-\.]+|)/(\d+)/(0|1)\s*$}
-    regExp_any  = %r{^\s*(\d+)/(server|client)/(any)/([\w\_\-\.]+|)/(any)/(0|1)\s*$}
-    regExp_long = %r{^\s*slot_num=(\d+),state=(0|1),is_required=(0|1),adapter_type=(client|server),remote_lpar_id=(\d+|any),remote_lpar_name=([\w\_\-]+|),remote_slot_num=(\d+|any)\s*$}
-    regExp_real = %r{^\s*lpar_name=([\w\_\-]+),lpar_id=(\d+),slot_num=(\d+),state=(0|1),is_required=(0|1),adapter_type=(client|server),remote_lpar_id=(\d+|any),remote_lpar_name=([\w\_\-]+|),remote_slot_num=(\d+|any)\s*$}
-
-    return true if  match = regExp.match(string)
-    return true if  match = regExp_any.match(string)
-    return true if  match = regExp_long.match(string)
-    return true if  match = regExp_real.match(string)
+    return true if  @regExp.match(string) or @regExp_any.match(string) or @regExp_long.match(string) or @regExp_real.match(string)
 
     false
   end
@@ -73,26 +69,21 @@ class VirtualScsiAdapter < VirtualAdapter
   def decode(string)
     @data_string_raw = string
 
-    regExp      = %r{^\s*(\d+)/(server|client)/(\d+)/([\w\_\-\.]+|)/(\d+)/(0|1)\s*$}
-    regExp_any  = %r{^\s*(\d+)/(server|client)/(any)/([\w\_\-\.]+|)/(any)/(0|1)\s*$}
-    regExp_long = %r{^\s*slot_num=(\d+),state=(0|1),is_required=(0|1),adapter_type=(client|server),remote_lpar_id=(\d+|any),remote_lpar_name=([\w\_\-]+|),remote_slot_num=(\d+|any)\s*$}
-    regExp_real = %r{^\s*lpar_name=([\w\_\-]+),lpar_id=(\d+),slot_num=(\d+),state=(0|1),is_required=(0|1),adapter_type=(client|server),remote_lpar_id=(\d+|any),remote_lpar_name=([\w\_\-]+|),remote_slot_num=(\d+|any)\s*$}
-
-    if  match = regExp.match(string)
+    if  match = @regExp.match(string)
       @virtualSlotNumber	= match[1].to_i
       @clientOrServer		= match[2]
       @remoteLparID		= match[3].to_i
       @remoteLparName		= match[4]
       @remoteSlotNumber	= match[5].to_i
       @isRequired			= match[6].to_i
-    elsif  match = regExp_any.match(string)
+    elsif  match = @regExp_any.match(string)
       @virtualSlotNumber	= match[1].to_i
       @clientOrServer		= match[2]
       @remoteLparID		= match[3]
       @remoteLparName		= match[4]
       @remoteSlotNumber	= match[5]
       @isRequired			= match[6].to_i
-    elsif match = regExp_long.match(string)
+    elsif match = @regExp_long.match(string)
       @virtualSlotNumber	= match[1].to_i
       @state				= match[2].to_i
       @isRequired			= match[3].to_i
@@ -100,7 +91,7 @@ class VirtualScsiAdapter < VirtualAdapter
       @remoteLparID		= match[5].to_i
       @remoteLparName		= match[6]
       @remoteSlotNumber	= match[7].to_i
-    elsif match = regExp_real.match(string)
+    elsif match = @regExp_real.match(string)
 
       @lpar_name = match[1]
       @lpar_id = match[2].to_i
@@ -113,7 +104,7 @@ class VirtualScsiAdapter < VirtualAdapter
       @remoteSlotNumber	= match[9].to_i
       @_type = 'real'
     else
-      abort "Class VirtualScsiAdapter:RegExp couldn't decode string #{string}"
+      raise Exception, "Class VirtualScsiAdapter:RegExp couldn't decode string #{string}"
     end
   end
 
