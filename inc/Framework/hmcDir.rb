@@ -31,7 +31,7 @@ class HmcDir
     }
 
     @frame_lpar_map = {
-      'lpar_info' => '_lpar.txt',
+      'lpar_info' => '_lpar_real.txt',
       'io_slot' => '_io_slot.txt',
       'memory' => '_mem_lpar.txt',
       'proc' => '_proc_lpar.txt',
