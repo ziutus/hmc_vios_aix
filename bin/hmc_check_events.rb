@@ -4,26 +4,26 @@ require 'pp'
 require 'erb'
 require 'optparse'
 
-$LOAD_PATH << File.dirname(__FILE__)+'/../inc'
+$LOAD_PATH << File.dirname(__FILE__) + '/../inc'
 require 'HMC/lssvcevents'
 
-app_dir = File.dirname(__FILE__)+'/..'
+app_dir = File.dirname(__FILE__) + '/..'
 directory = '../data'
 date = nil
 format = 'csv'
 report_type = 'all'
 verbose = 0
-hmcNotWorking = Array.new
+hmcNotWorking = []
 
 OptionParser.new do |opts|
 
-  opts.on('-d', '--directory NAME',  "base directory with all data, default: '#{directory}'") { |v| directory = v }
-  opts.on('-D', '--date DATE',  'date and time of collected data')         { |v| date = v }
-  opts.on( '--format FORMAT',  'format of report, can be "hmtl" or "csv"') { |v| format = v }
-  opts.on( '--type REPORT_TYPE',  'Type of report, can be "all" or "callhome"') { |v| report_type = v }
-  opts.on( '--verbose LEVEL', Integer,  'Level of verbose of script') { |v| verbose = v }
+  opts.on('-d', '--directory NAME', "base directory with all data, default: '#{directory}'") { |v| directory = v }
+  opts.on('-D', '--date DATE', 'date and time of collected data')         { |v| date = v }
+  opts.on( '--format FORMAT', 'format of report, can be "hmtl" or "csv"') { |v| format = v }
+  opts.on( '--type REPORT_TYPE', 'Type of report, can be "all" or "callhome"') { |v| report_type = v }
+  opts.on( '--verbose LEVEL', Integer, 'Level of verbose of script') { |v| verbose = v }
 
-  opts.on("-h", "--help", "Prints this help") do
+  opts.on('-h', '--help', 'Prints this help') do
     puts opts
     exit
   end
@@ -52,26 +52,26 @@ events = Lssvcevents.new
 renderer = ERB.new(File.read("#{app_dir}/erb/hmc_check_events_#{format}.erb"))
 
 Dir.chdir("#{directory}/#{date}/")
-Dir.glob('*').sort.select { |hmc_dir|
-    puts ">Checking HMC #{hmc_dir}<" if verbose > 0
-    Dir[hmc_dir + '/lssvcevents_hardware.txt' ].each { |filename|
-         unless File.exist?(filename)
-           puts ">File #{filename} doesn't exist"
-           next
-         end
+Dir.glob('*').sort.select do |hmc_dir|
+  puts ">Checking HMC #{hmc_dir}<" if verbose > 0
+  Dir[hmc_dir + '/lssvcevents_hardware.txt' ].each do |filename|
+    unless File.exist?(filename)
+      puts ">File #{filename} doesn't exist"
+      next
+    end
 
-        data_string = File.read(filename)
+    data_string = File.read(filename)
 
-        if data_string =~ /An unknown error occurred while trying to perform this command. Retry the command. If the error persists, contact your software support representative./
-          hmcNotWorking.push(hmc_dir)
-          next
-        end
-        events.parse(data_string, hmc_dir )
-    }
-}
+    if data_string =~ /An unknown error occurred while trying to perform this command. Retry the command. If the error persists, contact your software support representative./
+      hmcNotWorking.push(hmc_dir)
+      next
+    end
+    events.parse(data_string, hmc_dir )
+  end
+end
 
-events2 = Array.new
-events.events.each_index { |index|
+events2 = []
+events.events.each_index do |index|
 
   if report_type == 'all'
     events2.push(events.events[index])
@@ -86,12 +86,9 @@ events.events.each_index { |index|
     puts "wrong type of report #{report_type}"
     exit 6
   end
-}
-
-
+end
 
 puts renderer.result
-
 puts 'Found issue with collecting data from below HMCs:' + hmcNotWorking.join(',').to_s
 
 exit 0
