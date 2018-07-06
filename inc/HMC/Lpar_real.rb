@@ -352,7 +352,7 @@ class Lpar_real
 
   def decodeVirtualioSlot(string)
 
-    regexp_slot = /lpar_name=([\w\_\-]+),lpar_id=(\d+),curr_max_virtual_slots=(\d+),pend_max_virtual_slots=(\d+),next_avail_virtual_slot=(\d+)/
+    regexp_slot = /lpar_name=([\w\-]+),lpar_id=(\d+),curr_max_virtual_slots=(\d+),pend_max_virtual_slots=(\d+),next_avail_virtual_slot=(\d+)/
 
     match = regexp_slot.match(string)
 
