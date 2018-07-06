@@ -13,13 +13,15 @@ class System < Sys
   attr_reader :lpars
   attr_reader :lpars_by_name
   attr_reader :vioses
+  attr_reader :hmc
 
   def initialize(name = '', hmc = '')
-    super(name, hmc)
+    super(name)
 
     @lpars = {}
     @lpars_by_name = {}
     @vioses = []
+    @hmc = hmc
   end
 
   def parse_raw_data(string)
@@ -40,7 +42,7 @@ class System < Sys
         lpar_add_adapter('virtual_serial', line)
       elsif virtual_fc.can_parse?(line)
         lpar_add_adapter('virtual_fc', line)
-      elsif match = %r{^name=([\w\_\-]+),lpar_id=(\d+),lpar_env=}.match(line)
+      elsif match = %r{^name=([\w\-]+),lpar_id=(\d+),lpar_env=}.match(line)
         lpar_add(match[2], match[1])
         @lpars[match[2]].lssyscfg_decode(line)
         update_vioses = true
