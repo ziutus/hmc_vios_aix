@@ -1,7 +1,7 @@
 $LOAD_PATH << File.dirname(__FILE__) + '/../inc'
 $LOAD_PATH << File.dirname(__FILE__) + './inc'
 
-require 'Framework/Lpar'
+require 'Framework/HmcLpar'
 require 'HMC/Lpar_profile'
 require 'test/unit'
 require 'pp'
