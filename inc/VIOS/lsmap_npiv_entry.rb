@@ -49,10 +49,10 @@ class Lsmap_npiv_entry
   def parse(string)
 
     r_status = 'LOGGED_IN|NOT_LOGGED_IN'
-    r_flags = 'a<LOGGED_IN,STRIP_MERGE>|1<NOT_MAPPED,NOT_CONNECTED>|4<NOT_LOGGED>'
-    r_client_drc  = '\w{5}\.\w{3}\.\w{7}\-V\d+\-C\d+|\w{5}\.\w{3}\.\w{7}\-V\d+\-C\d+\-T\d+|'
-    r_physloc     = '\w{5}\.\w{3}\.\w{7}\-V\d+\-C\d+'
-    r_fc_loc_code = '\w{5}\.\w{3}\.\w{7}\-P\d+\-C\d+\-T\d+|'
+    r_flags = 'a<LOGGED_IN,STRIP_MERGE>|1<NOT_MAPPED,NOT_CONNECTED>|4<NOT_LOGGED>|0<>'
+    r_client_drc  = '\w{5}\.\w{3}\.[\w#]{7}\-V\d+\-C\d+|\w{5}\.\w{3}\.[\w#]{7}\-V\d+\-C\d+\-T\d+|'
+    r_physloc     = '\w{5}\.\w{3}\.[\w#]{7}\-V\d+\-C\d+'
+    r_fc_loc_code = '\w{5}\.\w{3}\.[\w#]{7}\-P\d+\-C\d+\-T\d+|\w{5}\.\w{3}\.[\w#]{7}\-P\d+\-C\d+\-C\d+\-T\d+|'
     r_lparname = '[\w\w_\-]+|'
 
     regexp = %r{^\s*Name\s+Physloc\s+ClntID\s+ClntName\s+ClntOS\s+
