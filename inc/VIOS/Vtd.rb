@@ -2,6 +2,10 @@ class Vtd
 
   #see: https://www.ibm.com/support/knowledgecenter/en/POWER8/p8hcg/p8hcg_lsmap.htm
 
+  # list of possible fields taken from: https://www.ibm.com/support/knowledgecenter/TI0003M/p8hcg/p8hcg_lsmap.htm
+  # fields_possible = %w[svsa physloc mirrored clientid vtd lun backing bdphysloc status]
+
+
   attr_accessor :name
   attr_accessor :status
   attr_accessor :lun
@@ -84,4 +88,70 @@ Physloc\s+([\w\.\-]+)\s*$}mx
   end
 
   alias parse decode
+
+  # list of possible fields taken from: https://www.ibm.com/support/knowledgecenter/TI0003M/p8hcg/p8hcg_lsmap.htm
+  # fields_possible = %w[svsa physloc mirrored clientid vtd lun backing bdphysloc status]
+
+  def to_s(fields = 'all', separator = ':')
+    result = []
+#    fields = "physloc:mirrored:vtd:lun:backing:bdphysloc:status" if fields == 'all'
+    fields = "physloc:mirrored:lun:backing:status" if fields == 'all'
+    fields = fields.split(separator) unless fields.kind_of?(Array)
+
+    fields.each do |field|
+      case field
+      when 'physloc' then result.push(@physloc)
+      when 'mirrored' then result.push(@mirrored)
+      when 'lun' then result.push(@lun)
+      when 'backing' then result.push(@backing_device)
+      #when 'bdphysloc' then result.push(@)
+      when 'status' then result.push(@status)
+      when 'vtd' then result.push(@name)
+      when 'svsa' then next
+      else
+        raise Exception, "Unknown field #{field}"
+      end
+    end
+
+    result.join(separator)
+  end
+
+  def to_s_long(spaces = 1)
+    string = "VTD#{make_spaces(1)}#{@name}"
+    string += "\nStatus#{make_spaces(1)}#{@status}" unless @status.nil?
+    string += "\nLUN#{make_spaces(1)}#{@lun}" unless @lun.nil?
+    string += "\nBacking device#{make_spaces(1)}#{@backing_device}" unless @backing_device.nil?
+
+    string += if @physloc.empty?
+                "\nPhysloc\n"
+              else
+                "\nPhysloc#{make_spaces(1)}#{@physloc}\n"
+              end
+    string += "Mirrored#{make_spaces(1)}#{@mirrored}\n" unless @mirrored.nil?
+
+    string
+  end
+
+  def to_s_long_fixed(spaces = 8)
+    string    = "VTD           #{make_spaces(spaces)}#{@name}"
+    string += "\nStatus        #{make_spaces(spaces)}#{@status}" unless @status.nil?
+    string += "\nLUN           #{make_spaces(spaces)}#{@lun}" unless @lun.nil?
+    string += "\nBacking device#{make_spaces(spaces)}#{@backing_device}" unless @backing_device.nil?
+
+    string += if @physloc.nil? || @physloc.empty?
+                "\nPhysloc\n"
+              else
+                "\nPhysloc       #{make_spaces(spaces)}#{@physloc}\n"
+              end
+    string += "Mirrored      #{make_spaces(spaces)}#{@mirrored}\n" unless @mirrored.nil?
+
+    string
+  end
+
+
+  def make_spaces(spaces = 1)
+    string = ''
+    1.step(spaces) { |i| string += ' ' }
+    string
+  end
 end
