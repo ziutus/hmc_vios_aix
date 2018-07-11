@@ -137,6 +137,35 @@ VFC client name:fcs1            VFC client DRC:U8233.E8B.XXXXXXX-V6-C31-T1'
   end
 
 
+  # https://www.ibm.com/developerworks/community/blogs/powermeup/entry/power_npiv_quick_dirty?lang=en_us
+  def test_npiv_p8
+    string = 'Name          Physloc                            ClntID ClntName       ClntOS
+------------- ---------------------------------- ------ -------------- -------
+vfchost3      U8205.E6B.#######-V2-C10                5
+
+Status:NOT_LOGGED_IN
+FC name:fcs6                    FC loc code:U78AA.001.#######-P1-C1-C3-T1
+Ports logged in:0
+Flags:4<NOT_LOGGED>
+VFC client name:                VFC client DRC:'
+
+    lsmap = Lsmap_npiv.new(string)
+
+    assert_equal('vfchost3', lsmap.data['vfchost3'].name)
+    assert_equal('U8205.E6B.#######-V2-C10', lsmap.data['vfchost3'].physloc)
+    assert_equal(5, lsmap.data['vfchost3'].clntid)
+    assert_equal('', lsmap.data['vfchost3'].clntname)
+    assert_equal('', lsmap.data['vfchost3'].clntos)
+    assert_equal('NOT_LOGGED_IN', lsmap.data['vfchost3'].status)
+    assert_equal('fcs6', lsmap.data['vfchost3'].fc_name)
+    assert_equal('U78AA.001.#######-P1-C1-C3-T1', lsmap.data['vfchost3'].fc_loc_code)
+    assert_equal(0, lsmap.data['vfchost3'].ports_logged_in)
+    assert_equal('4<NOT_LOGGED>', lsmap.data['vfchost3'].flags)
+    assert_equal('', lsmap.data['vfchost3'].vfc_client_name)
+    assert_equal('', lsmap.data['vfchost3'].vfc_client_drc)
+
+  end
+
   # test data source: https://www.ibm.com/developerworks/community/blogs/cgaix/entry/power_systems_sms_san_zoning_support1?lang=en
   def test_lpar_down
 
@@ -250,4 +279,7 @@ vfchost28:U9117.MMB.06xxxxx-V2-C43:38:nim9:AIX:LOGGED_IN:fcs3:U78C0.001.DBJN321-
     assert_equal(2, lsmap.data.count)
   end
 
+  def test_lsmap_npiv_to_s
+
+  end
 end
