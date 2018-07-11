@@ -6,6 +6,32 @@ require 'AIX/fcstat'
 
 class TestAixFcstat < Test::Unit::TestCase
 
+  # test data are taken from http://www.wmduszyk.com/?p=6800&langswitch_lang=en
+  def test_fcstat_error_reading_statistics_information
+    string = 'FIBRE CHANNEL STATISTICS REPORT: fcs0
+
+Device Type: FC Adapter (77102224)
+
+Option ROM Version: 49535020
+
+World Wide Node Name: 0x0
+World Wide Port Name: 0x2100001b3283477f
+
+FC-4 TYPES:
+Supported: 0x0000010000000000000000000000000000000000000000000000000000000000
+Active: 0x0000010000000000000000000000000000000000000000000000000000000000
+Class of Service: 3
+Port Speed (supported): 1 GBIT
+Port Speed (running): 4 GBIT
+Port FC ID: 0x010500
+Port Type: Fabric
+Error reading statistics information'
+
+    exception = assert_raise(RuntimeError) { fcstat = Fcstat.new(string) }
+    assert_equal("Error reading statistics information",  exception.message)
+  end
+
+
   # Test data source: IBM AIX Version 7.1 Differences Guide site 73
   def test_fcstat_ODM_issue
     string = 'Error accessing ODM
