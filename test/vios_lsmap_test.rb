@@ -49,4 +49,86 @@ class TestVioslsmap_long < Test::Unit::TestCase
     assert_equal(true, lpars.include?(28))
 
   end
+
+  # test data source: http://nixys.fr/blog/?p=618
+  def test_vhost_to_s
+    string = 'SVSA Physloc Client Partition ID
+--------------- -------------------------------------------- ------------------
+vhost4 U9117.MMB.999BCP-V2-C8 0x00000008
+VTD d7f1_lpar1
+Status Available
+LUN 0x8100000000000000
+Backing device hdisk25
+Physloc U78C0.001.DBJ1531-P2-C5-T1-W50060F80164D0B26-L17000000000000
+VTD d7f1n1_lpar1
+Status Available
+LUN 0x8200000000000000
+Backing device hdisk26
+Physloc U78C0.001.DBJ1531-P2-C5-T1-W50060F80164D0B26-L18000000000000
+VTD r7f1_lpar1
+Status Available
+LUN 0x8300000000000000
+Backing device hdisk24
+Physloc U78C0.001.DBJ1531-P2-C5-T1-W50060E80164DFB26-L16000000000000'
+
+    expected = "vhost4:d7f1_lpar1:d7f1n1_lpar1:r7f1_lpar1\n"
+    lsmap = Lsmap.new(string)
+
+    result = lsmap.to_s('vtd:svsa', ':')
+
+    assert_equal(expected, result)
+
+  end
+
+  # test data source: http://nixys.fr/blog/?p=618
+  def test_vhost_to_s2
+    string = 'SVSA Physloc Client Partition ID
+--------------- -------------------------------------------- ------------------
+vhost4 U9117.MMB.999BCP-V2-C8 0x00000008
+VTD d7f1_lpar1
+Status Available
+LUN 0x8100000000000000
+Backing device hdisk25
+Physloc U78C0.001.DBJ1531-P2-C5-T1-W50060F80164D0B26-L17000000000000
+VTD d7f1n1_lpar1
+Status Available
+LUN 0x8200000000000000
+Backing device hdisk26
+Physloc U78C0.001.DBJ1531-P2-C5-T1-W50060F80164D0B26-L18000000000000
+VTD r7f1_lpar1
+Status Available
+LUN 0x8300000000000000
+Backing device hdisk24
+Physloc U78C0.001.DBJ1531-P2-C5-T1-W50060E80164DFB26-L16000000000000'
+
+    expected = "vhost4 d7f1_lpar1 d7f1n1_lpar1 r7f1_lpar1\n"
+    lsmap = Lsmap.new(string)
+
+    result = lsmap.to_s('vtd svsa', ' ')
+
+    assert_equal(expected, result)
+
+  end
+
+  def test_lsmap__fixed_no_devices
+    string = 'SVSA Physloc Client Partition ID
+--------------- -------------------------------------------- ------------------
+vhost0 U9131.52A.10E47DG-V3-C31 0x00000000
+
+NO VIRTUAL TARGET DEVICE FOUND
+'
+
+    vhost = Vhost.new
+    vhost.name = 'vhost0'
+    vhost.physloc = 'U9131.52A.10E47DG-V3-C31'
+    vhost.client_partition_id = '0x00000000'
+
+    lsmap = Lsmap.new
+    lsmap.mapping['vhost0'] = vhost
+
+    #puts lsmap.to_s_long_fixed
+    #assert_equal(string, lsmap.to_s_long_fixed)
+
+  end
+
 end
