@@ -75,6 +75,8 @@ Invalid\sCRC\sCount:\s+([-\d]+)\s+
       raise 'Error accessing ODM - Device not found'
     elsif string =~ /^\s*Error\saccessing\sODM\s*VPD\sinformation\snot\sfound\s*$/
       raise 'Error accessing ODM - VPD information not found'
+    elsif string =~ /Error\sreading\sstatistics\sinformation/
+      raise 'Error reading statistics information'
     elsif match = regexp.match(string)
       @device = match[1]
 
