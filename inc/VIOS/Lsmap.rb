@@ -9,8 +9,6 @@ class Lsmap
   attr_accessor :vios
   attr_accessor :sys
 
-
-
   def initialize(string = '', vios = nil, sys = nil)
     @vios = vios
     @sys = sys
@@ -94,5 +92,21 @@ class Lsmap
       end
     end
     result.sort
+  end
+
+  def to_s(fields = 'all', separator = ':')
+    result = ''
+    @mapping.each_value do |vhost|
+      result += vhost.to_s(fields, separator) + "\n"
+    end
+    result
+  end
+
+  def to_s_long_fixed
+    result = ''
+    @mapping.each_value do |vhost|
+      result += vhost.to_s_long_fixed
+    end
+    result
   end
 end
