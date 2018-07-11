@@ -3,7 +3,7 @@ require 'VIOS/lsmap_npiv_entry'
 
 class Lsmap_npiv
 
-  attr_reader :data
+  attr_accessor :data
   attr_reader :data_string_raw
 
   attr_reader :fc_names
@@ -26,11 +26,15 @@ class Lsmap_npiv
     if (string =~ /Name\s*Physloc/)
       string.gsub("\nName", '--split--Name').split('--split--').each do |str|
         entry = Lsmap_npiv_entry.new(str)
+        entry.vios = @vios
+        entry.sys = @sys
         @data[entry.name] = entry
       end
     else
       string.each_line do |line|
         entry = Lsmap_npiv_entry.new(line)
+        entry.vios = @vios
+        entry.sys = @sys
         @data[entry.name] = entry
       end
     end
