@@ -5,19 +5,36 @@ class DataFile
 
   attr_accessor :separator
 
+  attr_reader :commands
+
   def initialize(filename, separator = nil)
     @filename = filename
-    @separator = separator.empty? ? '| |' : separator
+    @separator = separator.nil? ? '| |' : separator
 
     unless File.readable?(@filename)
       puts "Can't read file #{@filename}" if $DEBUG
       return false
     end
+
+    @aliases = { 'lsmap -npiv -all' => '/usr/ios/cli/ioscli lsmap -npiv -all' }
+    @commands = []
+
+  end
+
+  def list_of_commands
+    return false unless File.readable?(@filename)
+    separator = @separator
+    commands = []
+
+    File.open(@filename).each do |line|
+      tmp = line.split(separator)
+      commands.push(tmp[0]) unless commands.include?(tmp[0])
+    end
   end
 
   def find(command, separator = nil)
     data_string = ''
-    separator = @separator if separator.empty?
+    separator = @separator if separator.nil? or separator.empty?
 
     return false unless File.readable?(@filename)
 
