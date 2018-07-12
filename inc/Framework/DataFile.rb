@@ -36,7 +36,7 @@ class DataFile
     data_string = ''
     separator = @separator if separator.nil? or separator.empty?
 
-    return false unless File.readable?(@filename)
+    return nil unless File.readable?(@filename)
 
     File.open(@filename).each do |line|
       tmp = line.split(separator)
