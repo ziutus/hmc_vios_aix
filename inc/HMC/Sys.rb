@@ -9,7 +9,7 @@ class Sys
 
   attr_accessor :hmc
   # power5
-  attr_reader :name
+  attr_accessor :name
   attr_reader :state
   attr_reader :type_model
   attr_reader :serial_num
