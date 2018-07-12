@@ -13,7 +13,4 @@ class Lpar < HmcLpar
     @vscsi = {}
   end
 
-  def do_something_for_git
-
-  end
 end
