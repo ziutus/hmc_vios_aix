@@ -1,7 +1,7 @@
 require 'pp'
 require 'HMC/Sys'
 
-require 'Framework/Lpar'
+require 'Framework/lpar'
 
 require 'HMC/VirtualEthAdapter'
 require 'HMC/VirtualScsiAdapter'
