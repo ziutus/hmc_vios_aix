@@ -11,19 +11,19 @@ class Lsmap_npiv
   attr_accessor :vios
   attr_accessor :sys
 
-  def initialize(string = '', vios = nil, sys = nil)
+  def initialize(string = nil, vios = nil, sys = nil)
     @vios = vios
     @sys = sys
 
     @data = {}
     @data_string_raw = ''
-    parse(string) unless string.empty?
+    parse(string) unless string.nil? or string.empty?
   end
 
   def parse(string)
     @data_string_raw = string
 
-    if (string =~ /Name\s*Physloc/)
+    if string =~ /Name\s*Physloc/
       string.gsub("\nName", '--split--Name').split('--split--').each do |str|
         entry = Lsmap_npiv_entry.new(str)
         entry.vios = @vios
@@ -38,7 +38,7 @@ class Lsmap_npiv
         @data[entry.name] = entry
       end
     end
-    working_fcs()
+    working_fcs
     @data
   end
 
