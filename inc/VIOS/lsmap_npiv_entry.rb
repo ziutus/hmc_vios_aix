@@ -40,13 +40,11 @@ class Lsmap_npiv_entry
     @vfc_client_name = nil
     @vfc_client_drc = nil
 
-    unless string.empty?
-      @data_string_raw = string
-      parse(string)
-    end
+    parse(string) unless string.nil? or string.empty?
   end
 
   def parse(string)
+    @data_string_raw = string
 
     r_status = 'LOGGED_IN|NOT_LOGGED_IN'
     r_flags = 'a<LOGGED_IN,STRIP_MERGE>|1<NOT_MAPPED,NOT_CONNECTED>|4<NOT_LOGGED>|0<>'
