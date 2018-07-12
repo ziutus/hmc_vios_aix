@@ -46,7 +46,7 @@ class FrameworkData
       hmc_data.sys.each do |sys_name|
         sys = System.new(sys_name, hmc)
         sys.parse_raw_data(hmc_data.file_content(sys_name, 'lpar_info'))
-        systems.push(sys) if sys.name = sys_to_find
+        systems.push(sys) if sys.name == sys_to_find or sys_to_find == 'ALL'
       end
     end
 
@@ -91,8 +91,8 @@ class FrameworkData
         vhost_all = Lsmap.new(data_file.find("/usr/ios/cli/ioscli lsmap -all"), vios)
 
         puts 'Putting data from VIOSes about NPIV and vscsi' if @verbose > 0
-        lpars[index].vscsi.concat(vhost_all.mapping_for_lpar(lpar_id))
-        lpars[index].npiv.concat(npiv_all.mapping_for_lpar(lpar_id))
+        lpars[index].vscsi.merge!(vhost_all.mapping_for_lpar(lpar_id))
+        lpars[index].npiv.merge!(npiv_all.mapping_for_lpar(lpar_id))
       end
     end
 
@@ -106,7 +106,7 @@ class FrameworkData
     puts "data will be taken from file #{filename}" if @verbose > 0
     unless File.exist?(filename)
       puts "This file >#{filename}< doesn't exist! " if @verbose > 0
-      return false
+      return nil
     end
     data_file = DataFile.new(filename)
     data_file.find(command)
