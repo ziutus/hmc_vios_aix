@@ -49,6 +49,8 @@ class Lsmap
         end
 
         vhost = Vhost.new(line)
+        vhost.sys = @sys
+        vhost.vios = @vios
         vhost_number += 1
         vhost_value = ''
         vtd_number = 0
