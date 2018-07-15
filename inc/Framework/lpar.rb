@@ -9,8 +9,8 @@ class Lpar < HmcLpar
 
     super(sys, lpar_id, name, hmc)
 
-    @npiv = {}
-    @vscsi = {}
+    @npiv = []
+    @vscsi = []
   end
 
 end
