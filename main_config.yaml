@@ -1,0 +1,5 @@
+:vios_datafile_extension: txt
+:hmc_subdirectory: /hmc
+:vios_subdirectory: /vios
+:verbose: 0
+:field_separator: ":"
