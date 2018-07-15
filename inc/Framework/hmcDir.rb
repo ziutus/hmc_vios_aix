@@ -86,6 +86,16 @@ class HmcDir
   end
 
   def create_list_of_frames
+    filename = @dir + '/' + @hmc_dir_map['sys_list']
+
+    unless File.exist?(filename)
+      raise Exception, "Missing file with list of frames (#{filename}"
+    end
+
+    unless File.readable?(filename)
+      raise Exception, "Missing or not readable file with list of frames (#{filename}"
+    end
+
     File.read(@dir + '/' + @hmc_dir_map['sys_list']).split("\n").each do |string|
       sys = Sys.new
       sys.parse_f(string, 'name,serial_num,state')
