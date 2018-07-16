@@ -249,8 +249,8 @@ VFC client name:fcs1            VFC client DRC:U8233.E8B.XXXXXXX-V3-C31-T1'
 
   end
 
+  # test data source: http://blog.sekratech.de/2014/05/28/change-on-the-fly-vio-fc-mapping-because-of-problem-with-live-partition-mobility/
   def test_lsmap_fmt
-    # test data source: http://blog.sekratech.de/2014/05/28/change-on-the-fly-vio-fc-mapping-because-of-problem-with-live-partition-mobility/
     string = 'vfchost18:U9117.MMB.06xxxxx-V2-C49:38:nim9:AIX:LOGGED_IN:fcs3:U78C0.001.DBJN321-P2-C5-T2:5:a:fcs1:U9117.MMB.06xxxxx-V38-C5'
     lsmap = Lsmap_npiv.new(string)
 
@@ -263,7 +263,8 @@ VFC client name:fcs1            VFC client DRC:U8233.E8B.XXXXXXX-V3-C31-T1'
     assert_equal('fcs3',                      lsmap.data['vfchost18'].fc_name)
     assert_equal('U78C0.001.DBJN321-P2-C5-T2',lsmap.data['vfchost18'].fc_loc_code)
     assert_equal(5,                           lsmap.data['vfchost18'].ports_logged_in)
-    assert_equal('a',                         lsmap.data['vfchost18'].flags)
+    assert_equal('a',                         lsmap.data['vfchost18'].flags_short)
+    assert_equal('a<LOGGED_IN,STRIP_MERGE>',  lsmap.data['vfchost18'].flags)
     assert_equal('fcs1',                      lsmap.data['vfchost18'].vfc_client_name)
     assert_equal('U9117.MMB.06xxxxx-V38-C5',  lsmap.data['vfchost18'].vfc_client_drc)
 
@@ -279,7 +280,72 @@ vfchost28:U9117.MMB.06xxxxx-V2-C43:38:nim9:AIX:LOGGED_IN:fcs3:U78C0.001.DBJN321-
     assert_equal(2, lsmap.data.count)
   end
 
-  def test_lsmap_npiv_to_s
+  # https://www.ibm.com/developerworks/community/blogs/powermeup/entry/power_npiv_quick_dirty?lang=en_us
+  def test_lsmap_npiv_to_s_to_long
+
+    entry = Lsmap_npiv_entry.new
+    entry.name = 'vfchost3'
+    entry.physloc = 'U8205.E6B.#######-V2-C10'
+    entry.clntid = 5
+    entry.clntname = ''
+    entry.status = 'NOT_LOGGED_IN'
+    entry.fc_name = 'fcs6'
+    entry.ports_logged_in = 0
+    entry.fc_loc_code = 'U78AA.001.#######-P1-C1-C3-T1'
+    entry.flags = '4<NOT_LOGGED>'
+    entry.vfc_client_name = ''
+    entry.vfc_client_drc = ''
+
+    lsmap = Lsmap_npiv.new(entry.to_s_long_fixed)
+
+    assert_equal('vfchost3', lsmap.data['vfchost3'].name)
+    assert_equal('U8205.E6B.#######-V2-C10', lsmap.data['vfchost3'].physloc)
+    assert_equal(5, lsmap.data['vfchost3'].clntid)
+    assert_equal('', lsmap.data['vfchost3'].clntname)
+    assert_equal('', lsmap.data['vfchost3'].clntos)
+    assert_equal('NOT_LOGGED_IN', lsmap.data['vfchost3'].status)
+    assert_equal('fcs6', lsmap.data['vfchost3'].fc_name)
+    assert_equal('U78AA.001.#######-P1-C1-C3-T1', lsmap.data['vfchost3'].fc_loc_code)
+    assert_equal(0, lsmap.data['vfchost3'].ports_logged_in)
+    assert_equal('4<NOT_LOGGED>', lsmap.data['vfchost3'].flags)
+    assert_equal('', lsmap.data['vfchost3'].vfc_client_name)
+    assert_equal('', lsmap.data['vfchost3'].vfc_client_drc)
 
   end
+
+
+  # test taken from: https://www.ibm.com/developerworks/aix/library/au-NPIV/
+  def test_lsmap_npiv_to_s_to_long_2
+
+    entry_tmp = Lsmap_npiv_entry.new
+    entry_tmp.name = 'vfchost10'
+    entry_tmp.physloc = 'U8233.E8B.XXXXXXX-V1-C66'
+    entry_tmp.clntid = 4
+    entry_tmp.clntname = 'LPAR4'
+    entry_tmp.clntos = 'AIX'
+    entry_tmp.status = 'LOGGED_IN'
+    entry_tmp.fc_name = 'fcs0'
+    entry_tmp.ports_logged_in = 5
+    entry_tmp.fc_loc_code = 'U78A0.001.XXXXXXX-P1-C3-T1'
+    entry_tmp.flags = 'a<LOGGED_IN,STRIP_MERGE>'
+    entry_tmp.vfc_client_name = 'fcs0'
+    entry_tmp.vfc_client_drc = 'U8233.E8B.XXXXXXX-V6-C30-T1'
+
+    entry = Lsmap_npiv_entry.new(entry_tmp.to_s_long_fixed)
+
+    assert_equal('vfchost10', entry.name)
+    assert_equal('U8233.E8B.XXXXXXX-V1-C66', entry.physloc)
+    assert_equal(4, entry.clntid)
+    assert_equal('LPAR4', entry.clntname)
+    assert_equal('AIX', entry.clntos)
+    assert_equal('LOGGED_IN', entry.status)
+    assert_equal('fcs0', entry.fc_name)
+    assert_equal('U78A0.001.XXXXXXX-P1-C3-T1', entry.fc_loc_code)
+    assert_equal(5, entry.ports_logged_in)
+    assert_equal('a<LOGGED_IN,STRIP_MERGE>', entry.flags)
+    assert_equal('fcs0', entry.vfc_client_name)
+    assert_equal('U8233.E8B.XXXXXXX-V6-C30-T1', entry.vfc_client_drc)
+  end
+
+
 end
