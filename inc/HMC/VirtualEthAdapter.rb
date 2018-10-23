@@ -3,6 +3,8 @@ require 'HMC/HmcString'
 
 include HmcString
 
+# https://www.ibm.com/support/knowledgecenter/TI0002C/p8edm/chsyscfg.html
+
 class VirtualEthAdapter < VirtualAdapter
 
   attr_accessor :isIEEE
@@ -32,11 +34,23 @@ class VirtualEthAdapter < VirtualAdapter
     @allowedOsMacAddresses = nil
     @qosPiority = nil
 
-    @regexp_minimum 			       = %r{^\s*(\d+)/([01])/(\d+)/([\d,]+|)/(\d+)/([01])\s*$}
-    @regexp_vswitch 			       = %r{^\s*(\d+)/([01])/(\d+)/([\d,]+|)/(\d+)/([01])/([\w\-]+)\s*$}
-    @regexp_mac_address 		     = %r{^\s*(\d+)/([01])/(\d+)/([\d,]+|)/(\d+)/([01])/([\w\-]+)/(\w+|)\s*$}
-    @regexp_allowed_mac_address = %r{^\s*(\d+)/([01])/(\d+)/([\d,]+|)/(\d+)/([01])/([\w\-]+)/(\w+|)/([\w,]+|all)\s*$}
-    @regexp_qos_priority 	       = %r{^\s*(\d+)/([01])/(\d+)/([\d,]+|)/(\d+)/([01])/([\w\-]+)/(\w+|)/([\w,]+|all)/(\d+|none)\s*$}
+    @regexp_minimum 			       = %r{^\s*(\d+)/([01])/(\d+)/([\d,]+|)/(\d+)/([01]|)\s*$}
+    @regexp_vswitch 			       = %r{^\s*(\d+)/([01])/(\d+)/([\d,]+|)/(\d+)/([01]|)/([\w\-]+|)\s*$}
+    @regexp_mac_address 		     = %r{^\s*(\d+)/([01])/(\d+)/([\d,]+|)/(\d+)/([01]|)/([\w\-]+|)/(\w+|)\s*$}
+    @regexp_allowed_mac_address = %r{^\s*(\d+)/([01])/(\d+)/([\d,]+|)/(\d+)/([01]|)/([\w\-]+|)/(\w+|)/([\w,]+|all|)\s*$}
+    @regexp_qos_priority 	       = %r{^\s*(\d+)/([01])/(\d+)/([\d,]+|)/(\d+)/([01]|)/([\w\-]+|)/(\w+|)/([\w,]+|all|)/(\d+|none)\s*$}
+
+    # '20/1/101/0/0///all/none'
+    # virtual-slot-number/is-IEEE/port-vlan-ID/[additional-vlan-IDs]/[trunk-priority]/is-required[/[virtual-switch][/[MAC-address]/[allowed-OS-MAC-addresses]/[QoS-priority]]]
+
+    # The first 5 ’/’ characters must be present. The 6th
+    # ’/’ character is optional, but it must be present if
+    #    virtual-switch or any of the values following
+    # virtual-switch are specified. The last 3 ’/’
+    # characters are optional, but all 3 must be present if
+    #    MAC-address, allowed-OS-MAC-addresses, or QoS-priority
+    # is specified.
+
 
     @params = %w[isIEEE portVlanID additionalVlanIDs trunkPriority isTrunk virtualSwitch macAddress allowedOsMacAddresses qosPiority]
     @params_real = %w[lpar_name lpar_id slot_num state is_required is_trunk trunk_priority ieee_virtual_eth port_vlan_id vswitch addl_vlan_ids mac_addr allowed_os_mac_addrs qos_priority]
