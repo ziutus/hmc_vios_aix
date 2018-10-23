@@ -36,6 +36,29 @@ class TestVirtualEthAdapter < Test::Unit::TestCase
     assert_equal(1, adapter2.isRequired)
   end
 
+  def test_decode2
+
+
+    adapter2 = VirtualEthAdapter.new
+    adapter2.decode('6/1/60//0/0///all/none')
+    #virtual-slot-number/is-IEEE/port-vlan-ID/[additional-vlan-IDs]/[trunk-priority]/is-required[/[virtual-switch][/[MAC-address]/[allowed-OS-MAC-addresses]/[QoS-priority]]]
+
+    assert_equal(6, adapter2.virtualSlotNumber, 'Virtual Slot Number')
+    assert_equal(1, adapter2.isIEEE, 'is IEEE')
+    assert_equal(60, adapter2.portVlanID, 'Port VLan ID')
+    assert_equal('',adapter2.additionalVlanIDs, 'Additional Vlan IDs')
+    assert_equal(0, adapter2.isTrunk, 'Is Trunk')
+    assert_equal(0, adapter2.trunkPriority, 'Trunk Priority')
+    assert_equal(0, adapter2.isRequired, 'is required')
+    assert_equal('', adapter2.virtualSwitch, 'Virtual Switch name')
+    assert_equal('', adapter2.macAddress, 'mac address')
+    assert_equal('all', adapter2.allowedOsMacAddresses, 'Allowed Os Mac Addresses')
+    assert_equal('none', adapter2.qosPiority, 'QOS Piority')
+
+  end
+
+
+
   def test_vswitch_name
 
     adapter = VirtualEthAdapter.new('10/0/1//0/0/ETHERNET0//all/none')
