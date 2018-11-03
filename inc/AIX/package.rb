@@ -19,7 +19,7 @@ class Package
 
     # 'bos:bos.rte.security:5.3.1.1 : : :C:F:Base Security Function: : : : : : :0:1:/:1806'
     # ([\w\s]+):( ):( ):( ):( ):( ):( ):(\d):(\d):\/:(\d+)$
-    regexp_lslpp_qcL= /^(\w+):([\w\.]+):([\d\.]+):(\s):(\s):(\w):(\w):([\w\s]+):/
+    regexp_lslpp_qcL= /^([\w\.]+):([\w\.]+):([\d\.]+):(\s):(\s):(\w):(\w):([\w\s]+):/
 
     if match = regexp_lslpp_qcL.match(string)
 
