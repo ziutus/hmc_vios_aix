@@ -77,6 +77,8 @@ Invalid\sCRC\sCount:\s+([-\d]+)\s+
       raise 'Error accessing ODM - VPD information not found'
     elsif string =~ /Error\sreading\sstatistics\sinformation/
       raise 'Error reading statistics information'
+    elsif string =~ /Error\sopening\sdevice:\s+\/dev\/fscsi\d+\s+errno:\s+00000046/
+      raise 'Error - network is unreachable'
     elsif match = regexp.match(string)
       @device = match[1]
 

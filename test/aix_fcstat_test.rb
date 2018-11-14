@@ -50,6 +50,16 @@ VPD information not found'
     assert_equal("Error accessing ODM - VPD information not found",  exception.message)
   end
 
+  # Test data source: IBM AIX Version 7.1 Differences Guide site 73
+  def test_fcstat_46
+    string = 'Error opening device: /dev/fscsi0
+
+errno: 00000046'
+
+    exception = assert_raise(RuntimeError) { fcstat = Fcstat.new(string) }
+    assert_equal("Error - network is unreachable",  exception.message)
+  end
+
 
   def test_Fcstat1
 
