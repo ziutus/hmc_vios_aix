@@ -27,7 +27,7 @@ class FrameworkData
 
 
     if config_file.nil?
-      @vios_datafile_extension = nil
+      @vios_datafile_extension = "txt"
       @hmc_directory = '/hmc'
       @vios_subdirectory = '/vios'
     else
@@ -42,11 +42,11 @@ class FrameworkData
     create_dir(base_dir)
     create_dir(base_dir + @hmc_directory)
     create_dir(base_dir + @hmc_directory + '/' + @date)
-    create_dir(base_dir + @vios_directory)
-    create_dir(base_dir + @vios_directory + '/' + @date)
+    create_dir(base_dir + @vios_subdirectory)
+    create_dir(base_dir + @vios_subdirectory + '/' + @date)
   end
 
-  def create_dr(dirname)
+  def create_dir(dirname)
     if Dir.exist?(dirname)
       puts ">DEBUG: dirname exist: #{dirname}, ignoring..." if @verbose > 0
     else
