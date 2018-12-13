@@ -40,10 +40,9 @@ class FrameworkData
 
   def create_structure(base_dir)
     create_dir(base_dir)
-    create_dir(base_dir + @hmc_directory)
-    create_dir(base_dir + @hmc_directory + '/' + @date)
-    create_dir(base_dir + @vios_subdirectory)
-    create_dir(base_dir + @vios_subdirectory + '/' + @date)
+    create_dir(base_dir + '/' + @date)
+    create_dir(base_dir + '/' + @date + @hmc_directory)
+    create_dir(base_dir + '/' + @date + @vios_subdirectory)
   end
 
   def create_dir(dirname)
@@ -59,7 +58,7 @@ class FrameworkData
     systems = []
 
     puts ">DEBUG(1): searching data about frame #{sys_to_find}" if @verbose > 0
-    hmc_dir_base = @directory + '/' + @hmc_directory + '/' + @date + '/'
+    hmc_dir_base = @directory  + '/' + @date + '/' + @hmc_directory + '/'
     puts ">DEBUG(1): checking directory #{hmc_dir_base}" if @verbose > 0
     Dir.chdir(hmc_dir_base)
     Dir.glob('*').select do |hmc|
@@ -86,7 +85,7 @@ class FrameworkData
     puts ">DEBUG: verbose: #{@verbose}" if @verbose > 0
     puts '>DEBUG: searching data about frame on HMCs' if @verbose > 0
 
-    hmc_dir_base = @directory + '/' + @hmc_directory + '/' + @date + '/'
+    hmc_dir_base = @directory + '/' + @date + '/' + @hmc_directory + '/'
     puts ">DEBUG: going to directory #{hmc_dir_base}" if @verbose > 0
     unless File.directory?(hmc_dir_base)
       puts ">DEBUG: Directory #{hmc_dir_base} doesn't exist!" if @verbose > 0
@@ -146,7 +145,7 @@ class FrameworkData
   end
 
   def vios_data(lparname, command)
-    path = Pathname.new("#{directory}/#{@vios_subdirectory}/#{@date}/#{lparname}.#{vios_datafile_extension}")
+    path = Pathname.new("#{directory}/#{@date}/#{@vios_subdirectory}/#{lparname}.#{vios_datafile_extension}")
     path.cleanpath
     filename = path.realpath
     puts ">DEBUG: Data will be taken from file #{filename}" if @verbose > 0
