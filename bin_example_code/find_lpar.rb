@@ -8,11 +8,10 @@ $LOAD_PATH << File.dirname(__FILE__) + '/../inc'
 
 require 'Framework/framework_data'
 
-directory = '/mnt/c/git/hmc_vios_aix2/data'
-#directory = 'c:\git\hmc_vios_aix2\data'
+directory = File.join(Dir.pwd, '..', 'data')
 config_file = '../main_config.yaml'
 date = '20180603_1656'
-verbose = 1
+verbose = 0
 errors = 0
 lpar_to_find = 'nim1'
 
