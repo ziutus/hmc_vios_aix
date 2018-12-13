@@ -29,7 +29,7 @@ class VirtualAdapter
     @params = []
   end
 
-  def diff(other_adapter, profile1, profile2)
+  def diff(other_adapter, profile1, profile2, null_0_none_equal = false )
     diff = {}
 
     if self.class.name != other_adapter.class.name
@@ -38,6 +38,12 @@ class VirtualAdapter
 
     @params.sort.each do |param|
       next if  instance_variable_get("@#{param}") == other_adapter.instance_variable_get("@#{param}")
+
+      if null_0_none_equal
+        a = instance_variable_get("@#{param}")
+        b = other_adapter.instance_variable_get("@#{param}")
+        next if ( a.to_s == '0' || a == 'none' || a == 'null')  && (b.to_s == '0' || b == 'none' || b == 'null')
+      end
 
       diff_entry = {}
       diff_entry[profile2] = other_adapter.instance_variable_get("@#{param}")

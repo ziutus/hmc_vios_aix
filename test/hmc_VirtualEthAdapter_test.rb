@@ -205,4 +205,39 @@ class TestVirtualEthAdapter < Test::Unit::TestCase
 
   end
 
+  def test_diff_2
+
+    adapter1 = VirtualEthAdapter.new('10/0/1//0/0/ETHERNET0//all/none')
+    adapter2 = VirtualEthAdapter.new('10/0/1//0/0/ETHERNET1//all/0')
+
+    diffs = adapter1.diff(adapter2, 'profile1', 'profile2', false)
+    assert_equal(2, diffs.keys.count)
+    assert_equal('qosPiority', diffs.keys[0])
+    assert_equal('virtualSwitch', diffs.keys[1])
+    assert_equal('none', diffs['qosPiority']['profile1'])
+    assert_equal('0', diffs['qosPiority']['profile2'])
+    assert_equal('ETHERNET0', diffs['virtualSwitch']['profile1'])
+    assert_equal('ETHERNET1', diffs['virtualSwitch']['profile2'])
+
+  end
+
+
+  def test_diff_zero_null_none_1
+
+    adapter1 = VirtualEthAdapter.new('10/0/1//0/0/ETHERNET0//all/none')
+    adapter2 = VirtualEthAdapter.new('10/0/1//0/0/ETHERNET1//all/0')
+
+    diffs = adapter1.diff(adapter2, 'profile1', 'profile2', true)
+    assert_equal(1, diffs.keys.count)
+  end
+
+  def test_diff_zero_null_none_2
+
+    adapter1 = VirtualEthAdapter.new('10/0/1//0/0/ETHERNET0//all/none')
+    adapter2 = VirtualEthAdapter.new('10/0/1//0/0/ETHERNET0//all/0')
+
+    diffs = adapter1.diff(adapter2, 'profile1', 'profile2', true)
+    assert_equal(0, diffs.keys.count)
+  end
+
 end
