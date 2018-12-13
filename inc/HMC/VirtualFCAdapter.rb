@@ -62,14 +62,13 @@ class VirtualFCAdapter < VirtualAdapter
   def decode(string)
     @data_string_raw = string
 
-
     match = @reg_exp.match(string)
     raise "RegExp couldn't decode string #{string}" unless match
 
     @virtualSlotNumber 	= match[1].to_i
-    @clientOrServer 	= match[2]
-    @remoteLparID 		= match[3].to_i
-    @remoteLparName		= match[4]
+    @clientOrServer 	  = match[2]
+    @remoteLparID 		  = match[3].to_i
+    @remoteLparName		  = match[4]
     @remoteSlotNumber 	= match[5].to_i
     wwpns	= match[6]
     @isRequired	= match[7].to_i
