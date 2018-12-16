@@ -68,6 +68,16 @@ class Lsmap_npiv
     @fc_names
   end
 
+  def working_fcs_number
+    result = {}
+    @data.each_pair do |name, entry|
+      result[entry.fc_name] = 0 unless defined? result[entry.fc_name]
+      result[entry.fc_name] += 1
+    end
+
+    result
+  end
+
   def using_fcs?(name)
     @fc_names.include?(name)
   end
