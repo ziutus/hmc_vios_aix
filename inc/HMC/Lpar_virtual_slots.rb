@@ -200,49 +200,55 @@ class Lpar_virtual_slots
   def diff(other_lpar_virtual_slots, type, null_zero_none_equal = 0)
 
     diff = {}
-    max_virtual_slots = self.max_virtual_slots > other_lpar_virtual_slots.max_virtual_slots ? self.max_virtual_slots : other_lpar_virtual_slots.max_virtual_slots
+    max_virtual_slots = [self.max_virtual_slots, other_lpar_virtual_slots.max_virtual_slots].max
 
     1.upto(max_virtual_slots) do |i|
+
       if virtual_slots.key?(i) && other_lpar_virtual_slots.virtual_slots.key?(i)
 
-          self_slot =  virtual_slots[i]
-          other_slot = other_lpar_virtual_slots.virtual_slots[i]
-          self_profile_name = profile_name
-          other_profile_name = other_lpar_virtual_slots.profile_name
+        self_slot =  virtual_slots[i]
+        other_slot = other_lpar_virtual_slots.virtual_slots[i]
+        self_profile_name = profile_name
+        other_profile_name = other_lpar_virtual_slots.profile_name
 
-          # let's check type of slots
-          if type == 'virtual_serial_adapters'
-            next unless self_slot.class.name == 'VirtualSerialAdapter' or other_slot.class.name == 'VirtualSerialAdapter'
-          elsif type == 'VirtualScsiAdapter'
-            next unless self_slot.class.name == 'VirtualScsiAdapter' or other_slot.class.name == 'VirtualScsiAdapter'
-          elsif type == 'virtual_eth_adapters'
-            next unless self_slot.class.name == 'VirtualEthAdapter' or other_slot.class.name == 'VirtualEthAdapter'
-          elsif type == 'virtual_fc_adapters'
-            next unless self_slot.class.name == 'VirtualFCAdapter' or other_slot.class.name == 'VirtualFCAdapter'
+        # let's check type of slots
+        if type == 'virtual_serial_adapters'
+          next unless self_slot.class.name == 'VirtualSerialAdapter' or other_slot.class.name == 'VirtualSerialAdapter'
+        end
+
+        if type == 'VirtualScsiAdapter'
+          next unless self_slot.class.name == 'VirtualScsiAdapter' or other_slot.class.name == 'VirtualScsiAdapter'
+        end
+        if type == 'virtual_eth_adapters'
+          next unless self_slot.class.name == 'VirtualEthAdapter' or other_slot.class.name == 'VirtualEthAdapter'
+        end
+
+        if type == 'virtual_fc_adapters'
+          next unless self_slot.class.name == 'VirtualFCAdapter' or other_slot.class.name == 'VirtualFCAdapter'
+        end
+
+        # let's check if slot are the same type (ethernet, fcs etc)
+        if self_slot.class.name != other_slot.class.name
+          entry = {}
+          entry[self_profile_name] =  "The slot type is #{self_slot.class.name}"
+          entry[other_profile_name] = "The slot type is #{other_slot.class.name}"
+          diff["VirtualSlot #{i}"] = entry
+
+          next
+        end
+
+        if self_slot.class.name == 'VirtualFCAdapter' ||
+           self_slot.class.name == 'VirtualEthAdapter' ||
+           self_slot.class.name == 'VirtualScsiAdapter'
+
+          diff_entry_slot = self_slot.diff(other_slot, self_profile_name, other_profile_name, null_zero_none_equal)
+
+          diff_entry_slot.each do |key, entry_tmp|
+            diff["VirtualSlot #{i} #{key}"] = entry_tmp
           end
-
-          # let's check if slot are the same type (ethernet, fcs etc)
-          if self_slot.class.name != other_slot.class.name
-            entry = {}
-            entry[self_profile_name] =  "The slot type is #{self_slot.class.name}"
-            entry[other_profile_name] = "The slot type is #{other_slot.class.name}"
-            diff["VirtualSlot #{i}"] = entry
-
-            next
-          end
-
-          if self_slot.class.name == 'VirtualFCAdapter' ||
-             self_slot.class.name == 'VirtualEthAdapter' ||
-             self_slot.class.name == 'VirtualScsiAdapter'
-
-            diff_entry_slot = self_slot.diff(other_slot, self_profile_name, other_profile_name, null_zero_none_equal)
-
-            diff_entry_slot.each do |key, entry_tmp|
-              diff["VirtualSlot #{i} #{key}"] = entry_tmp
-            end
-          else
-            raise("unsupported type of adapter #{self_slot.class.name} ")
-          end
+        else
+          raise("unsupported type of adapter #{self_slot.class.name} ")
+        end
 
 
       elsif virtual_slots.key?(i) && !other_lpar_virtual_slots.virtual_slots.key?(i)
@@ -267,6 +273,7 @@ class Lpar_virtual_slots
         entry[self_profile_name]  = "A profile use it: #{self_slot.class.name} #{self_slot.to_s}"
         entry[other_profile_name] = "A profile doesn't use slot"
         diff["VirtualSlot #{i}"] = entry
+
       elsif !virtual_slots.key?(i) && other_lpar_virtual_slots.virtual_slots.key?(i)
 
         other_slot = other_lpar_virtual_slots.virtual_slots[i]
