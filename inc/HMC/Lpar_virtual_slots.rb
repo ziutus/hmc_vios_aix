@@ -197,7 +197,7 @@ class Lpar_virtual_slots
     adapters_to_s('virtual_serial_adapters')
   end
 
-  def diff(other_lpar_virtual_slots, type)
+  def diff(other_lpar_virtual_slots, type, null_zero_none_equal = 0)
 
     diff = {}
     max_virtual_slots = self.max_virtual_slots > other_lpar_virtual_slots.max_virtual_slots ? self.max_virtual_slots : other_lpar_virtual_slots.max_virtual_slots
@@ -235,7 +235,7 @@ class Lpar_virtual_slots
              self_slot.class.name == 'VirtualEthAdapter' ||
              self_slot.class.name == 'VirtualScsiAdapter'
 
-            diff_entry_slot = self_slot.diff(other_slot, self_profile_name, other_profile_name)
+            diff_entry_slot = self_slot.diff(other_slot, self_profile_name, other_profile_name, null_zero_none_equal)
 
             diff_entry_slot.each do |key, entry_tmp|
               diff["VirtualSlot #{i} #{key}"] = entry_tmp

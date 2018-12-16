@@ -96,9 +96,13 @@ class Lpar_profile
   attr_reader   :_default_params
 
   attr_reader   :virtual_slots
+  attr_accessor :_null_zero_none_equal
+
 
   def initialize(lpar_id = '', profile_name = 'normal')
     string = ''
+
+    @_null_zero_none_equal = false
 
     if lpar_id.class.to_s == 'String'
       if lpar_id.include?('=')
@@ -410,6 +414,10 @@ class Lpar_profile
         if val_self != val_profile
           val_self    = 'nil' if val_self.nil?
           val_profile = 'nil' if val_profile.nil?
+
+          if @_null_zero_none_equal
+            next if (val_self.to_s == '0' or val_self == 'null' or val_self == 'none') and (val_profile.to_s == '0' or val_profile == 'null' or val_profile == 'none')
+          end
 
           difference = {}
           difference[another_profile.name] = val_profile
