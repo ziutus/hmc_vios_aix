@@ -11,10 +11,26 @@ class ErrptEntry
   attr_reader :class
   attr_reader :description
   attr_reader :resource_name
+
+  attr_accessor :parent_resource
+  attr_accessor :_in_summary
+  attr_accessor :_show
   #	attr_accessor :break_size
+
+  def compare_short_string
+    "#{label}:#{identifier}:#{type}:" + @class + ":#{resource_name}:#{description}"
+  end
+
+  def compare_short(other)
+    compare_short_string == other.compare_short_string
+  end
 
   def initialize(string)
     @data_string_raw = ''
+    @parent_resource = nil
+
+    @_show = false
+    @_in_summary = false
 
     parse(string) unless string.empty?
   end
