@@ -208,7 +208,7 @@ do
 		for FRAME in `cat $DIR/lssyscfg_r_sys_F_name_serial_num_state.txt | grep -v "\." | cut -d "," -f 1`;
 		do
 
-            ${SSH} ${HMC} "lssyscfg -m ${FRAME} -r lpar"              > ${DIR}/${FRAME}_lpar.txt
+            ${SSH} ${HMC} "lssyscfg -m ${FRAME} -r lpar"              > ${DIR}/${FRAME}_lpar_real.txt
 			${SSH} ${HMC} "lssyscfg -m ${FRAME} -r prof"               > ${DIR}/${FRAME}_prof.txt
 			${SSH} ${HMC} "lshwres  -m ${FRAME} -r mem --level sys"    > ${DIR}/${FRAME}_mem.txt
 			${SSH} ${HMC} "lshwres  -m ${FRAME} -r proc --level sys"   > ${DIR}/${FRAME}_proc.txt
