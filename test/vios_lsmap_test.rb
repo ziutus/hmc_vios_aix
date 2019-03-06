@@ -1,7 +1,7 @@
 $LOAD_PATH << File.dirname(__FILE__)+'/../inc'
 $LOAD_PATH << File.dirname(__FILE__)+'./inc'
 
-require 'VIOS/Lsmap'
+require 'VIOS/lsmap'
 require 'test/unit'
 require 'pp'
 
