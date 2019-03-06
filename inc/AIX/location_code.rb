@@ -87,9 +87,16 @@ class LocationCode
     string
   end
 
-  def regexp(type)
-
-
+  def self.regexp_string(type)
+    if type == 'virtual_planar'
+      '\w{5}\.\w{3}\.[\w#]{7}\-V\d+\-C\d+'
+    elsif type == 'virtual_planar_client'
+      '\w{5}\.\w{3}\.[\w#]{7}\-V\d+\-C\d+|\w{5}\.\w{3}\.[\w#]{7}\-V\d+\-C\d+\-T\d+'
+    elsif type == 'physical_planar'
+      '\w{5}\.\w{3}\.[\w#]{7}\-P\d+\-C\d+\-T\d+|\w{5}\.\w{3}\.[\w#]{7}\-P\d+\-C\d+\-C\d+\-T\d+'
+    else
+      raise Exception, "Wrong type of location code >#{type}<"
+    end
   end
 
 end
