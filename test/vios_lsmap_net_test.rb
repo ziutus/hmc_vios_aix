@@ -84,6 +84,11 @@ Physloc U78C0.001.DBJ4508-P2-C8-T2 '
 
   end
 
+  # Data test source: https://www.ibm.com/support/knowledgecenter/9109-RMD/p7hcg/lsmap.htm (point 3)
+  def test_fmt
+    string = 'ent3:U8204.E8A.06A85B2-V13-C11-T1:ent10:ent1:Available:U7311.D20.06168AC-P1-C06-T1'
+  end
+
   # data source: http://aix-skills.blogspot.com/2013/06/resetting-networkin-vios-virtual-io.html
   def test_long
     string = 'SVEA Physloc
