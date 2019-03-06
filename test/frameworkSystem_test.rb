@@ -48,4 +48,20 @@ lpar_name=p72vio2,lpar_id=2,slot_num=4,state=1,is_required=0, is_trunk=0,ieee_vi
     assert_equal(false, system.lpar_name_exist?('p72vio1'))
     assert_equal(true, system.lpar_name_exist?('aix53_15'))
   end
+
+  # test data source: own power5 frame
+  def test_vios_found
+    string = 'name=nim1,lpar_id=5,lpar_env=aixlinux,state=Running,resource_config=1,os_version=AIX 5.3 5300-05-05-0123,logical_serial_num=6535CCG5,default_profile=normal,curr_profile=normal,work_group_id=none,shared_proc_pool_util_auth=0,allow_perf_collection=0,power_ctrl_lpar_ids=none,boot_mode=norm,lpar_keylock=norm,auto_start=0,redundant_err_path_reporting=0,rmc_state=active,rmc_ipaddr=192.168.200.235,sync_curr_profile=0
+name=vios2,lpar_id=3,lpar_env=vioserver,state=Running,resource_config=1,os_version=Nieznane,logical_serial_num=6535CCG3,default_profile=normal,curr_profile=normal,work_group_id=none,shared_proc_pool_util_auth=0,allow_perf_collection=0,power_ctrl_lpar_ids=none,lpar_keylock=norm,auto_start=0,redundant_err_path_reporting=0,rmc_state=inactive,rmc_ipaddr=192.168.200.201,sync_curr_profile=0
+name=vios1,lpar_id=2,lpar_env=vioserver,state=Running,resource_config=1,os_version=Nieznane,logical_serial_num=6535CCG2,default_profile=normal,curr_profile=normal,work_group_id=none,shared_proc_pool_util_auth=0,allow_perf_collection=0,power_ctrl_lpar_ids=none,lpar_keylock=norm,auto_start=0,redundant_err_path_reporting=1,rmc_state=inactive,rmc_ipaddr=192.168.200.200,sync_curr_profile=0
+name=dump,lpar_id=1,lpar_env=aixlinux,state=Not Activated,resource_config=0,os_version=Nieznane,logical_serial_num=6535CCG1,default_profile=test_1,curr_profile=test_1,work_group_id=none,shared_proc_pool_util_auth=0,allow_perf_collection=0,power_ctrl_lpar_ids=none,boot_mode=sms,lpar_keylock=norm,auto_start=0,redundant_err_path_reporting=0,rmc_state=inactive,rmc_ipaddr=,sync_curr_profile=0
+'
+
+    system = System.new('power5')
+    system.parse_raw_data(string)
+
+    assert_equal(['vios1', 'vios2'], system.vioses.sort)
+
+  end
+
 end
