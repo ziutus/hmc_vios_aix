@@ -76,4 +76,32 @@ D712FEAE   0726162611 T S fcs0          LINK_DEAD events reported by the VIOS
 
   end
 
+  # test data source: https://www.ibm.com/developerworks/community/blogs/paixperiences/entry/vios_npiv_issues?lang=en_us
+  def test_vios_1
+    string = '7870C5A4   0620125012 T S vfchost12      Virtual FC Host Adapter detected an erro
+7870C5A4   0620125012 T S vfchost12      Virtual FC Host Adapter detected an erro
+7870C5A4   0620125012 T S vfchost0       Virtual FC Host Adapter detected an erro
+7870C5A4   0620125012 T S vfchost0       Virtual FC Host Adapter detected an erro'
+
+    errpt = Errpt.new(string)
+    errpt.summary
+
+    pp errpt.errors_summary
+
+    assert_equal(4, errpt.errors.count, 'number of errors in errpt')
+
+  end
+
+  def test_compare
+    entry1 = ErrptEntry.new('7870C5A4   0620125012 T S vfchost12      Virtual FC Host Adapter detected an erro')
+    entry2 = ErrptEntry.new('7870C5A4   0620125012 T S vfchost12      Virtual FC Host Adapter detected an erro')
+    entry3 = ErrptEntry.new('7870C5A4   0620125012 T S vfchost0       Virtual FC Host Adapter detected an erro')
+    entry4 = ErrptEntry.new('4B436A3D   0726162111 T H fscsi0         LINK ERROR')
+
+    assert_equal(true, entry1.compare_short(entry2))
+    assert_equal(false, entry1.compare_short(entry3))
+    assert_equal(false, entry1.compare_short(entry4))
+
+  end
+
 end
