@@ -14,34 +14,34 @@ backup_dir = '/var/tmp/'
 time_diff_max_expected = 60*60*24*4
 
 
-hmc_names = Array.new
+hmc_names = []
 
 #pp options["defaults"]["hmcs"]["backup_server"]
 #pp options["hmcs"]
 
-options["hmcs"].each do |hmc|
-  hmc_names.push( hmc["name"])
+options['hmcs'].each do |hmc|
+  hmc_names.push( hmc['name'])
 end
 
 
-hmc_missing_dirs = Array.new
+hmc_missing_dirs = []
 
 pp hmc_names
 
 hmc_names.sort.each do |hmc|
 
-   puts "* Checking HMC #{hmc}"
-   hmc_dir = backup_dir + "/" + hmc
-   unless Dir.exist?(hmc_dir)
-     puts "** Backup directory #{hmc_dir} doesn't exist!"
-     next
-   end
+  puts "* Checking HMC #{hmc}"
+  hmc_dir = backup_dir + "/" + hmc
+  unless Dir.exist?(hmc_dir)
+   puts "** Backup directory #{hmc_dir} doesn't exist!"
+   next
+  end
 
-  puts "**Checking number of files in directory"
+  puts '**Checking number of files in directory'
   files = Dir["#{hmc_dir}/*"]
 
-  if files.count == 0
-    puts "** no backup files!"
+  if files.count.zero?
+    puts '** no backup files!'
     next
   end
 
@@ -49,14 +49,13 @@ hmc_names.sort.each do |hmc|
     size = File.size(file)
     puts "*** file #{file} has size: " + size.to_s
     if size < 800000
-      puts "Size is to small, is it backup?"
+      puts 'Size is to small, is it backup?'
     end
 
     birthdate = File.ctime(file)
 
     pp birthdate
 
-    
     time_diff = Time.now() - birthdate
     time_diff = time_diff.round(0)
 
@@ -67,7 +66,6 @@ hmc_names.sort.each do |hmc|
     end
 
   end
-
 end
 
 
