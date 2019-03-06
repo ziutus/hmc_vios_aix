@@ -39,8 +39,8 @@ unless Dir.exist?(directory)
   exit 1
 end
 
-unless Dir.exist?("#{directory}/#{date}")
-  puts "The directory #{directory}/#{date} doesn't exist, exiting..."
+unless Dir.exist?("#{directory}/#{date}/hmc/")
+  puts "The directory #{directory}/#{date}/hmc/ doesn't exist, exiting..."
   exit 1
 end
 
@@ -51,7 +51,7 @@ end
 events = Lssvcevents.new
 renderer = ERB.new(File.read("#{app_dir}/erb/hmc_check_events_#{format}.erb"))
 
-Dir.chdir("#{directory}/#{date}/")
+Dir.chdir("#{directory}/#{date}/hmc/")
 Dir.glob('*').sort.select do |hmc_dir|
   puts ">Checking HMC #{hmc_dir}<" if verbose > 0
   Dir[hmc_dir + '/lssvcevents_hardware.txt' ].each do |filename|
