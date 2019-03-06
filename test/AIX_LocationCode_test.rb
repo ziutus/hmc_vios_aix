@@ -66,4 +66,13 @@ class AIXLocationCode_Test < Test::Unit::TestCase
     assert_equal('6', location_code.port)
   end
 
+  # date source: https://www.ibm.com/developerworks/aix/library/au-NPIV/index.html
+  def test_regexp
+
+    assert_equal(true, Regexp.new(LocationCode.regexp_string('virtual_planar')).match?('U8233.E8B.XXXXXXX-V1-C66'))
+    assert_equal(false, Regexp.new(LocationCode.regexp_string('virtual_planar')).match?('U8233.E8B.XXXXXXX-P1-C66'))
+
+
+  end
+
 end
