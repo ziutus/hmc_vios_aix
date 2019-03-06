@@ -111,9 +111,9 @@ ACTIVE\sPVs:\s+(\d+)\s+AUTO\sON:\s+(yes|no)\s+
 MAX\sPPs\sper\sVG:\s+(\d+)\s+
 MAX\sPPs\sper\sPV:\s+(\d+)\s+MAX\s+PVs:\s+(\d+)\s+
 LTG\ssize\s\(Dynamic\):\s+(\d+\skilobyte\(s\))\s+AUTO\sSYNC:\s+(yes|no)\s+
-HOT\sSPARE:\s+(yes|no)\s+BB\sPOLICY:\s+(relocatable)\s+
+HOT\sSPARE:\s+(yes|no)\s+BB\sPOLICY:\s+(relocatable|non-relocatable)\s+
 PV\sRESTRICTION:\s+(none)\s+INFINITE\sRETRY:\s+(no)\s+
-DISK\sBLOCK\sSIZE:\s+(512)\s+CRITICAL\sVG:\s+(no)\s*
+DISK\sBLOCK\sSIZE:\s+(\d+)\s+CRITICAL\sVG:\s+(no)\s*
 }mx
 
     match_long        = regexp_long.match(string)
