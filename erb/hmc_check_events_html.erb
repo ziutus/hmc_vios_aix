@@ -26,7 +26,7 @@ th {
        background == '#CCC' ? background = '#FFF' : background = '#CCC'
      end %>
   <tr style="background: <%= background %>;">
-    <td><%= entry.hmc_name %></td>
+    <td><%= entry.hmc_names.join(',') %></td>
     <td><%= entry.last_time %></td>
     <td><%= entry.problem_num %></td>
     <td><%= entry.pmh_num %></td>
