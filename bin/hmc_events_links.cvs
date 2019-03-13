@@ -27,3 +27,22 @@ E35A0017;https://www.ibm.com/support/knowledgecenter/HW4M4/p8eai/E35A0017.htm;Ca
 E3CA0262;https://www.ibm.com/support/knowledgecenter/HW4L4/p8eai/E3CA0262.htm;Error trying to detect the devices supported by Media Services
 E3D45069;https://www.ibm.com/support/knowledgecenter/en/HW4L4/p8eai/E3D45069.htm;Error trying to send data to RSF for server side of the Transmit Service Data task. This is the result of an exception being caught by the underlying Tasklet infrastructure. The Transmit Service Data task has been ended.
 B200F004;https://www.ibm.com/support/knowledgecenter/P8DEH/p8eai/B200F004.htm;The partition did not respond to a system request to power off. A system request to power off a partition failed. The partition ID is in extended word one as LP=xxx in decimal format. Capture a Partition Dump. Contact your next level of support.
+11008700;https://www.ibm.com/support/knowledgecenter/en/POWER6/area7/11008700.htm;BPC A lost input power
+11008701;https://www.ibm.com/support/knowledgecenter/en/POWER6/area7/11008701.htm;BPC B lost input power
+14022081;http://ftpmirror.your.org/pub/misc/ftp.software.ibm.com/systems/power/docs/hw/p7/p7eail_SRC1l.pdf;Input power to BPA A has been lost or partially lost.
+14022082;http://ftpmirror.your.org/pub/misc/ftp.software.ibm.com/systems/power/docs/hw/p7/p7eail_SRC1l.pdf;Input power to BPA B has been lost or partially lost.
+14022A02;http://ftpmirror.your.org/pub/misc/ftp.software.ibm.com/systems/power/docs/hw/p7/p7eail_SRC1l.pdf;A communication fault between the BPC (BPA-A) and BPD 1A has been detected.
+14022A03;http://ftpmirror.your.org/pub/misc/ftp.software.ibm.com/systems/power/docs/hw/p7/p7eail_SRC1l.pdf;A communication fault between the BPC (BPA-A) and BPD 2A has been detected.
+14022A85;http://ftpmirror.your.org/pub/misc/ftp.software.ibm.com/systems/power/docs/hw/p7/p7eail_SRC1l.pdf;The A-side BPC has detected that the cross feed from the B-side has failed
+14022B02;http://ftpmirror.your.org/pub/misc/ftp.software.ibm.com/systems/power/docs/hw/p7/p7eail_SRC1l.pdf;A communication fault between the BPC (BPA-B) and BPD 1B has been detected.
+14022B03;http://ftpmirror.your.org/pub/misc/ftp.software.ibm.com/systems/power/docs/hw/p7/p7eail_SRC1l.pdf;A communication fault between the BPC (BPA-B) and BPD 2B has been detected.
+2685-128;https://www.ibm.com/support/knowledgecenter/8231-E2D/p7eai/2685-128.htm;The error log analysis indicates a hardware failure.
+2685-130;https://www.ibm.com/support/knowledgecenter/8231-E2D/p7eai/2685-130.htm;Error log analysis indicates a problem reported by the disk drive's self-monitoring function.
+26D3-128;https://www.ibm.com/support/knowledgecenter/9109-RMD/p7eai/26D3-128.htm;The error log analysis indicates a hardware failure.
+2D14-FFF4;https://www.ibm.com/support/knowledgecenter/7874-024/p7eai/2D14-FFF4.htm;Disk drive problem.
+2E43-403;https://www.ibm.com/support/knowledgecenter/PureDataOA1801/p8eai/2E43-403.htm;Checksum Verification Test failed.
+B175F138;https://www.ibm.com/support/knowledgecenter/P8DEH/p8eai/B175F138.htm;Gard records found during periodic check.
+B3031107;https://www.ibm.com/support/knowledgecenter/P8ESS/p8eai/B3031107.htm;Customer tested problem reporting by creating a serviceable event on the HMC user interface.
+E3321007;https://www-01.ibm.com/support/docview.wss?uid=nas8N1022182;E3321007 Call home SRC due to failure during problem analysis for call home events.
+E3551042;https://www.ibm.com/support/knowledgecenter/es/POWER8/p8eai/E3551042.htm;An unknown error has occurred while attempting to launch a task at the user's request. The task is most likely not running, and the error is logged and ignored.
+
