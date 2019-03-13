@@ -1,0 +1,29 @@
+B3020001;https://www.ibm.com/support/knowledgecenter/HW4M4/p8eai/B3020001.htm;Management Console (MC) RMC connection to partition monitoring fault;
+E3D45069;https://www.ibm.com/support/knowledgecenter/en/HW4L4/p8eai/E3D45069.htm;Error trying to send data to RSF for server side of the Transmit Service Data task. This is the result of an exception being caught by the underlying Tasklet infrastructure. The Transmit Service Data task has been ended.;
+11002700;https://www.ibm.com/support/knowledgecenter/8246-L1S/p7eai/11002700.htm;VRM fault on the processor card.;
+14010063;https://www.ibm.com/support/knowledgecenter/en/POWER6/area7/14010063.htm;Air Moving Device number four is defective.
+14012052;https://www.ibm.com/support/knowledgecenter/en/POWER6/area7/14012052.htm;DCA number two is defective.
+A7001152;https://www.ibm.com/support/knowledgecenter/P8HPC/p8eai/A7001152.htm;A reset/reload of the service processor has cleared the timeout condition. If a service processor dump exists, it should be collected for IBM Service.
+A7004761;https://www.ibm.com/support/knowledgecenter/P8DEH/p8eai/A7004761.htm;The server's update access key has expired.
+B113E504;https://www.ibm.com/support/knowledgecenter/PureDataOA1801/p8eai/B113E504.htm;A hardware failure was detected in the central electronics complex (CEC).;
+B150F138;https://www.ibm.com/support/knowledgecenter/PureDataOA1801/p8eai/B150F138.htm;Firmware detected either a FRU deconfiguration record or an improper Cabling. This is a reminder for servicing faulty hardware pending service present in the system.
+B155A434;https://www.ibm.com/support/knowledgecenter/PureDataOA1801/p8eai/B155A434.htm;An invalid call was made.;
+B15A3303;https://www.ibm.com/support/knowledgecenter/PureDataOA1801/p8eai/B15A3303.htm;The service procesor time-of-day is invalid. If the error occurred while reading the service processor's hardware time-of-day clock (also known as the real time clock), this error indicates that the time of day must be set to a valid time. If the error occurred while setting the service processor's hardware time-of-day clock (the RTC), the service processor may need to be replaced.;
+B1818601;https://www.ibm.com/support/knowledgecenter/PureDataOA1801/p8eai/B1818601.htm;An application has received an unexpected signal.;
+B181E6C7;https://www.ibm.com/support/knowledgecenter/PureDataOA1801/p8eai/B181E6C7.htm;An emergency service processor fail-over (EFO) was requested when the system was in the transitory state. This will cause termination of the secondary service processor first, then failover will begin.
+B1A38B24;https://www.ibm.com/support/knowledgecenter/PureDataOA1801/p8eai/B1A38B24.htm;An invalid network configuration was entered by the user.;
+B7006981;https://www.ibm.com/support/knowledgecenter/8246-L1S/p7eai/B7006981.htm;RIO, HSL or 12X I/O bridge failure;
+E212E114;https://www.ibm.com/support/knowledgecenter/P8DEH/p8eai/E212E114.htm;Memory Alert; percent of total memory in use is over the allowed threshold Error reason = percent in use scaled by 10.;
+E212E11C;https://www.ibm.com/support/knowledgecenter/P8HPC/p8eai/E212E11C.htm;Memory Alert; total swap area is too small Error reason = swap area size
+E212E136;https://www.ibm.com/support/knowledgecenter/P8HPC/p8eai/E212E136.htm;DASD Alert: / usage exceeds threshold. i.e. low on free DASD on the mentioned DASD partition Error reason = percent in use scaled by 10.
+E212E138;https://www.ibm.com/support/knowledgecenter/P8HPC/p8eai/E212E138.htm;DASD Alert: /dump usage exceeds threshold. i.e. low on free DASD on the mentioned DASD partition Error reason = percent in use scaled by 10.
+E212E13D;https://www.ibm.com/support/knowledgecenter/P8HPC/p8eai/E212E13D.htm;DASD Alert: /var/hsc/log usage exceeds threshold. i.e. low on free DASD on the mentioned DASD partition Error reason = percent in use scaled by 10.
+E212E150;https://www.ibm.com/support/knowledgecenter/P8HPC/p8eai/E212E13D.htm;CPU Alert: a process was using too much SE HMC CPU time. Error reason = percent in use scaled by 10.;
+E212E151;https://www.ibm.com/support/knowledgecenter/P8HPC/p8eai/E212E151.htm;CPU Alert: The SE HMC overall was way too busy for too long. Error reason = percent in use scaled by 10.
+E302F850;https://www.ibm.com/support/knowledgecenter/P8ESS/p8eai/E302F850.htm;A failure occurred while trying to unpack the RPM file in the "complete concurrently" code routine. Reboot the HMC and try the operation again.
+E3551230;https://www.ibm.com/support/knowledgecenter/P8HPC/p8eai/E3551230.htm;A critical hardware event was detected.
+E35A0016;https://www.ibm.com/support/knowledgecenter/POWER8/p8eai/E35A0016.htm;Call your next level of support.;
+E35A0017;https://www.ibm.com/support/knowledgecenter/HW4M4/p8eai/E35A0017.htm;Call your next level of support.
+E3CA0262;https://www.ibm.com/support/knowledgecenter/HW4L4/p8eai/E3CA0262.htm;Error trying to detect the devices supported by Media Services
+E3D45069;https://www.ibm.com/support/knowledgecenter/en/HW4L4/p8eai/E3D45069.htm;Error trying to send data to RSF for server side of the Transmit Service Data task. This is the result of an exception being caught by the underlying Tasklet infrastructure. The Transmit Service Data task has been ended.
+B200F004;https://www.ibm.com/support/knowledgecenter/P8DEH/p8eai/B200F004.htm;The partition did not respond to a system request to power off. A system request to power off a partition failed. The partition ID is in extended word one as LP=xxx in decimal format. Capture a Partition Dump. Contact your next level of support.

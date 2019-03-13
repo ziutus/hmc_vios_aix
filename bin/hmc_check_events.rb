@@ -3,6 +3,8 @@
 require 'pp'
 require 'erb'
 require 'optparse'
+require 'socket'
+require  'pathname'
 
 $LOAD_PATH << File.dirname(__FILE__) + '/../inc'
 require 'HMC/lssvcevents'
@@ -13,6 +15,7 @@ date = nil
 format = 'csv'
 report_type = 'all'
 verbose = 0
+linksfile='hmc_events_links.cvs'
 hmcNotWorking = []
 
 OptionParser.new do |opts|
@@ -22,6 +25,8 @@ OptionParser.new do |opts|
   opts.on( '--format FORMAT', 'format of report, can be "hmtl" or "csv"') { |v| format = v }
   opts.on( '--type REPORT_TYPE', 'Type of report, can be "all" or "callhome"') { |v| report_type = v }
   opts.on( '--verbose LEVEL', Integer, 'Level of verbose of script') { |v| verbose = v }
+  opts.on( '--linksfile FILENAME', 'Links file') { |v| linksfile = v }
+  opts.on( '--type REPORT_TYPE', 'Type of report, can be "all" or "callhome"') { |v| report_type = v }
 
   opts.on('-h', '--help', 'Prints this help') do
     puts opts
@@ -41,11 +46,31 @@ end
 
 unless Dir.exist?("#{directory}/#{date}/hmc/")
   puts "The directory #{directory}/#{date}/hmc/ doesn't exist, exiting..."
-  exit 1
+  exit 2
 end
 
 unless format == 'csv' or format == 'html'
   puts "Unknown format #{format}, you can use only 'html' or 'csv'."
+  exit 3;
+end
+
+links = {}
+
+linksfilewhole = linksfile
+
+if File.file?(linksfile) and File.exist?(linksfile)
+  linksfilewhole = Pathname.new(linksfile).realpath.to_s
+
+
+  puts "Link file exist, creating table" if verbose > 0
+  File.foreach(linksfile).with_index do |line, line_num|
+    data = line.split(';')
+    links[data[0]] = { :refcode => data[0], :link => data[1], :hint => data[2] }
+  end
+
+else
+  puts "Link file doesn't exist" if verbose > 0
+
 end
 
 events = Lssvcevents.new
@@ -89,6 +114,9 @@ events.events.each_index do |index|
 end
 
 puts renderer.result
-puts 'Found issue with collecting data from below HMCs:' + hmcNotWorking.join(',').to_s
+
+if hmcNotWorking.count > 0
+  puts 'Found issue with collecting data from below HMCs:' + hmcNotWorking.join(',').to_s
+end
 
 exit 0
