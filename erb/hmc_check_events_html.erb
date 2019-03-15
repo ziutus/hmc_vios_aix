@@ -22,14 +22,14 @@ th {
 <table>
 <tr><th>HMC</th><th>Last event time</th><th>problem number</th><th>PHM</th><th>Reference code</th><th>sys name</th><th>Failing mtms</th><th>text</th></tr>
 <% events2.each do |entry| %>
-  <% if entry.hmc_name != hmc_name_old
+  <% if entry.hmcs_name.join(',') != hmc_name_old
        background == '#CCC' ? background = '#FFF' : background = '#CCC'
      end %>
   <tr style="background: <%= background %>;">
     <td><%= entry.hmcs_name.join(',') %></td>
     <td><%= entry.last_time %></td>
     <td><%= entry.problem_num %></td>
-    <td><%= entry.pmh_num %></td>
+    <td><%= entry.pmh_num_nice %></td>
     <td>
       <% if links.key?(entry.refcode) %>
         <a href="<%= links[entry.refcode][:link] %>"> <%=  entry.refcode %>  </a>
@@ -40,7 +40,7 @@ th {
     <td><%= entry.sys_name %></td>
     <td><%= entry.failing_mtms %></td>
     <td><%= entry.text %><% if links.key?(entry.refcode) %> (hint:<%= links[entry.refcode][:hint] %>) <% end %></td>
-  </tr><% hmc_name_old = entry.hmc_name %><% end %>
+  </tr><% hmc_name_old = entry.hmcs_name.join(',') %><% end %>
 </table>
 
-<% if links.count > 0 %> Links and hints are taken from file <%= Socket.gethostname %>:<%= linksfilewhole  %>  <% end %>
+<% if links.count > 0 %><p>Links and hints are taken from file <%= Socket.gethostname %>:<%= linksfilewhole  %></p> <% end %>
