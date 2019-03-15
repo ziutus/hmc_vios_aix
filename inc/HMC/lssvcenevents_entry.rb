@@ -7,6 +7,8 @@ class Lssvcenevents_entry
 
   attr_accessor :hmcs_name
   attr_accessor :hmc_name
+  attr_accessor :pmh_num_nice
+
   attr_accessor :problem_num
   attr_accessor :pmh_num
   attr_accessor :refcode
@@ -45,6 +47,7 @@ class Lssvcenevents_entry
 
     @problem_num = nil
     @pmh_num = nil
+    @pmh_num_nice = nil
     @refcode = nil
     @status = nil
     @first_time = nil
@@ -79,13 +82,9 @@ approval_state callhome_intended duplicate_count event_severity analyzing_mtms r
   end
 
   def to_s
-    cols = %w[problem_num pmh_num refcode status first_time last_time sys_name sys_mtms enclosure_mtms firmware_fix
-text created_time reporting_name reporting_mtms failing_mtms analyzing_hmc event_time files
-approval_state callhome_intended duplicate_count event_severity analyzing_mtms ref_code_extn sys_refcode fru_details
-]
     string = ''
 
-    cols.each do |col|
+    @_allowed_cols.each do |col|
       string += "#{col}=" + instance_variable_get("@#{col}") + ","
     end
 
@@ -105,15 +104,17 @@ approval_state callhome_intended duplicate_count event_severity analyzing_mtms r
         raise 'wrong key'
       end
     end
+
+    @pmh_num_nice = @pmh_num.gsub(',', ' ')
+
   end
 
 
   def compare(other)
 
-    cols = %w[problem_num pmh_num refcode status first_time last_time sys_name sys_mtms enclosure_mtms firmware_fix
-text created_time reporting_name reporting_mtms failing_mtms event_time files
-approval_state callhome_intended duplicate_count event_severity analyzing_mtms ref_code_extn sys_refcode fru_details
-]
+    # in case of network issue (problem with connection from second or third HMC),
+    # sys_name and reporting_name would be the IP address
+    cols = @_allowed_cols - %w[analyzing_hmc sys_name reporting_name]
 
     cols.each do |cal|
       #puts "#{cal}:  " + self.instance_variable_get("@#{cal}") + ": " + other.instance_variable_get("@#{cal}") + "\n"
