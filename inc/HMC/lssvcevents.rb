@@ -26,7 +26,7 @@ class Lssvcevents
     string.split("\n").each do |line|
       entry = Lssvcenevents_entry.new(line, hmc_name)
 
-      if @events.count == 0
+      if @events.count.zero?
         @events.push(entry)
         next
       end
