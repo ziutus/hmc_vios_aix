@@ -46,7 +46,6 @@ class Lssvcevents
       else
         @events.push(entry)
       end
-
     end
 
     true
