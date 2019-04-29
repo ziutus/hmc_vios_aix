@@ -28,17 +28,15 @@ class Lssvcevents
         next
       end
 
-      exist_in_events = false
       event_id = 0
       @events.each_with_index do |event, id|
         if event.compare(entry)
           event_id = id
-          exist_in_events = true
           break
         end
       end
 
-      if exist_in_events
+      if event_id > 0
         @events[event_id].hmc_add(hmc_name)
       else
         @events.push(entry)
@@ -51,4 +49,37 @@ class Lssvcevents
   def count
     @events.count
   end
+
+  def parse_csv(string)
+    return true if string.nil?
+
+    headers = ''
+    line_nr = 0
+    lines = string.split("\n")
+    lines.each do |line|
+      if line_nr.zero?
+        headers = line
+        line_nr += 1
+        next
+      end
+
+      entry = Lssvcenevents_entry.new
+      entry.parse_from_csv(headers, line)
+
+      event_id = -1
+      @events.each_with_index do |event, id|
+        if event.compare(entry, %w[hmcs_name problem_num last_time refcode sys_name failing_mtms machine_type machine_model status text phm_num])
+          event_id = id
+          puts "Event ID #{id} found"
+          next
+        end
+      end
+
+      @events[event_id].parse_from_csv(headers, line) if event_id >= 0
+      line_nr += 1
+    end
+
+    true
+  end
+
 end

@@ -46,6 +46,7 @@ class Lssvcenevents_entry
   attr_accessor :resolution_status
   attr_accessor :action_plan
 
+
   def initialize(string = nil, hmc_name = nil)
     @hmcs_name = []
 
@@ -137,12 +138,20 @@ approval_state callhome_intended duplicate_count event_severity analyzing_mtms r
 
   def compare(other, cols = nil)
 
+    verbose = 0
     # in case of network issue (problem with connection from second or third HMC),
     # sys_name and reporting_name would be the IP address
     cols = @_allowed_cols - %w[analyzing_hmc sys_name reporting_name] if cols.nil?
 
     cols.each do |cal|
-      return false unless instance_variable_get("@#{cal}") == other.instance_variable_get("@#{cal}")
+       unless instance_variable_get("@#{cal}") == other.instance_variable_get("@#{cal}")
+         if verbose > 0
+           print "self:  #{cal}:" + instance_variable_get("@#{cal}") + "\n"
+           print "other: #{cal}:" + other.instance_variable_get("@#{cal}") + "\n"
+           print "----\n"
+         end
+         return false
+       end
     end
 
     true
@@ -165,6 +174,7 @@ approval_state callhome_intended duplicate_count event_severity analyzing_mtms r
   end
 
   def hmc_add(hmc_name)
+    hmc_name.strip!
     @hmcs_name.push(hmc_name) unless @hmcs_name.include?(hmc_name)
   end
 
