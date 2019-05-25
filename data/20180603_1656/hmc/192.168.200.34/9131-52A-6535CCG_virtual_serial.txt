@@ -1,0 +1,8 @@
+lpar_name=dump,lpar_id=1,slot_num=1,state=0,is_required=1,connect_status=unavailable,adapter_type=server,supports_hmc=1,remote_lpar_id=any,remote_lpar_name=,remote_slot_num=any
+lpar_name=dump,lpar_id=1,slot_num=0,state=0,is_required=1,connect_status=unavailable,adapter_type=server,supports_hmc=1,remote_lpar_id=any,remote_lpar_name=,remote_slot_num=any
+lpar_name=vios1,lpar_id=2,slot_num=1,state=1,is_required=1,connect_status=unavailable,adapter_type=server,supports_hmc=1,remote_lpar_id=any,remote_lpar_name=,remote_slot_num=any
+lpar_name=vios1,lpar_id=2,slot_num=0,state=1,is_required=1,connect_status=unavailable,adapter_type=server,supports_hmc=1,remote_lpar_id=any,remote_lpar_name=,remote_slot_num=any
+lpar_name=vios2,lpar_id=3,slot_num=1,state=1,is_required=1,connect_status=unavailable,adapter_type=server,supports_hmc=1,remote_lpar_id=any,remote_lpar_name=,remote_slot_num=any
+lpar_name=vios2,lpar_id=3,slot_num=0,state=1,is_required=1,connect_status=unavailable,adapter_type=server,supports_hmc=1,remote_lpar_id=any,remote_lpar_name=,remote_slot_num=any
+lpar_name=nim1,lpar_id=5,slot_num=1,state=1,is_required=1,connect_status=unavailable,adapter_type=server,supports_hmc=1,remote_lpar_id=any,remote_lpar_name=,remote_slot_num=any
+lpar_name=nim1,lpar_id=5,slot_num=0,state=1,is_required=1,connect_status=unavailable,adapter_type=server,supports_hmc=1,remote_lpar_id=any,remote_lpar_name=,remote_slot_num=any

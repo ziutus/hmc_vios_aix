@@ -1,0 +1,8 @@
+lpar_name=dump,lpar_id=1,slot_num=2,state=0,is_required=1,is_trunk=0,ieee_virtual_eth=0,port_vlan_id=1,addl_vlan_ids=,mac_addr=26E6B0001002
+lpar_name=vios1,lpar_id=2,slot_num=6,state=1,is_required=0,is_trunk=0,ieee_virtual_eth=0,port_vlan_id=6,addl_vlan_ids=,mac_addr=26E6B0002006
+lpar_name=vios1,lpar_id=2,slot_num=7,state=1,is_required=0,is_trunk=1,trunk_priority=1,ieee_virtual_eth=0,port_vlan_id=7,addl_vlan_ids=,mac_addr=26E6B0002007
+lpar_name=vios2,lpar_id=3,slot_num=6,state=1,is_required=1,is_trunk=1,trunk_priority=2,ieee_virtual_eth=0,port_vlan_id=6,addl_vlan_ids=,mac_addr=26E6B0003006
+lpar_name=vios2,lpar_id=3,slot_num=8,state=1,is_required=1,is_trunk=1,trunk_priority=2,ieee_virtual_eth=0,port_vlan_id=8,addl_vlan_ids=,mac_addr=26E6B0003008
+lpar_name=vios2,lpar_id=3,slot_num=9,state=1,is_required=0,is_trunk=0,ieee_virtual_eth=0,port_vlan_id=6,addl_vlan_ids=,mac_addr=26E6B0003009
+lpar_name=nim1,lpar_id=5,slot_num=6,state=1,is_required=0,is_trunk=0,ieee_virtual_eth=1,port_vlan_id=6,addl_vlan_ids=,mac_addr=26E6B0005006
+lpar_name=nim1,lpar_id=5,slot_num=7,state=1,is_required=0,is_trunk=0,ieee_virtual_eth=0,port_vlan_id=7,addl_vlan_ids=,mac_addr=26E6B0005007

@@ -1,0 +1,1 @@
+HSCLA4C0 System zarządzany nie obsługuje wirtualnego kanału światłowodowego.

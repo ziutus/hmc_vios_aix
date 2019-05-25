@@ -1,0 +1,4 @@
+lpar_name=vios1,lpar_id=2,slot_num=2,state=1,is_required=1,adapter_type=server,remote_lpar_id=5,remote_lpar_name=nim1,remote_slot_num=2
+lpar_name=vios2,lpar_id=3,slot_num=2,state=1,is_required=0,adapter_type=server,remote_lpar_id=5,remote_lpar_name=nim1,remote_slot_num=3
+lpar_name=nim1,lpar_id=5,slot_num=3,state=1,is_required=1,adapter_type=client,remote_lpar_id=3,remote_lpar_name=vios2,remote_slot_num=2
+lpar_name=nim1,lpar_id=5,slot_num=2,state=1,is_required=1,adapter_type=client,remote_lpar_id=2,remote_lpar_name=vios1,remote_slot_num=2

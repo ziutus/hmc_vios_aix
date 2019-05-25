@@ -1,0 +1,4 @@
+lpar_name=dump,lpar_id=1,curr_max_virtual_slots=10,pend_max_virtual_slots=10,next_avail_virtual_slot=3
+lpar_name=vios1,lpar_id=2,curr_max_virtual_slots=200,pend_max_virtual_slots=200,next_avail_virtual_slot=3
+lpar_name=vios2,lpar_id=3,curr_max_virtual_slots=200,pend_max_virtual_slots=200,next_avail_virtual_slot=3
+lpar_name=nim1,lpar_id=5,curr_max_virtual_slots=10,pend_max_virtual_slots=10,next_avail_virtual_slot=4
