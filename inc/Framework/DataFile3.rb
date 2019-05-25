@@ -23,10 +23,11 @@ class DataFile3
     end
   end
 
-  def write(command, value)
+  def write(command, value, confirm = false)
     File.open(@filename, 'a') do |file|
       file.write("### command:#{command} ### time:#{Time.now.strftime("%Y-%m-%d_%H:%M:%S")} ### timestamp: #{Time.now.to_i} ###\n")
       file.write(value)
+      puts STDERR '.' if confirm
     end
   end
   alias Write write
