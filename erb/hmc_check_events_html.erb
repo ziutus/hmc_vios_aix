@@ -18,9 +18,32 @@ th {
 %>
 <h3>HMC issues</h3>
 
+<!--
+HMC Name
+Event Time
+Event ID#
+PHM
+refcode
+System serial $
+System Name
+Machine Type
+Model
+Priority
+CHG/INC
+Event Description
+Event Status
+Action Plan
+Resolution Status
+
+-->
+
 <p>Data are taken from output of 'lssvcevents -t hardware --filter "status=open"' <% if report_type == "callhome" %> and filtered only events with callhome_intended == 'true'  <% end %></p>
 <table>
-<tr><th>HMC</th><th>Last event time</th><th>problem number</th><th>PHM</th><th>Reference code</th><th>sys name</th><th>Failing mtms</th><th>text</th></tr>
+<tr><th>HMC</th><th>Last event time</th><th>problem number</th><th>PHM</th><th>Reference code</th><th>Serial number</th><th>sys name</th><th>Failing mtms</th><th>Machine Type</th><th>Model</th>
+  <th>Priority</th><th>Ticket number</th><th>Event Status</th>
+  <th>text</th>
+  <th>Action Plan</th><th>Resolution status</th>
+</tr>
 <% events2.each do |entry| %>
   <% if entry.hmcs_name.join(',') != hmc_name_old
        background == '#CCC' ? background = '#FFF' : background = '#CCC'
@@ -37,10 +60,20 @@ th {
           <%= entry.refcode %>
         <% end %>
     </td>
+    <td> Serial number</td>
     <td><%= entry.sys_name %></td>
     <td><%= entry.failing_mtms %></td>
+    <td>Machine Type</td>
+    <td>Model</td>
+    <td>priority</td>
+    <td>ticket number</td>
+    <td>Event Status</td>
     <td><%= entry.text %><% if links.key?(entry.refcode) %> (hint:<%= links[entry.refcode][:hint] %>) <% end %></td>
-  </tr><% hmc_name_old = entry.hmcs_name.join(',') %><% end %>
+    <td>action plan</td>
+    <td>Resolution Status</td>
+  </tr>
+    <% hmc_name_old = entry.hmcs_name.join(',') %>
+  <% end %>
 </table>
 
 <% if links.count > 0 %><p>Links and hints are taken from file <%= Socket.gethostname %>:<%= linksfilewhole  %></p> <% end %>
