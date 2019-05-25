@@ -157,19 +157,19 @@ case action
 
   when 'lparMemoryAdd'
     lpar = Lpar_real.new(system_name, lpar_id, lpar_name)
-    puts execute.execute(lpar.memoryAdd_cmd(1024))
+    puts execute.execute(lpar.memory_add_cmd(1024))
 
   when 'lparMemoryRemove'
     lpar = Lpar_real.new(system_name, lpar_id, lpar_name)
-    puts execute.execute(lpar.memoryRemove_cmd(1024))
+    puts execute.execute(lpar.memory_remove_cmd(1024))
 
   when 'lparProcUnitsRemove'
     lpar = Lpar_real.new(system_name, lpar_id, lpar_name)
-    puts execute.execute(lpar.procUnitsRemove_cmd(0.1))
+    puts execute.execute(lpar.proc_units_remove_cmd(0.1))
 
   when 'lparProcUnitsAdd'
     lpar = Lpar_real.new(system_name, lpar_id, lpar_name)
-    puts execute.execute(lpar.procUnitsAdd_cmd(0.1))
+    puts execute.execute(lpar.proc_units_add_cmd(0.1))
 
 
   when 'lparAddVscsi'
@@ -237,7 +237,7 @@ case action
       adapter = VirtualScsiAdapter.new()
       adapter.decode(match[3])
 
-      slotsUsed[match[2].to_i][adapter.virtualSlotNmuber] = 'notUsed'
+      slotsUsed[match[2].to_i][adapter.virtualSlotNumber] = 'notUsed'
 
       lpars[match[2].to_i].adapter_scsi_add(adapter)
     }
