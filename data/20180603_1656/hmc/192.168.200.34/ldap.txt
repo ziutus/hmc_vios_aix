@@ -1,0 +1,1 @@
+primary=,backup=,basedn=,timelimit=,bindtimelimit=,referrals=,ssl=0,loginattribute=,hmcauthnameattribute=,hmcuserpropsattribute=,binddn=,bindpwset=0,automanage=0,auth=ldap,searchfilter=,scope=one,tlscacert=,hmcgroups=

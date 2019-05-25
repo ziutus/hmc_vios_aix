@@ -1,0 +1,6 @@
+"version= Version: 7
+ Release: 7.9.0
+ Service Pack: 3
+HMC Build level 20151216.1
+","base_version=V7R7.9.0
+"

@@ -1,0 +1,1 @@
+ssh=enable,sshprotocol=,remotewebui=enable,xntp=disable,xntpserver=127.127.1.0,syslogserver=,syslogtcpserver=,syslogtlsserver=,netboot=disable,altdiskboot=disable,ldap=disable,kerberos=disable,kerberos_default_realm=,kerberos_realm_kdc=,kerberos_clockskew=,kerberos_ticket_lifetime=,kpasswd_admin=,trace=,kerberos_keyfile_present=,legacyhmccomm=disable,sol=disabled

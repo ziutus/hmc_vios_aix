@@ -1,0 +1,1 @@
+Wprowadzono niepoprawny atrybut.  Niepoprawnym atrybutem jest type_serial.  Popraw wprowadzone dane i ponów komendę.

@@ -1,0 +1,72 @@
+uname -n| |vios2
+date +"%s"| |1528044960
+lsmap -npiv -all -fmt :| |vfchost0:U9117.MMB.xxxxxxx-V2-C1:5:nim1:AIX:LOGGED_IN:fcs0:U78C0.001.DBJN321-P2-C5-T1:5:a:fcs0:U9117.MMB.06xxxxx-V5-C5
+lsmap -npiv -all -fmt :| |vfchost1:U9117.MMB.xxxxxxx-V2-C2:5:nim1:AIX:LOGGED_IN:fcs1:U78C0.001.DBJN321-P2-C5-T2:3:a:fcs1:U9117.MMB.06xxxxx-V5-C6
+lsmap -npiv -all -fmt :| |vfchost2:U9117.MMB.xxxxxxx-V2-C3:6:lapr_4:AIX:LOGGED_IN:fcs0:U78C0.001.DBJN321-P2-C5-T1:5:a:fcs0:U9117.MMB.06xxxxx-V6-C6
+lsmap -npiv -all -fmt :| |vfchost3:U9117.MMB.xxxxxxx-V2-C4:6:lapr_4:AIX:LOGGED_IN:fcs1:U78C0.001.DBJN321-P2-C5-T2:3:a:fcs1:U9117.MMB.06xxxxx-V6-C7
+lsmap -npiv -all -fmt :| |vfchost4:U9117.MMB.xxxxxxx-V2-C5:7:lpar_5:AIX:LOGGED_IN:fcs0:U78C0.001.DBJN321-P2-C5-T1:5:a:fcs0:U9117.MMB.06xxxxx-V7-C7
+lsmap -npiv -all -fmt :| |vfchost5:U9117.MMB.xxxxxxx-V2-C6:7:lpar_5:AIX:LOGGED_IN:fcs1:U78C0.001.DBJN321-P2-C5-T2:3:a:fcs1:U9117.MMB.06xxxxx-V7-C8
+lsmap -all| |SVSA                 Physloc                           Client Partition ID
+lsmap -all| |-------------        --------------------------------- ------------------
+lsmap -all| |vhost0               U787A.001.0397658-V2-C5           0x00000005
+lsmap -all| |
+lsmap -all| |VTD                   c5_vtscsi1
+lsmap -all| |Status                Available
+lsmap -all| |LUN                   0x8100000000000000
+lsmap -all| |Backing device        hdisk11
+lsmap -all| |Physloc
+lsmap -all| |
+lsmap -all| |VTD                   c5_vtscsi2
+lsmap -all| |Status                Available
+lsmap -all| |LUN                   0x8200000000000000
+lsmap -all| |Backing device        hdisk12
+lsmap -all| |Physloc
+lsmap -all| |
+lsmap -all| |VTD                   c5_vtscsi3
+lsmap -all| |Status                Available
+lsmap -all| |LUN                   0x8300000000000000
+lsmap -all| |Backing device        hdisk13
+lsmap -all| |Physloc
+lsmap -all| |SVSA                 Physloc                           Client Partition ID
+lsmap -all| |-------------        --------------------------------- ------------------
+lsmap -all| |vhost1               U787A.001.0397658-V2-C6           0x00000006
+lsmap -all| |
+lsmap -all| |VTD                   c6_vtscsi1
+lsmap -all| |Status                Available
+lsmap -all| |LUN                   0x8100000000000000
+lsmap -all| |Backing device        hdisk14
+lsmap -all| |Physloc
+lsmap -all| |
+lsmap -all| |VTD                   c6_vtscsi2
+lsmap -all| |Status                Available
+lsmap -all| |LUN                   0x8200000000000000
+lsmap -all| |Backing device        hdisk15
+lsmap -all| |Physloc
+lsmap -all| |
+lsmap -all| |VTD                   c6_vtscsi3
+lsmap -all| |Status                Available
+lsmap -all| |LUN                   0x8300000000000000
+lsmap -all| |Backing device        hdisk16
+lsmap -all| |Physloc
+lsmap -all| |SVSA                 Physloc                           Client Partition ID
+lsmap -all| |-------------        --------------------------------- ------------------
+lsmap -all| |vhost2               U787A.001.0397658-V2-C7           0x00000007
+lsmap -all| |
+lsmap -all| |VTD                   c7_vtscsi1
+lsmap -all| |Status                Available
+lsmap -all| |LUN                   0x8100000000000000
+lsmap -all| |Backing device        hdisk17
+lsmap -all| |Physloc
+lsmap -all| |
+lsmap -all| |VTD                   c7_vtscsi2
+lsmap -all| |Status                Available
+lsmap -all| |LUN                   0x8200000000000000
+lsmap -all| |Backing device        hdisk18
+lsmap -all| |Physloc
+lsmap -all| |
+lsmap -all| |VTD                   c7_vtscsi3
+lsmap -all| |Status                Available
+lsmap -all| |LUN                   0x8300000000000000
+lsmap -all| |Backing device        hdisk19
+lsmap -all| |Physloc
+echo "---end---"| |---end---

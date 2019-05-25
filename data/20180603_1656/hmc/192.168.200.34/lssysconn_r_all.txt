@@ -1,0 +1,1 @@
+resource_type=sys,type_model_serial_num=9131-52A*6535CCG,sp=primary,sp_phys_loc=unavailable,ipaddr=192.168.200.39,alt_ipaddr=unavailable,state=Connected
