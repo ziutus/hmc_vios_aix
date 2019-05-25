@@ -1,5 +1,5 @@
 source "https://rubygems.org" do
 
-gem 'spreadsheet'
-
+  gem 'net-ssh'
+  gem 'spreadsheet'
 end
