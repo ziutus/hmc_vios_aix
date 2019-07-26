@@ -43,7 +43,7 @@ Class\sof\sService:\s+(\d+)\s+
 Port\sSpeed\s\(supported\):\s+(\d+\sGBIT|UNKNOWN)\s+
 Port\sSpeed\s\(running\):\s+(\d+\sGBIT|UNKNOWN)\s+
 (Port\sFC\sID:\s+\w+|)\s*
-Port\sType:\s(Fabric)\s+
+Port\sType:\s(Fabric|Private\sLoop)\s+
 (Attention\sType:\s+Link\sUp|Attention\sType:\s+Link\sDown|Attention\sType:\s+UNKNOWN|)\s*
 (Topology:\s+Point\sto\sPoint\sor\sFabric|Topology:\s+UNKNOWN|)\s*
 \s+

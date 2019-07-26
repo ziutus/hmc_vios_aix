@@ -271,6 +271,19 @@ errno: 00000046'
     assert_equal(91_161_424, fcstat.data['FC SCSI Traffic Statistics']['Output Bytes'])
   end
 
+  # source of test data: https://www.lazysystemadmin.com/2010/08/find-wwn-address-in-aix.html
+  # comment from: Ben @ Geekswing April 26, 2013 at 10:59 PM
+  def test_fcstat_private_loop
+
+    string = File.read('test/data/fcstat_4.txt')
+    fcstat = Fcstat.new(string)
+    data = fcstat.get_stats()
+
+    assert_equal('fcs0', fcstat.device, 'fcstat device name')
+    assert_equal('Private Loop', fcstat.data['Port Type'])
+
+  end
+
   def test_fc_scsi_traffic_statistics
     string = 'FC SCSI Traffic Statistics
  Input Requests: 35188289
