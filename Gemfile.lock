@@ -1,0 +1,17 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    net-ssh (4.1.0)
+    ruby-ole (1.2.12.1)
+    spreadsheet (1.1.5)
+      ruby-ole (>= 1.0)
+
+PLATFORMS
+  x64-mingw32
+
+DEPENDENCIES
+  net-ssh!
+  spreadsheet!
+
+BUNDLED WITH
+   1.16.0.pre.3
