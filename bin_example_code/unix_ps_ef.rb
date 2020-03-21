@@ -1,13 +1,15 @@
 #! /usr/bin/env ruby
 
 $LOAD_PATH << File.dirname(__FILE__)+"/inc"
+$LOAD_PATH << File.dirname(__FILE__) + '/../inc'
+
 
 require 'pp'
 require 'optparse'
 
 require 'Unix/Ps_ef'
 
-filename = 't/data/linux_2.txt'
+filename = 'test/data/linux_1.txt'
 
 OptionParser.new do |opts|
 
@@ -30,4 +32,4 @@ contents = File.read(filename)
 
 ps = Ps_ef.new(contents)
 
-#pp ps
+# pp ps
