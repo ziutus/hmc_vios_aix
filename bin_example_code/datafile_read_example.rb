@@ -5,8 +5,8 @@ require 'yaml'
 require 'net/ssh'
 require 'pp'
 
-require_relative 'inc/Framework/MyExec'
-require_relative 'inc/Framework/DataFile'
+require_relative 'lib/Framework/MyExec'
+require_relative 'lib/Framework/DataFile'
 
 options = {}
 options = YAML.load_file('hmc_data.yaml')

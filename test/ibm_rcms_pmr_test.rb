@@ -1,8 +1,8 @@
-$LOAD_PATH << File.dirname(__FILE__)+'/../inc'
-$LOAD_PATH << File.dirname(__FILE__)+'./inc'
+$LOAD_PATH << File.dirname(__FILE__)+'/../lib'
+$LOAD_PATH << File.dirname(__FILE__)+'./lib'
 
 require 'test/unit'
-require_relative '../inc/ibm_case'
+require_relative '../lib/ibm_case'
 
 class IBM_rcms_pmr_Test < Test::Unit::TestCase
 

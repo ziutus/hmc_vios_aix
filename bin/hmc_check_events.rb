@@ -6,7 +6,7 @@ require 'optparse'
 require 'socket'
 require  'pathname'
 
-$LOAD_PATH << File.dirname(__FILE__) + '/../inc'
+$LOAD_PATH << File.dirname(__FILE__) + '/../lib'
 require 'HMC/lssvcevents'
 
 app_dir = File.dirname(__FILE__) + '/..'

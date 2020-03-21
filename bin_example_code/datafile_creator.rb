@@ -5,7 +5,7 @@ require 'erb'
 require 'optparse'
 require 'date'
 
-$LOAD_PATH << File.dirname(__FILE__) + '/../inc'
+$LOAD_PATH << File.dirname(__FILE__) + '/../lib'
 
 require 'Framework/framework_data'
 require 'Framework/DataFile'

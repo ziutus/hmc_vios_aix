@@ -78,7 +78,7 @@ This script ping in the same time many servers and provide result in nice way
 if you want to add libraries to your path, you can use below code:
 
 ```
-export RUBYLIB="/home/ziutus/github/hmc_vios_aix-master/inc:/home/ziutus/ruby_local/inc"
+export RUBYLIB="/home/ziutus/github/hmc_vios_aix-master/lib:/home/ziutus/ruby_local/lib"
 ```
 
 Configuration file with default data for HMC script (hmc_manage.rb) should provide data like: hmc IP or name, user on HMC and password. It is yaml file. 

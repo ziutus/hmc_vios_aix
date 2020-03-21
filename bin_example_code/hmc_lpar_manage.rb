@@ -6,15 +6,15 @@ require 'net/ssh'
 require 'pp'
 
 
-require_relative 'inc/nc/MyExec'
-require_relative 'inc/HMC/Sys'
-require_relative 'inc/HMC/Lpar_real'
-require_relative 'inc/HMC/Lpar_profile'
+require_relative 'lib/nc/MyExec'
+require_relative 'lib/HMC/Sys'
+require_relative 'lib/HMC/Lpar_real'
+require_relative 'lib/HMC/Lpar_profile'
 
-require_relative 'inc/HMC/VirtualEthAdapter'
-require_relative 'inc/HMC/VirtualScsiAdapter'
+require_relative 'lib/HMC/VirtualEthAdapter'
+require_relative 'lib/HMC/VirtualScsiAdapter'
 
-require_relative 'inc/HMC/TaskRoles'
+require_relative 'lib/HMC/TaskRoles'
 
 my_name = File.basename(__FILE__)
 

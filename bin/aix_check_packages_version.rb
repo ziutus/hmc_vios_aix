@@ -3,7 +3,7 @@
 require 'pp'
 require 'optparse'
 
-$LOAD_PATH << File.dirname(__FILE__) + '/../inc'
+$LOAD_PATH << File.dirname(__FILE__) + '/../lib'
 
 
 OptionParser.new do |opts|

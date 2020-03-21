@@ -4,7 +4,7 @@ require 'pp'
 require 'erb'
 require 'optparse'
 
-$LOAD_PATH << File.dirname(__FILE__) + '/../inc'
+$LOAD_PATH << File.dirname(__FILE__) + '/../lib'
 
 require 'Framework/framework_data'
 

@@ -3,8 +3,8 @@
 require 'optparse'
 require 'pp'
 
-require_relative('../inc/ibm_case')
-require_relative('../inc/HashFromCsv')
+require_relative('../lib/ibm_case')
+require_relative('../lib/HashFromCsv')
 
 include HashFromCsv
 

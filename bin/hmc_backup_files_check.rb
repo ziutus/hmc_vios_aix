@@ -1,7 +1,7 @@
 #! /usr/bin/env ruby
 
 # own libraries
-$LOAD_PATH << File.dirname(__FILE__)+'/../inc'
+$LOAD_PATH << File.dirname(__FILE__)+'/../lib'
 
 # standard libraries
 require 'pp'

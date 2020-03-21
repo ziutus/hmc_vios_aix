@@ -1,5 +1,5 @@
-$LOAD_PATH << File.dirname(__FILE__)+'/../inc'
-$LOAD_PATH << File.dirname(__FILE__)+'./inc'
+$LOAD_PATH << File.dirname(__FILE__)+'/../lib'
+$LOAD_PATH << File.dirname(__FILE__)+'./lib'
 
 require 'test/unit'
 require 'VIOS/lsmap_npiv_entry'
