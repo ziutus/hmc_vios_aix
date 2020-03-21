@@ -17,7 +17,7 @@ class Ps_ef
 
   def decode(string)
     string.split("\n").each do |string|
-      next if string =~ /"UID\s+PID\s+PPID\s+C\s+STIME\s+TTY\s+TIME\s+CMD"/
+      next if string =~ /UID\s+PID\s+PPID\s+C\s+STIME\s+TTY\s+TIME\s+CMD/
 
       process = Ps_process.new(string)
       @table[process.pid] = process
