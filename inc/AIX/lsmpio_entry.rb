@@ -35,7 +35,11 @@ class Lsmpio_entry
     else
       print "Wrong line:>" + line + "<\n"
     end
+  end
 
+  def to_s(space1_size, space2_size)
+
+    "#{@name}  #{@path_id}   #{@status} #{@path_status} #{@parent} #{@connection}"
   end
 
 end

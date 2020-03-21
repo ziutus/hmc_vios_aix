@@ -13,11 +13,15 @@ class TestAixFcstat < Test::Unit::TestCase
     lsmpio_entry = Lsmpio_entry.new(string)
 
     assert_equal(string, lsmpio_entry.string_raw, 'raw string equal to provided string')
+    assert_equal(string, lsmpio_entry.to_s(2,3), 'to_s equal to provided string (parsing validation)')
+
     assert_equal('hdisk1234', lsmpio_entry.name, 'name')
     assert_equal(0, lsmpio_entry.path_id, 'path_id')
     assert_equal('Enabled', lsmpio_entry.status, 'status')
     assert_equal('Opt,Sel,Deg,Rsv', lsmpio_entry.path_status, 'path_status')
     assert_equal('fscsi0', lsmpio_entry.parent, 'parent')
     assert_equal('500a098186a7d4ca,0008000000000000', lsmpio_entry.connection, 'connection')
+    assert_equal('500a098186a7d4ca', lsmpio_entry.connection_port, 'connection port')
+    assert_equal('0008000000000000', lsmpio_entry.connection_disk, 'connection disk')
   end
 end
