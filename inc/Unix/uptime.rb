@@ -10,6 +10,7 @@ class Uptime
 
   def initialize(string = '')
     @time = nil
+    parse_simple(string) unless string.empty?
   end
 
   def parse_simple(string)
