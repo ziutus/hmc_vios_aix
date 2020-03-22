@@ -27,14 +27,6 @@ is difficult: no internal variables, no isolation etc, so it is time to change b
 Why I choose Ruby and not Python or something different? Ruby is used in Chef :). Some part of code can be used in Chef.
 
 
-## Why AIX 5.3 not current one like 7.1 or 7.2?
-Why I'm using in my tests AIX 5.3 and not current AIX like 7.1 or 7.2? because I got this version with my hardware :). 
-if you are using newer versions and you are authorized to provide me data to update my scripts I will do it. 
-If you known how to really buy newer version of this software please write to me. I was trying to contact sellers but they ignored me :).
-
-I will use some example data found on Internet (manual pages, example data, posts etc) but I can't promise that it will be working on your setup.
-
-
 # Scripts
 ## Collecting data 
 ### Script hmc_collect_data.sh
@@ -75,7 +67,15 @@ This script ping in the same time many servers and provide result in nice way
 
 # Installation
 
-if you want to add libraries to your path, you can use below code:
+## gem
+I created gem, it is available on rubygems.org. It is called _hmc_vios_aix_.  You can add to your gem file:
+
+```
+gem "hmc_vios_aix"
+```
+
+
+if you want to use source code, you must add libraries to your path, you can use below code:
 
 ```
 export RUBYLIB="/home/ziutus/github/hmc_vios_aix-master/lib:/home/ziutus/ruby_local/lib"
