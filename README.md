@@ -1,3 +1,8 @@
+# EOVS - End of Vendor Support ;)
+As you maybe seen on the market, AIX is not so popular now.
+As result, I'm not longer hire on posistion to use it so this project will not be continued in future.
+it is keep here to keep some really nice code (in my own opinion) but don't expect to any new stuff published here...
+
 # Motivation
 ## Why this project?
 I'm the AIX SysAdmin and I don't like to do every day the same jobs. If something is repetitive, maybe we can write script for that?
